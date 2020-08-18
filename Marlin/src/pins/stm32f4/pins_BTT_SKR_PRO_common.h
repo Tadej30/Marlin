@@ -27,7 +27,7 @@
 
 // Use one of these or SDCard-based Emulation will be used
 #if NO_EEPROM_SELECTED
-  //#define SRAM_EEPROM_EMULATION                 // Use BackSRAM-based EEPROM emulation
+//#define SRAM_EEPROM_EMULATION                 // Use BackSRAM-based EEPROM emulation
 //#define FLASH_EEPROM_EMULATION                  // Use Flash-based EEPROM emulation
 #endif
 
@@ -274,6 +274,14 @@
  *               ￣￣                                               ￣￣
  *               EXP2                                              EXP1
  */
+
+ // EEPROM Robot_dyn AT24C256
+
+#define I2C_EEPROM
+#ifdef E2END
+#undef E2END
+#endif
+#define E2END 0x7FFF // EEPROM end address AT24C256 (32kB)
 
 //
 // LCDs and Controllers
