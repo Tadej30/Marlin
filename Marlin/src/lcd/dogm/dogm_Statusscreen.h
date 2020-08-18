@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 #pragma once
@@ -32,6 +32,9 @@
 #include "ultralcd_DOGM.h"
 
 #define BW(N) ((N + 7) / 8)
+#define STATUS_CHAMBER_X 70
+#define STATUS_BED_X 35
+#define STATUS_FAN_X 100
 
 #if ENABLED(CUSTOM_STATUS_SCREEN_IMAGE) && DISABLED(STATUS_COMBINE_HEATERS)
 
@@ -808,20 +811,24 @@
   #ifdef STATUS_CHAMBER_ANIM
 
     const unsigned char status_chamber_bmp[] PROGMEM = {
-      B00011111,B11111111,B11111000,
-      B00010000,B00000000,B00001000,
-      B00010000,B00000000,B00001000,
-      B00010000,B00000000,B00001000,
-      B00010000,B00000000,B00001000,
-      B00010000,B00000000,B00001000,
-      B00010000,B00000000,B00001000,
-      B00010000,B00000000,B00001000,
-      B00010000,B00000000,B00001000,
-      B00010000,B00000000,B00001000,
-      B00011111,B11111111,B11111000,
-      B00011111,B11111111,B11111000
-    };
-    const unsigned char status_chamber_on_bmp[] PROGMEM = {
+
+      B11111111,B11111111,B11111111, // ########################
+      B10000000,B00000000,B00000001, // #......................#
+      B10001010,B10101010,B10101001, // #...#.#.#.#.#.#.#.#.#..#
+      B10011111,B11111111,B11111101, // #..###################.#
+      B10011001,B01010100,B01110101, // #..##..#.#.#.#...###.#.#
+      B10010111,B01010101,B10111101, // #..#.###.#.#.#.##.####.#
+      B10010111,B00010100,B01111101, // #..#.###...#.#...#####.#
+      B10011001,B01010101,B11111101, // #..##..#.#.#.#.#######.#
+      B10011111,B11111111,B11111101, // #..###################.#
+      B10001010,B10101010,B10101001, // #...#.#.#.#.#.#.#.#.#..#
+      B10000000,B00000000,B00000001, // #......................#
+      B11111111,B11111111,B11111111  // ########################
+  
+
+};
+
+      const unsigned char status_chamber_on_bmp[] PROGMEM = {
       B00011111,B11111111,B11111000,
       B00010000,B00000000,B00001000,
       B00010000,B10000100,B00001000,
