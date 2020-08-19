@@ -64,17 +64,17 @@ uint32_t PrintJobRecovery::cmd_sdpos, // = 0
 PrintJobRecovery recovery;
 
 #ifndef POWER_LOSS_PURGE_LEN
-  #define POWER_LOSS_PURGE_LEN 0
+  #define POWER_LOSS_PURGE_LEN 15
 #endif
 #ifndef POWER_LOSS_ZRAISE
-  #define POWER_LOSS_ZRAISE 2     // Move on loss with backup power, or on resume without it
+  #define POWER_LOSS_ZRAISE 5     // Move on loss with backup power, or on resume without it
 #endif
 
 #if DISABLED(BACKUP_POWER_SUPPLY)
   #undef POWER_LOSS_RETRACT_LEN   // No retract at outage without backup power
 #endif
 #ifndef POWER_LOSS_RETRACT_LEN
-  #define POWER_LOSS_RETRACT_LEN 0
+  #define POWER_LOSS_RETRACT_LEN 3
 #endif
 
 /**
@@ -242,7 +242,7 @@ void PrintJobRecovery::save(const bool force/*=false*/, const float zraise/*=0*/
 
         #if POWER_LOSS_RETRACT_LEN
           // Retract filament now
-          gcode.process_subcommands_now_P(PSTR("G1 F3000 E-" STRINGIFY(POWER_LOSS_RETRACT_LEN)));
+          gcode.process_subcommands_now_P(PSTR("G1 F2400 E-" STRINGIFY(POWER_LOSS_RETRACT_LEN)));
         #endif
 
         #if POWER_LOSS_ZRAISE
@@ -451,7 +451,7 @@ void PrintJobRecovery::resume() {
 
   // Un-retract if there was a retract at outage
   #if POWER_LOSS_RETRACT_LEN
-    gcode.process_subcommands_now_P(PSTR("G1 E" STRINGIFY(POWER_LOSS_RETRACT_LEN) " F3000"));
+    gcode.process_subcommands_now_P(PSTR("G1 E" STRINGIFY(POWER_LOSS_RETRACT_LEN) " F2400"));
   #endif
 
   // Additional purge if configured
@@ -465,7 +465,7 @@ void PrintJobRecovery::resume() {
   #endif
 
   // Move back to the saved XY
-  sprintf_P(cmd, PSTR("G1 X%s Y%s F3000"),
+  sprintf_P(cmd, PSTR("G1 X%s Y%s F2400"),
     dtostrf(info.current_position.x, 1, 3, str_1),
     dtostrf(info.current_position.y, 1, 3, str_2)
   );

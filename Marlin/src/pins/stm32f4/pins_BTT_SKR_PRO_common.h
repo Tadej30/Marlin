@@ -219,8 +219,8 @@
 
 // Extension Header 2
 
-//#define PS_ON_PIN      PF15
-//#define POWER_LOSS_PIN PF14
+#define PS_ON_PIN      PF15
+#define POWER_LOSS_PIN PF14
 
 // Temperature Sensors
 //
