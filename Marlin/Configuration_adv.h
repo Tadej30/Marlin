@@ -1143,7 +1143,7 @@
 
   #define MENU_ADDAUTOSTART               // Add a menu option to run auto#.g files
 
-  #define EVENT_GCODE_SD_ABORT "G28 Z+10 X5 Y215"       // G-code to run on Stop Print (e.g., "G28XY" or "G27")
+  #define EVENT_GCODE_SD_ABORT "G28XY"       // G-code to run on Stop Print (e.g., "G28XY" or "G27")
 
   #if ENABLED(PRINTER_EVENT_LEDS)
     #define PE_LEDS_COMPLETED_TIME  (50*60) // (seconds) Time to keep the LED "done" color before restoring normal illumination
@@ -2256,7 +2256,7 @@
   #endif
 
   #if AXIS_IS_TMC(Z)
-    #define Z_CURRENT       700
+    #define Z_CURRENT       600
     #define Z_CURRENT_HOME  Z_CURRENT
     #define Z_MICROSTEPS     16
     #define Z_RSENSE          0.11
@@ -2467,18 +2467,18 @@
   #define X2_HYBRID_THRESHOLD    130
   #define Y_HYBRID_THRESHOLD     130
   #define Y2_HYBRID_THRESHOLD    130
-  #define Z_HYBRID_THRESHOLD       3
-  #define Z2_HYBRID_THRESHOLD      3
-  #define Z3_HYBRID_THRESHOLD      3
-  #define Z4_HYBRID_THRESHOLD      3
-  #define E0_HYBRID_THRESHOLD     30
-  #define E1_HYBRID_THRESHOLD     30
-  #define E2_HYBRID_THRESHOLD     30
-  #define E3_HYBRID_THRESHOLD     30
-  #define E4_HYBRID_THRESHOLD     30
-  #define E5_HYBRID_THRESHOLD     30
-  #define E6_HYBRID_THRESHOLD     30
-  #define E7_HYBRID_THRESHOLD     30
+  #define Z_HYBRID_THRESHOLD      30
+  #define Z2_HYBRID_THRESHOLD     30
+  #define Z3_HYBRID_THRESHOLD     30
+  #define Z4_HYBRID_THRESHOLD     30
+  #define E0_HYBRID_THRESHOLD     40
+  #define E1_HYBRID_THRESHOLD     40
+  #define E2_HYBRID_THRESHOLD     40
+  #define E3_HYBRID_THRESHOLD     40
+  #define E4_HYBRID_THRESHOLD     40
+  #define E5_HYBRID_THRESHOLD     40
+  #define E6_HYBRID_THRESHOLD     40
+  #define E7_HYBRID_THRESHOLD     40
 
   /**
    * Use StallGuard2 to home / probe X, Y, Z.
