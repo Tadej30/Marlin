@@ -794,7 +794,7 @@
   #endif
 #endif
 
-#define DEFAULT_EJERK    2.5  // May be used by Linear Advance
+#define DEFAULT_EJERK    5  // May be used by Linear Advance
 
 /**
  * Junction Deviation Factor
@@ -978,7 +978,7 @@
  *     |    [-]    |
  *     O-- FRONT --+
  */
-#define NOZZLE_TO_PROBE_OFFSET { 26, 4, -1.290 }
+#define NOZZLE_TO_PROBE_OFFSET { 26, 4, -1.285 }
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
@@ -1122,9 +1122,9 @@
 #define X_MIN_POS 0
 #define Y_MIN_POS -10
 #define Z_MIN_POS 0
-#define X_MAX_POS 255
+#define X_MAX_POS 250
 #define Y_MAX_POS 220
-#define Z_MAX_POS 215
+#define Z_MAX_POS 210
 
 /**
  * Software Endstops
