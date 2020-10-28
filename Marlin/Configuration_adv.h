@@ -1199,7 +1199,6 @@
     //#define POWER_LOSS_RECOVER_ZHOME  // Z homing is needed for proper recovery. 99.9% of the time this should be disabled!
     #define POWER_LOSS_ZRAISE       5 // (mm) Z axis raise on resume (on power loss with UPS)
     #define POWER_LOSS_PIN       PF14 // Pin to detect power loss. Set to -1 to disable default pin on boards without module.
-    #define POWER_LOSS_STATE     LOW // State of pin indicating power loss
     //#define POWER_LOSS_PULL           // Set pullup / pulldown as appropriate
     #define POWER_LOSS_PURGE_LEN   20 // (mm) Length of filament to purge on resume
     #define POWER_LOSS_RETRACT_LEN 10 // (mm) Length of filament to retract on fail. Requires backup power.
@@ -1613,7 +1612,7 @@
   #if ENABLED(DOUBLECLICK_FOR_Z_BABYSTEPPING)
     #define DOUBLECLICK_MAX_INTERVAL  800   // Maximum interval between clicks, in milliseconds.
                                             // Note: Extra time may be added to mitigate controller latency.
-    //#define MOVE_Z_WHEN_IDLE              // Jump to the move Z menu on doubleclick when printer is idle.
+    #define MOVE_Z_WHEN_IDLE              // Jump to the move Z menu on doubleclick when printer is idle.
     #if ENABLED(MOVE_Z_WHEN_IDLE)
       #define MOVE_Z_IDLE_MULTIPLICATOR 10   // Multiply 1mm by this factor for the move step size.
     #endif
