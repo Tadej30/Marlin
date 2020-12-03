@@ -21,19 +21,23 @@
  */
 #pragma once
 
-#if HOTENDS > 3 || E_STEPPERS > 3
-  #error "BIGTREE SKR Pro V1.2 supports up to 3 hotends / E-steppers."
-#endif
+/**
+ * \file
+ * \brief Sd2Card class for V2 SD/SDHC cards
+ */
 
-#if ENABLED(USB_HOST_MSC_FLASH_SUPPORT)
-  #if ENABLED(USBCON)
-    #error "For USB host MSC make sure USBCON is not defined. Remove -DUSBCON if present."
-  #endif
-  #if SERIAL_PORT == -1 || SERIAL_PORT_2 == -1
-    #error "USB host MSC and USB emulated serial port can't be enabled on BTT SKR Pro V1.2 at the same time."
-  #endif
-#endif
+#include "../SdFatConfig.h"
+#include "../SdInfo.h"
 
-#define BOARD_INFO_NAME "BTT SKR Pro V1.2"
+class Sd2Card {
+  public:
 
-#include "pins_BTT_SKR_PRO_common.h"
+    bool init(const uint8_t sckRateID=0, const pin_t chipSelectPin=0);
+
+    static void idle();
+
+    bool readBlock(uint32_t block, uint8_t* dst);
+    bool writeBlock(uint32_t blockNumber, const uint8_t* src);
+
+    static bool isInserted();
+};

@@ -2,9 +2,6 @@
  * Marlin 3D Printer Firmware
  * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
- * Based on Sprinter and grbl.
- * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -21,19 +18,28 @@
  */
 #pragma once
 
-#if HOTENDS > 3 || E_STEPPERS > 3
-  #error "BIGTREE SKR Pro V1.2 supports up to 3 hotends / E-steppers."
+/**
+ * Define USB HOST Pins: OTG_DM, OTG_DP
+ */
+#ifndef USB_OTG_DM_PIN
+  #define USB_OTG_DM_PIN  PA11
+#endif
+#ifndef USB_OTG_DP_PIN
+  #define USB_OTG_DP_PIN  PA12
 #endif
 
-#if ENABLED(USB_HOST_MSC_FLASH_SUPPORT)
-  #if ENABLED(USBCON)
-    #error "For USB host MSC make sure USBCON is not defined. Remove -DUSBCON if present."
-  #endif
-  #if SERIAL_PORT == -1 || SERIAL_PORT_2 == -1
-    #error "USB host MSC and USB emulated serial port can't be enabled on BTT SKR Pro V1.2 at the same time."
-  #endif
+#if USB_OTG_DM_PIN == PA11 && USB_OTG_DP_PIN == PA12
+  #define USB_OTG_ID FS
+#elif USB_OTG_DM_PIN == PB14 && USB_OTG_DP_PIN == PB15
+  #define USB_OTG_ID HS  // HS port used for FS function
+#else
+  #error "USB OTG pins error!"
 #endif
 
-#define BOARD_INFO_NAME "BTT SKR Pro V1.2"
+#define __USB_OTG_ISR(n) void OTG_##n##_IRQHandler(void)
+#define _USB_OTG_ISR(n)  __USB_OTG_ISR(n)
+#define USB_OTG_ISR()    _USB_OTG_ISR(USB_OTG_ID)
 
-#include "pins_BTT_SKR_PRO_common.h"
+#define __USB_OTG_INSTANCE(n) USB_OTG_##n
+#define _USB_OTG_INSTANCE(n)  __USB_OTG_INSTANCE(n)
+#define USB_OTG_INSTANCE      _USB_OTG_INSTANCE(USB_OTG_ID)

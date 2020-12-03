@@ -29,6 +29,15 @@
   #error "Marlin extruder/hotends limit! Increase MAX_E_STEPPERS to continue."
 #endif
 
+#if ENABLED(USB_HOST_MSC_FLASH_SUPPORT)
+  #if ENABLED(USBCON)
+    #error "For USB host MSC make sure USBCON is not defined. Remove -DUSBCON if present."
+  #endif
+  #if SERIAL_PORT == -1 || SERIAL_PORT_2 == -1
+    #error "USB host MSC and USB emulated serial port can't be enabled on GTR V1.0 at the same time."
+  #endif
+#endif
+
 #define BOARD_INFO_NAME "BTT GTR V1.0"
 
 // Onboard I2C EEPROM
@@ -36,6 +45,12 @@
 #define MARLIN_EEPROM_SIZE                0x2000  // 8KB (24C64 ... 64Kb = 8KB)
 
 #define TP                                        // Enable to define servo and probe pins
+
+//
+// USB OTG Host
+//
+#define USB_OTG_DM_PIN                      PA11
+#define USB_OTG_DP_PIN                      PA12
 
 //
 // Servos
