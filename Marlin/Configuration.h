@@ -1775,7 +1775,7 @@
  * USB Flash mounted in MCU USB OTG Host port
  * you need uncomment both SDSUPPORT and following option at the same time or it won't work.
  */
-//#define USB_HOST_MSC_FLASH_SUPPORT
+//#define USB_HOST_MSC_FLASH_SUPPORT  (uncomment -DUSBCON -DUSBD_USE_CDC platform.ini row 728  )
 
 /**
  * SD CARD: SPI SPEED
