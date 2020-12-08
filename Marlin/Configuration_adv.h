@@ -1222,7 +1222,7 @@
     #define POWER_LOSS_PIN       PF14 // Pin to detect power loss. Set to -1 to disable default pin on boards without module.
     #define POWER_LOSS_STATE     HIGH // State of pin indicating power loss
     #define POWER_LOSS_PULLUP         // Set pullup / pulldown as appropriate for your sensor
-    77#define POWER_LOSS_PULLDOWN
+    //#define POWER_LOSS_PULLDOWN
     #define POWER_LOSS_PURGE_LEN   20 // (mm) Length of filament to purge on resume
     #define POWER_LOSS_RETRACT_LEN 10 // (mm) Length of filament to retract on fail. Requires backup power.
 
@@ -2129,7 +2129,7 @@
                                                   //   For direct drive, the full length of the nozzle.
   #define ADVANCED_PAUSE_CONTINUOUS_PURGE         // Purge continuously up to the purge length until interrupted.
   #define ADVANCED_PAUSE_PURGE_FEEDRATE        1  // (mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
-  #define ADVANCED_PAUSE_PURGE_LENGTH         50  // (mm) Length to extrude after loading.
+  #define ADVANCED_PAUSE_PURGE_LENGTH         25  // (mm) Length to extrude after loading.
                                                   //   Set to 0 for manual extrusion.
                                                   //   Filament can be extruded repeatedly from the Filament Change menu
                                                   //   until extrusion is consistent, and to purge old filament.
@@ -2612,7 +2612,7 @@
     #define Y_STALL_SENSITIVITY  1
     #define Y2_STALL_SENSITIVITY Y_STALL_SENSITIVITY
     #define Z_STALL_SENSITIVITY  1
-    //#define Z2_STALL_SENSITIVITY Z_STALL_SENSITIVITY
+    #define Z2_STALL_SENSITIVITY Z_STALL_SENSITIVITY
     //#define Z3_STALL_SENSITIVITY Z_STALL_SENSITIVITY
     //#define Z4_STALL_SENSITIVITY Z_STALL_SENSITIVITY
    #define SPI_ENDSTOPS              // TMC2130 only
