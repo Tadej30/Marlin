@@ -1054,7 +1054,7 @@
   #define MANUAL_FEEDRATE { 50*60, 50*60, 16*60, 1*60 } // (mm/min) Feedrates for manual moves along X, Y, Z, E from panel
   #define SHORT_MANUAL_Z_MOVE 0.025 // (mm) Smallest manual Z move (< 0.1mm)
   #if IS_ULTIPANEL
-    #define MANUAL_E_MOVES_RELATIVE // Display extruder move distance rather than "position"
+    //#define MANUAL_E_MOVES_RELATIVE // Display extruder move distance rather than "position"
     #define ULTIPANEL_FEEDMULTIPLY  // Encoder sets the feedrate multiplier on the Status Screen
   #endif
 #endif
@@ -1084,10 +1084,10 @@
       // Use a height slightly above the estimated nozzle-to-probe Z offset.
       // For example, with an offset of -5, consider a starting height of -4.
       //
-      //#define PROBE_OFFSET_WIZARD_START_Z -4.0
+      #define PROBE_OFFSET_WIZARD_START_Z -1.0
 
       // Set a convenient position to do the calibration (probing point and nozzle/bed-distance)
-      //#define PROBE_OFFSET_WIZARD_XY_POS { X_CENTER, Y_CENTER }
+      #define PROBE_OFFSET_WIZARD_XY_POS { X_CENTER, Y_CENTER }
     #endif
   #endif
 
@@ -1675,7 +1675,7 @@
 #define LIN_ADVANCE
 #if ENABLED(LIN_ADVANCE)
   //#define EXTRA_LIN_ADVANCE_K // Enable for second linear advance constants
-  #define LIN_ADVANCE_K 0.10    // 0.22 Unit: mm compression per 1mm/s extruder speed
+  #define LIN_ADVANCE_K 0.04    // 0.22 Unit: mm compression per 1mm/s extruder speed
   //#define LA_DEBUG            // If enabled, this will generate debug information output over USB.
   #define EXPERIMENTAL_SCURVE   // Enable this option to permit S-Curve Acceleration
 #endif
@@ -2296,7 +2296,7 @@
     #define X_MICROSTEPS     16        // 0..256
     #define X_RSENSE          0.11
     #define X_CHAIN_POS      -1        // -1..0: Not chained. 1: MCU MOSI connected. 2: Next in chain, ...
-    #define X_INTERPOLATE  true      // Enable to override 'INTERPOLATE' for the X axis
+    #define X_INTERPOLATE  true        // Enable to override 'INTERPOLATE' for the X axis
   #endif
 
   #if AXIS_IS_TMC(X2)
@@ -2367,7 +2367,7 @@
     #define E0_MICROSTEPS    16
     #define E0_RSENSE         0.11
     #define E0_CHAIN_POS     -1
-    //#define E0_INTERPOLATE true
+    #define E0_INTERPOLATE true
   #endif
 
   #if AXIS_IS_TMC(E1)
@@ -2563,21 +2563,21 @@
   #define HYBRID_THRESHOLD
 
   #define X_HYBRID_THRESHOLD     130  // [mm/s]
-  #define X2_HYBRID_THRESHOLD    130
+  #define X2_HYBRID_THRESHOLD    100
   #define Y_HYBRID_THRESHOLD     130
-  #define Y2_HYBRID_THRESHOLD    130
+  #define Y2_HYBRID_THRESHOLD    100
   #define Z_HYBRID_THRESHOLD      30
   #define Z2_HYBRID_THRESHOLD     30
-  #define Z3_HYBRID_THRESHOLD     30
-  #define Z4_HYBRID_THRESHOLD     30
-  #define E0_HYBRID_THRESHOLD     40
-  #define E1_HYBRID_THRESHOLD     40
-  #define E2_HYBRID_THRESHOLD     40
-  #define E3_HYBRID_THRESHOLD     40
-  #define E4_HYBRID_THRESHOLD     40
-  #define E5_HYBRID_THRESHOLD     40
-  #define E6_HYBRID_THRESHOLD     40
-  #define E7_HYBRID_THRESHOLD     40
+  #define Z3_HYBRID_THRESHOLD      3
+  #define Z4_HYBRID_THRESHOLD      3
+  #define E0_HYBRID_THRESHOLD     30
+  #define E1_HYBRID_THRESHOLD     30
+  #define E2_HYBRID_THRESHOLD     30
+  #define E3_HYBRID_THRESHOLD     30
+  #define E4_HYBRID_THRESHOLD     30
+  #define E5_HYBRID_THRESHOLD     30
+  #define E6_HYBRID_THRESHOLD     30
+  #define E7_HYBRID_THRESHOLD     30
 
   /**
    * Use StallGuard to home / probe X, Y, Z.
