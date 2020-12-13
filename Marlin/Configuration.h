@@ -734,7 +734,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {  100, 100, 400, 350 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {  100, 100, 400, 345 }
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -1850,7 +1850,7 @@
 //  If CLOCKWISE normally moves DOWN this makes it go UP.
 //  If CLOCKWISE normally moves UP this makes it go DOWN.
 //
-#define REVERSE_MENU_DIRECTION
+//#define REVERSE_MENU_DIRECTION
 
 //
 // This option reverses the encoder direction for Select Screen.
