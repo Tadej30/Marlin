@@ -734,7 +734,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {  100, 100, 400, 343 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {  100, 100, 400, 345 }
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -1135,7 +1135,7 @@
 #define Z_MIN_POS 0
 #define X_MAX_POS 250
 #define Y_MAX_POS 220
-#define Z_MAX_POS 210
+#define Z_MAX_POS 215
 
 /**
  * Software Endstops
