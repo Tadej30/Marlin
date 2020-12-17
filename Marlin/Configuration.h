@@ -489,6 +489,8 @@
   #if ENABLED(PID_PARAMS_PER_HOTEND)
     // Specify between 1 and HOTENDS values per array.
     // If fewer than EXTRUDER values are provided, the last element will be repeated.
+    // PID Tuning the Nozle: 1. FAN ON M106 S255 / 2. Nozle ON M303 E0 S200 C10
+
     #define DEFAULT_Kp_LIST {  22.20,  22.20 }
     #define DEFAULT_Ki_LIST {   1.08,   1.08 }
     #define DEFAULT_Kd_LIST { 114.00, 114.00 }
@@ -498,7 +500,7 @@
     #define DEFAULT_Kd 69.23
   #endif
 #endif // PIDTEMP
-// PID Tuning the Nozle: 1. FAN ON M106 S255 / 2. Nozle ON M303 E0 S200 C10
+
 //===========================================================================
 //====================== PID > Bed Temperature Control ======================
 //===========================================================================
@@ -1830,7 +1832,7 @@
 // This option overrides the default number of encoder pulses needed to
 // produce one step. Should be increased for high-resolution encoders.
 //
-#define ENCODER_PULSES_PER_STEP 5
+#define ENCODER_PULSES_PER_STEP 4
 
 //
 // Use this option to override the number of step signals required to
