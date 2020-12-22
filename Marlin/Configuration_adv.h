@@ -1716,9 +1716,9 @@
  */
 #if PROBE_SELECTED && !IS_KINEMATIC
   #define PROBING_MARGIN_LEFT PROBING_MARGIN
-  #define PROBING_MARGIN_RIGHT 20
-  #define PROBING_MARGIN_FRONT 20
-  #define PROBING_MARGIN_BACK 20
+  #define PROBING_MARGIN_RIGHT 10
+  #define PROBING_MARGIN_FRONT 10
+  #define PROBING_MARGIN_BACK  10
 #endif
 
 #if EITHER(MESH_BED_LEVELING, AUTO_BED_LEVELING_UBL)
@@ -1966,7 +1966,7 @@
  * Currently handles M108, M112, M410, M876
  * NOTE: Not yet implemented for all platforms.
  */
-//#define EMERGENCY_PARSER
+#define EMERGENCY_PARSER
 
 // Bad Serial-connections can miss a received command by sending an 'ok'
 // Therefore some clients abort after 30 seconds in a timeout.
@@ -1982,7 +1982,7 @@
 #define SERIAL_OVERRUN_PROTECTION
 
 // For serial echo, the number of digits after the decimal point
-//#define SERIAL_FLOAT_PRECISION 4
+#define SERIAL_FLOAT_PRECISION 4
 
 // @section extras
 
