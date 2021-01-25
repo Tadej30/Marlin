@@ -54,8 +54,6 @@ namespace Anycubic {
   float            ChironTFT::live_Zoffset;
   file_menu_t      ChironTFT::file_menu;
 
-  ChironTFT Chiron;
-
   ChironTFT::ChironTFT(){}
 
   void ChironTFT::Startup() {
@@ -88,9 +86,9 @@ namespace Anycubic {
 
     safe_delay(200);
 
-    // Enable leveling and Disable end stops during print
+    // Enable levelling and Disable end stops during print
     // as Z home places nozzle above the bed so we need to allow it past the end stops
-    injectCommands_P(AC_cmnd_enable_leveling);
+    injectCommands_P(AC_cmnd_enable_levelling);
 
     // Startup tunes are defined in Tunes.h
     //PlayTune(BEEPER_PIN, Anycubic_PowerOn, 1);
@@ -576,11 +574,10 @@ namespace Anycubic {
       } break;
 
       case 15:   // A15 Resuming from outage
-        if (printer_state == AC_printer_resuming_from_power_outage) {
+        if (printer_state == AC_printer_resuming_from_power_outage)
           // Need to home here to restore the Z position
-          injectCommands(AC_cmnd_power_loss_recovery);
-          injectCommands("M1000");  // home and start recovery
-        }
+          injectCommands_P(AC_cmnd_power_loss_recovery);
+          injectCommands_P(PSTR("M1000"));  // home and start recovery
         break;
 
       case 16: { // A16 Set HotEnd temp  A17 S170
@@ -623,10 +620,10 @@ namespace Anycubic {
       case 21:   // A21 Home Axis  A21 X
         if (!isPrinting()) {
           switch ((char)panel_command[4]) {
-            case 'X': injectCommands_P(PSTR("G28X")); break;
-            case 'Y': injectCommands_P(PSTR("G28Y")); break;
-            case 'Z': injectCommands_P(PSTR("G28Z")); break;
-            case 'C': injectCommands_P(G28_STR); break;
+            case 'X': injectCommands_P(PSTR("G28 X")); break;
+            case 'Y': injectCommands_P(PSTR("G28 Y")); break;
+            case 'Z': injectCommands_P(PSTR("G28 Z")); break;
+            case 'C': injectCommands_P(PSTR("G28")); break;
           }
         }
         break;
@@ -721,7 +718,7 @@ namespace Anycubic {
           // If the same meshpoint is selected twice in a row, move the head to that ready for adjustment
           if ((selectedmeshpoint.x == pos.x) && (selectedmeshpoint.y == pos.y)) {
             if (!isPositionKnown())
-              injectCommands_P(G28_STR); // home
+              injectCommands_P(PSTR("G28")); // home
 
             if (isPositionKnown()) {
               #if ACDEBUG(AC_INFO)
@@ -749,7 +746,7 @@ namespace Anycubic {
           if (isPrinting())
             SendtoTFTLN(AC_msg_probing_not_allowed); // forbid auto leveling
           else {
-            injectCommands_P(PSTR("G28O\nG29"));
+            injectCommands_P(isMachineHomed() ? PSTR("G29") : PSTR("G28\nG29"));
             printer_state = AC_printer_probing;
             SendtoTFTLN(AC_msg_start_probing);
           }
@@ -765,7 +762,7 @@ namespace Anycubic {
               selectedmeshpoint.x = selectedmeshpoint.y = 99;
             }
           break;
-          case 'D':   // Save Z Offset tables and restore leveling state
+          case 'D':   // Save Z Offset tables and restore levelling state
             if (!isPrinting()) {
               setAxisPosition_mm(1.0,Z);
               injectCommands_P(PSTR("M500"));
@@ -787,7 +784,7 @@ namespace Anycubic {
             float Zshift = atof(&panel_command[4]);
             setSoftEndstopState(false);  // disable endstops
             // Allow temporary Z position nudging during print
-            // From the leveling panel use the all points UI to adjust the print pos.
+            // From the levelling panel use the all points UI to adjust the print pos.
             if (isPrinting()) {
               #if ACDEBUG(AC_INFO)
                 SERIAL_ECHOLNPAIR("Change Zoffset from:", live_Zoffset, " to ", live_Zoffset + Zshift);

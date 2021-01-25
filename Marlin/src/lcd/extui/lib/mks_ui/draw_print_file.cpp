@@ -49,7 +49,7 @@ int8_t curDirLever = 0;
 LIST_FILE list_file;
 DIR_OFFSET dir_offset[10];
 
-extern uint8_t public_buf[513];
+extern uint8_t public_buf[512];
 extern char public_buf_m[100];
 
 uint8_t sel_id = 0;
@@ -73,7 +73,8 @@ uint8_t sel_id = 0;
 
     for (uint16_t i = 0; i < fileCnt; i++) {
       if (list_file.Sd_file_cnt == list_file.Sd_file_offset) {
-        card.getfilename_sorted(SD_ORDER(i, fileCnt));
+        const uint16_t nr = SD_ORDER(i, fileCnt);
+        card.getfilename_sorted(nr);
 
         list_file.IsFolder[valid_name_cnt] = card.flag.filenameIsDir;
         strcpy(list_file.file_name[valid_name_cnt], list_file.curDirPath);
@@ -204,7 +205,7 @@ static void event_handler(lv_obj_t *obj, lv_event_t event) {
   }
 }
 
-void lv_draw_print_file() {
+void lv_draw_print_file(void) {
   //uint8_t i;
   uint8_t file_count;
 

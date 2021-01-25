@@ -357,6 +357,10 @@
   #error "FILAMENT_CHANGE_LOAD_LENGTH is now FILAMENT_CHANGE_FAST_LOAD_LENGTH."
 #elif defined(LEVEL_CORNERS_INSET)
   #error "LEVEL_CORNERS_INSET is now LEVEL_CORNERS_INSET_LFRB."
+#elif ENABLED(LEVEL_BED_CORNERS) && !defined(LEVEL_CORNERS_INSET_LFRB)
+  #error "LEVEL_BED_CORNERS requires LEVEL_CORNERS_INSET_LFRB values."
+#elif BOTH(LEVEL_CORNERS_USE_PROBE, SENSORLESS_PROBING)
+  #error "LEVEL_CORNERS_USE_PROBE is incompatible with SENSORLESS_PROBING."
 #elif defined(BEZIER_JERK_CONTROL)
   #error "BEZIER_JERK_CONTROL is now S_CURVE_ACCELERATION."
 #elif HAS_JUNCTION_DEVIATION && defined(JUNCTION_DEVIATION_FACTOR)
@@ -584,6 +588,10 @@
   #error "SERIAL_PORT must be defined."
 #elif defined(SERIAL_PORT_2) && SERIAL_PORT_2 == SERIAL_PORT
   #error "SERIAL_PORT_2 cannot be the same as SERIAL_PORT."
+#elif defined(LCD_SERIAL_PORT) && LCD_SERIAL_PORT == SERIAL_PORT
+  #error "LCD_SERIAL_PORT cannot be the same as SERIAL_PORT."
+#elif defined(LCD_SERIAL_PORT) && LCD_SERIAL_PORT == SERIAL_PORT_2
+  #error "LCD_SERIAL_PORT cannot be the same as SERIAL_PORT_2."
 #endif
 #if !(defined(__AVR__) && defined(USBCON))
   #if ENABLED(SERIAL_XON_XOFF) && RX_BUFFER_SIZE < 1024
@@ -703,10 +711,6 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
   #if NONE(HAS_MARLINUI_U8GLIB, HAS_GRAPHICAL_TFT, HAS_MARLINUI_HD44780, EXTENSIBLE_UI)
     #error "LCD_SET_PROGRESS_MANUALLY requires LCD_PROGRESS_BAR, Character LCD, Graphical LCD, TFT, or EXTENSIBLE_UI."
   #endif
-#endif
-
-#if ENABLED(USE_M73_REMAINING_TIME) && DISABLED(LCD_SET_PROGRESS_MANUALLY)
-  #error "USE_M73_REMAINING_TIME requires LCD_SET_PROGRESS_MANUALLY"
 #endif
 
 #if !HAS_LCD_MENU && ENABLED(SD_REPRINT_LAST_SELECTED_FILE)
@@ -1429,18 +1433,6 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
 
 #endif
 
-#if ENABLED(LEVEL_BED_CORNERS)
-  #ifndef LEVEL_CORNERS_INSET_LFRB
-    #error "LEVEL_BED_CORNERS requires LEVEL_CORNERS_INSET_LFRB values."
-  #elif ENABLED(LEVEL_CORNERS_USE_PROBE)
-    #if !HAS_BED_PROBE
-      #error "LEVEL_CORNERS_USE_PROBE requires a real probe."
-    #elif ENABLED(SENSORLESS_PROBING)
-      #error "LEVEL_CORNERS_USE_PROBE is incompatible with SENSORLESS_PROBING."
-    #endif
-  #endif
-#endif
-
 /**
  * Allow only one bed leveling option to be defined
  */
@@ -1603,7 +1595,7 @@ static_assert(hbm[Z_AXIS] >= 0, "HOMING_BUMP_MM.Z must be greater than or equal 
 /**
  * ULTIPANEL encoder
  */
-#if IS_ULTIPANEL && NONE(IS_NEWPANEL, SR_LCD_2W_NL) && !PIN_EXISTS(SHIFT_CLK)
+#if IS_ULTIPANEL && NONE(IS_NEWPANEL, SR_LCD_2W_NL) && !defined(SHIFT_CLK)
   #error "ULTIPANEL controllers require some kind of encoder."
 #endif
 
@@ -1943,16 +1935,16 @@ static_assert(hbm[Z_AXIS] >= 0, "HOMING_BUMP_MM.Z must be greater than or equal 
  * Basic multi hotend duplication mode
  */
 #if ENABLED(MULTI_NOZZLE_DUPLICATION)
-  #if ENABLED(SINGLENOZZLE)
-    #error "MULTI_NOZZLE_DUPLICATION is incompatible with SINGLENOZZLE."
+  #if HOTENDS < 2
+    #error "MULTI_NOZZLE_DUPLICATION requires 2 or more hotends."
   #elif ENABLED(DUAL_X_CARRIAGE)
     #error "MULTI_NOZZLE_DUPLICATION is incompatible with DUAL_X_CARRIAGE."
+  #elif ENABLED(SINGLENOZZLE)
+    #error "MULTI_NOZZLE_DUPLICATION is incompatible with SINGLENOZZLE."
   #elif ENABLED(MIXING_EXTRUDER)
     #error "MULTI_NOZZLE_DUPLICATION is incompatible with MIXING_EXTRUDER."
   #elif ENABLED(SWITCHING_EXTRUDER)
     #error "MULTI_NOZZLE_DUPLICATION is incompatible with SWITCHING_EXTRUDER."
-  #elif HOTENDS < 2
-    #error "MULTI_NOZZLE_DUPLICATION requires 2 or more hotends."
   #endif
 #endif
 
@@ -2397,23 +2389,8 @@ static_assert(hbm[Z_AXIS] >= 0, "HOMING_BUMP_MM.Z must be greater than or equal 
     #error "SERIAL_PORT is set to -1, but the MOTHERBOARD has no native USB support. Set SERIAL_PORT to a valid value for your board."
   #elif SERIAL_PORT_2 == -1
     #error "SERIAL_PORT_2 is set to -1, but the MOTHERBOARD has no native USB support. Set SERIAL_PORT_2 to a valid value for your board."
-  #elif MMU2_SERIAL_PORT == -1
-    #error "MMU2_SERIAL_PORT is set to -1, but the MOTHERBOARD has no native USB support. Set MMU2_SERIAL_PORT to a valid value for your board."
   #elif LCD_SERIAL_PORT == -1
     #error "LCD_SERIAL_PORT is set to -1, but the MOTHERBOARD has no native USB support. Set LCD_SERIAL_PORT to a valid value for your board."
-  #endif
-#endif
-
-/**
- * MMU2 require a dedicated serial port
- */
-#ifdef MMU2_SERIAL_PORT
-  #if MMU2_SERIAL_PORT == SERIAL_PORT
-    #error "MMU2_SERIAL_PORT cannot be the same as SERIAL_PORT."
-  #elif defined(SERIAL_PORT_2) && MMU2_SERIAL_PORT == SERIAL_PORT_2
-    #error "MMU2_SERIAL_PORT cannot be the same as SERIAL_PORT_2."
-  #elif defined(LCD_SERIAL_PORT) && MMU2_SERIAL_PORT == LCD_SERIAL_PORT
-    #error "MMU2_SERIAL_PORT cannot be the same as LCD_SERIAL_PORT."
   #endif
 #endif
 
@@ -3301,14 +3278,6 @@ static_assert(   _ARR_TEST(3,0) && _ARR_TEST(3,1) && _ARR_TEST(3,2)
   #elif DISABLED(EEPROM_SETTINGS)
     #warning "PASSWORD_FEATURE settings will be lost on power-off without EEPROM_SETTINGS."
   #endif
-#endif
-
-
-/**
- * Sanity Check for MEATPACK and BINARY_FILE_TRANSFER Features
- */
-#if BOTH(MEATPACK, BINARY_FILE_TRANSFER)
-  #error "Either enable MEATPACK or enable BINARY_FILE_TRANSFER."
 #endif
 
 /**

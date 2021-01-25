@@ -67,6 +67,10 @@ extern portMUX_TYPE spinlock;
 #define ENABLE_ISRS()  if (spinlock.owner != portMUX_FREE_VAL) portEXIT_CRITICAL(&spinlock)
 #define DISABLE_ISRS() portENTER_CRITICAL(&spinlock)
 
+// Fix bug in pgm_read_ptr
+#undef pgm_read_ptr
+#define pgm_read_ptr(addr) (*(addr))
+
 // ------------------------
 // Types
 // ------------------------
@@ -85,13 +89,6 @@ extern uint16_t HAL_adc_result;
 // ------------------------
 // Public functions
 // ------------------------
-
-//
-// Tone
-//
-void toneInit();
-void tone(const pin_t _pin, const unsigned int frequency, const unsigned long duration=0);
-void noTone(const pin_t _pin);
 
 // clear reset reason
 void HAL_clear_reset_source();

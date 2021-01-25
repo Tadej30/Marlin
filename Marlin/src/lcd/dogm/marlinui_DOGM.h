@@ -110,20 +110,10 @@
     #define U8G_CLASS U8GLIB_MINI12864_2X                       // 8 stripes (HW-SPI)
   #endif
 
-#elif ENABLED(MKS_12864OLED_SSD1306)
+#elif EITHER(MKS_12864OLED_SSD1306, FYSETC_242_OLED_12864)
 
   // MKS 128x64 (SSD1306) OLED I2C LCD
-
-  #define FORCE_SOFT_SPI                                        // SW-SPI
-
-  #if ENABLED(ALTERNATIVE_LCD)
-    #define U8G_CLASS U8GLIB_SSD1306_128X64_2X                  // 4 stripes
-  #else
-    #define U8G_CLASS U8GLIB_SSD1306_128X64                     // 8 stripes
-  #endif
-
-#elif ENABLED(FYSETC_242_OLED_12864)
-
+  // - or -
   // FYSETC OLED 2.42" 128 × 64 FULL GRAPHICS CONTROLLER
 
   #define FORCE_SOFT_SPI                                        // SW-SPI
@@ -131,7 +121,7 @@
   #if ENABLED(ALTERNATIVE_LCD)
     #define U8G_CLASS U8GLIB_SSD1306_128X64_2X                  // 4 stripes
   #else
-    #define U8G_CLASS U8GLIB_SSD1309_128X64_HAL
+    #define U8G_CLASS U8GLIB_SSD1306_128X64                     // 8 stripes
   #endif
 
 #elif ENABLED(ZONESTAR_12864OLED_SSD1306)

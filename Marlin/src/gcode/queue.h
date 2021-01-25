@@ -186,5 +186,3 @@ private:
 };
 
 extern GCodeQueue queue;
-
-extern const char G28_STR[];

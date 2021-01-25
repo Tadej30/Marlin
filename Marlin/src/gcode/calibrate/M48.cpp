@@ -51,6 +51,8 @@
  * This function requires the machine to be homed before invocation.
  */
 
+extern const char SP_Y_STR[];
+
 void GcodeSuite::M48() {
 
   if (homing_needed_error()) return;

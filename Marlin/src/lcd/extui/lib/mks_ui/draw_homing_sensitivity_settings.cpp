@@ -74,7 +74,7 @@ static void event_handler(lv_obj_t *obj, lv_event_t event) {
   }
 }
 
-void lv_draw_homing_sensitivity_settings() {
+void lv_draw_homing_sensitivity_settings(void) {
   scr = lv_screen_create(HOMING_SENSITIVITY_UI, machine_menu.HomingSensitivityConfTitle);
 
   sprintf_P(public_buf_l, PSTR("%d"), TERN(X_SENSORLESS, stepperX.homing_threshold(), 0));

@@ -249,7 +249,7 @@ typedef struct {
     float Move_E_scale    = 0;
   #endif
   float offset_value      = 0;
-  int8_t show_mode        = 0; // -1: Temperature control    0: Printing temperature
+  char show_mode          = 0;    // -1: Temperature control    0: Printing temperature
 } HMI_value_t;
 
 #define DWIN_CHINESE 123

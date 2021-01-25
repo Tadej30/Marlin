@@ -43,7 +43,6 @@
 #include <math.h>
 
 #include "core/utility.h"
-
 #include "module/motion.h"
 #include "module/planner.h"
 #include "module/endstops.h"
@@ -58,7 +57,6 @@
 #include "gcode/parser.h"
 #include "gcode/queue.h"
 
-#include "feature/pause.h"
 #include "sd/cardreader.h"
 
 #include "lcd/marlinui.h"
@@ -141,6 +139,7 @@
 
 #if ENABLED(EXPERIMENTAL_I2CBUS)
   #include "feature/twibus.h"
+  TWIBus i2c;
 #endif
 
 #if ENABLED(I2C_POSITION_ENCODERS)
@@ -172,6 +171,10 @@
 
 #if HAS_LEVELING
   #include "feature/bedlevel/bedlevel.h"
+#endif
+
+#if BOTH(ADVANCED_PAUSE_FEATURE, PAUSE_PARK_NO_STEPPER_TIMEOUT)
+  #include "feature/pause.h"
 #endif
 
 #if ENABLED(GCODE_REPEAT_MARKERS)
@@ -230,7 +233,18 @@
   #include "feature/password/password.h"
 #endif
 
+PGMSTR(NUL_STR, "");
 PGMSTR(M112_KILL_STR, "M112 Shutdown");
+PGMSTR(G28_STR, "G28");
+PGMSTR(M21_STR, "M21");
+PGMSTR(M23_STR, "M23 %s");
+PGMSTR(M24_STR, "M24");
+PGMSTR(SP_P_STR, " P");  PGMSTR(SP_T_STR, " T");
+PGMSTR(X_STR,     "X");  PGMSTR(Y_STR,     "Y");  PGMSTR(Z_STR,     "Z");  PGMSTR(E_STR,     "E");
+PGMSTR(X_LBL,     "X:"); PGMSTR(Y_LBL,     "Y:"); PGMSTR(Z_LBL,     "Z:"); PGMSTR(E_LBL,     "E:");
+PGMSTR(SP_A_STR, " A");  PGMSTR(SP_B_STR, " B");  PGMSTR(SP_C_STR, " C");
+PGMSTR(SP_X_STR, " X");  PGMSTR(SP_Y_STR, " Y");  PGMSTR(SP_Z_STR, " Z");  PGMSTR(SP_E_STR, " E");
+PGMSTR(SP_X_LBL, " X:"); PGMSTR(SP_Y_LBL, " Y:"); PGMSTR(SP_Z_LBL, " Z:"); PGMSTR(SP_E_LBL, " E:");
 
 MarlinState marlin_state = MF_INITIALIZING;
 
@@ -253,11 +267,39 @@ bool wait_for_heatup = true;
 
 #endif
 
+#if PIN_EXISTS(CHDK)
+  extern millis_t chdk_timeout;
+#endif
+
+#if ENABLED(I2C_POSITION_ENCODERS)
+  I2CPositionEncodersMgr I2CPEM;
+#endif
+
 /**
  * ***************************************************************************
  * ******************************** FUNCTIONS ********************************
  * ***************************************************************************
  */
+
+void setup_killpin() {
+  #if HAS_KILL
+    #if KILL_PIN_STATE
+      SET_INPUT_PULLDOWN(KILL_PIN);
+    #else
+      SET_INPUT_PULLUP(KILL_PIN);
+    #endif
+  #endif
+}
+
+void setup_powerhold() {
+  #if HAS_SUICIDE
+    OUT_WRITE(SUICIDE_PIN, !SUICIDE_PIN_INVERTING);
+  #endif
+  #if ENABLED(PSU_CONTROL)
+    powersupply_on = ENABLED(PSU_DEFAULT_OFF);
+    if (ENABLED(PSU_DEFAULT_OFF)) PSU_OFF(); else PSU_ON();
+  #endif
+}
 
 /**
  * Stepper Reset (RigidBoard, et.al.)
@@ -265,6 +307,18 @@ bool wait_for_heatup = true;
 #if HAS_STEPPER_RESET
   void disableStepperDrivers() { OUT_WRITE(STEPPER_RESET_PIN, LOW); } // Drive down to keep motor driver chips in reset
   void enableStepperDrivers()  { SET_INPUT(STEPPER_RESET_PIN); }      // Set to input, allowing pullups to pull the pin high
+#endif
+
+#if ENABLED(EXPERIMENTAL_I2CBUS) && I2C_SLAVE_ADDRESS > 0
+
+  void i2c_on_receive(int bytes) { // just echo all bytes received to serial
+    i2c.receive(bytes);
+  }
+
+  void i2c_on_request() {          // just send dummy data for now
+    i2c.reply("Hello World!\n");
+  }
+
 #endif
 
 /**
@@ -287,6 +341,17 @@ bool pin_is_protected(const pin_t pin) {
 }
 
 #pragma GCC diagnostic pop
+
+void protected_pin_err() {
+  SERIAL_ERROR_MSG(STR_ERR_PROTECTED_PIN);
+}
+
+void quickstop_stepper() {
+  planner.quick_stop();
+  planner.synchronize();
+  set_current_from_steppers_for_axis(ALL_AXES);
+  sync_plan_position();
+}
 
 void enable_e_steppers() {
   #define _ENA_E(N) ENABLE_AXIS_E##N();
@@ -323,6 +388,41 @@ void disable_all_steppers() {
 
   TERN_(EXTENSIBLE_UI, ExtUI::onSteppersDisabled());
 }
+
+#if ENABLED(G29_RETRY_AND_RECOVER)
+
+  void event_probe_failure() {
+    #ifdef ACTION_ON_G29_FAILURE
+      host_action(PSTR(ACTION_ON_G29_FAILURE));
+    #endif
+    #ifdef G29_FAILURE_COMMANDS
+      gcode.process_subcommands_now_P(PSTR(G29_FAILURE_COMMANDS));
+    #endif
+    #if ENABLED(G29_HALT_ON_FAILURE)
+      #ifdef ACTION_ON_CANCEL
+        host_action_cancel();
+      #endif
+      kill(GET_TEXT(MSG_LCD_PROBING_FAILED));
+    #endif
+  }
+
+  void event_probe_recover() {
+    TERN_(HOST_PROMPT_SUPPORT, host_prompt_do(PROMPT_INFO, PSTR("G29 Retrying"), DISMISS_STR));
+    #ifdef ACTION_ON_G29_RECOVER
+      host_action(PSTR(ACTION_ON_G29_RECOVER));
+    #endif
+    #ifdef G29_RECOVER_COMMANDS
+      gcode.process_subcommands_now_P(PSTR(G29_RECOVER_COMMANDS));
+    #endif
+  }
+
+#endif
+
+#if ENABLED(ADVANCED_PAUSE_FEATURE)
+  #include "feature/pause.h"
+#else
+  constexpr bool did_pause_print = false;
+#endif
 
 /**
  * A Print Job exists when the timer is running or SD printing
@@ -411,8 +511,8 @@ inline void manage_inactivity(const bool ignore_stepper_queue=false) {
 
   // Prevent steppers timing-out in the middle of M600
   // unless PAUSE_PARK_NO_STEPPER_TIMEOUT is disabled
-  const bool parked_or_ignoring = ignore_stepper_queue
-                               || TERN0(PAUSE_PARK_NO_STEPPER_TIMEOUT, did_pause_print);
+  const bool parked_or_ignoring = ignore_stepper_queue ||
+     (BOTH(ADVANCED_PAUSE_FEATURE, PAUSE_PARK_NO_STEPPER_TIMEOUT) && did_pause_print);
 
   // Reset both the M18/M84 activity timeout and the M85 max 'kill' timeout
   if (parked_or_ignoring) gcode.reset_stepper_timeout(ms);
@@ -450,7 +550,6 @@ inline void manage_inactivity(const bool ignore_stepper_queue=false) {
   }
 
   #if PIN_EXISTS(CHDK) // Check if pin should be set to LOW (after M240 set it HIGH)
-    extern millis_t chdk_timeout;
     if (chdk_timeout && ELAPSED(ms, chdk_timeout)) {
       chdk_timeout = 0;
       WRITE(CHDK_PIN, LOW);
@@ -886,15 +985,6 @@ void setup() {
   #endif
   #define SETUP_RUN(C) do{ SETUP_LOG(STRINGIFY(C)); C; }while(0)
 
-<<<<<<< HEAD
-  #if ENABLED(PSU_CONTROL)
-    SETUP_LOG("PSU_CONTROL");
-    powersupply_on = ENABLED(PSU_DEFAULT_OFF);
-    if (ENABLED(PSU_DEFAULT_OFF)) PSU_OFF(); else PSU_ON();
-  #endif
-
-=======
->>>>>>> parent of dae8c72b5d... Merge branch 'bugfix-2.0.x' into Prusa_Mk3/s_Marlin
   #if EITHER(DISABLE_DEBUG, DISABLE_JTAG)
     // Disable any hardware debug to free up pins for IO
     #if ENABLED(DISABLE_DEBUG) && defined(JTAGSWD_DISABLE)
@@ -907,9 +997,8 @@ void setup() {
   #endif
 
   MYSERIAL0.begin(BAUDRATE);
-  millis_t serial_connect_timeout = millis() + 1000UL;
+  uint32_t serial_connect_timeout = millis() + 1000UL;
   while (!MYSERIAL0 && PENDING(millis(), serial_connect_timeout)) { /*nada*/ }
-
   #if HAS_MULTI_SERIAL && !HAS_ETHERNET
     MYSERIAL1.begin(BAUDRATE);
     serial_connect_timeout = millis() + 1000UL;
@@ -950,29 +1039,13 @@ void setup() {
     SETUP_RUN(recovery.setup());
   #endif
 
-  #if HAS_KILL
-    SETUP_LOG("KILL_PIN");
-    #if KILL_PIN_STATE
-      SET_INPUT_PULLDOWN(KILL_PIN);
-    #else
-      SET_INPUT_PULLUP(KILL_PIN);
-    #endif
-  #endif
+  SETUP_RUN(setup_killpin());
 
   #if HAS_TMC220x
     SETUP_RUN(tmc_serial_begin());
   #endif
 
-  #if HAS_SUICIDE
-    SETUP_LOG("SUICIDE_PIN")
-    OUT_WRITE(SUICIDE_PIN, !SUICIDE_PIN_INVERTING);
-  #endif
-
-  #if ENABLED(PSU_CONTROL)
-    SETUP_LOG("PSU_CONTROL");
-    powersupply_on = ENABLED(PSU_DEFAULT_OFF);
-    if (ENABLED(PSU_DEFAULT_OFF)) PSU_OFF(); else PSU_ON();
-  #endif
+  SETUP_RUN(setup_powerhold());
 
   #if HAS_STEPPER_RESET
     SETUP_RUN(disableStepperDrivers());

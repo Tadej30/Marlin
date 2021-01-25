@@ -29,6 +29,7 @@ extern void lv_draw_touch_calibration_screen();
 extern void lv_clear_touch_calibration_screen();
 extern void lv_update_touch_calibration_screen();
 
+//extern void disp_temp_ready_print();
 #ifdef __cplusplus
   } /* C-declarations for C++ */
 #endif

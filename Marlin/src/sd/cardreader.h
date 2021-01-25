@@ -27,8 +27,6 @@
 
 #if ENABLED(SDSUPPORT)
 
-extern const char M23_STR[], M24_STR[];
-
 #if BOTH(SDCARD_SORT_ALPHA, SDSORT_DYNAMIC_RAM)
   #define SD_RESORT 1
 #endif
