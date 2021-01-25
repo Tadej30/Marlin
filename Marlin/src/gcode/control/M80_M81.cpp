@@ -89,9 +89,8 @@
  */
 void GcodeSuite::M81() {
   thermalManager.disable_all_heaters();
-  planner.finish_and_disable();
-
   print_job_timer.stop();
+  planner.finish_and_disable();
 
   #if HAS_FAN
     thermalManager.zero_fan_speeds();
