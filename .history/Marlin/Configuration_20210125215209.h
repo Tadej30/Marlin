@@ -315,8 +315,8 @@
 #define PSU_CONTROL
 #define PSU_NAME "24V Power Supply"
 #define PS_ON_PIN PF15
-//#define SUICIDE_PIN                       -1   // Enable MKSPWC support
-//#define KILL_PIN                          -1   // Enable MKSPWC support
+#define SUICIDE_PIN                       -1   // Enable MKSPWC support
+#define KILL_PIN                          -1   // Enable MKSPWC support
 
 #if ENABLED(PSU_CONTROL)
   #define PSU_ACTIVE_STATE HIGH      // Set 'LOW' for ATX, 'HIGH' for X-Box
