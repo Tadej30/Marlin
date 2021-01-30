@@ -785,8 +785,8 @@ void idle(TERN_(ADVANCED_PAUSE_FEATURE, bool no_stepper_sleep/*=false*/)) {
   // Auto-report Temperatures / SD Status
   #if HAS_AUTO_REPORTING
     if (!gcode.autoreport_paused) {
-      TERN_(AUTO_REPORT_TEMPERATURES, thermalManager.auto_report_temperatures());
-      TERN_(AUTO_REPORT_SD_STATUS, card.auto_report_sd_status());
+      TERN_(AUTO_REPORT_TEMPERATURES, thermalManager.auto_reporter.tick());
+      TERN_(AUTO_REPORT_SD_STATUS, card.auto_reporter.tick());
     }
   #endif
 
@@ -995,12 +995,13 @@ void setup() {
   #endif
 
   MYSERIAL0.begin(BAUDRATE);
-  uint32_t serial_connect_timeout = millis() + 1000UL;
-  while (!MYSERIAL0 && PENDING(millis(), serial_connect_timeout)) { /*nada*/ }
+  millis_t serial_connect_timeout = millis() + 1000UL;
+  while (!MYSERIAL0.connected() && PENDING(millis(), serial_connect_timeout)) { /*nada*/ }
+
   #if HAS_MULTI_SERIAL && !HAS_ETHERNET
     MYSERIAL1.begin(BAUDRATE);
     serial_connect_timeout = millis() + 1000UL;
-    while (!MYSERIAL1 && PENDING(millis(), serial_connect_timeout)) { /*nada*/ }
+    while (!MYSERIAL1.connected() && PENDING(millis(), serial_connect_timeout)) { /*nada*/ }
   #endif
   SERIAL_ECHOLNPGM("start");
 
