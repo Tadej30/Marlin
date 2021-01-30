@@ -40,10 +40,6 @@
   #endif
 #endif
 
-#if ENABLED(ESP3D_WIFISUPPORT)
-  DefaultSerial MSerial(false, Serial2Socket);
-#endif
-
 // ------------------------
 // Externs
 // ------------------------

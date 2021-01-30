@@ -548,8 +548,6 @@
   #include "stm32f1/pins_FLSUN_HISPEED.h"       // STM32F1                                env:flsun_hispeed
 #elif MB(BEAST)
   #include "stm32f1/pins_BEAST.h"               // STM32F1                                env:STM32F103RE
-#elif MB(MINGDA_MPX_ARM_MINI)
-  #include "stm32f1/pins_MINGDA_MPX_ARM_MINI.h" // STM32F1                                env:STM32F103RE
 
 //
 // ARM Cortex-M4F
@@ -606,8 +604,6 @@
   #include "stm32f4/pins_ANET_ET4.h"            // STM32F4                                env:Anet_ET4_OpenBLT
 #elif MB(ANET_ET4P)
   #include "stm32f4/pins_ANET_ET4P.h"           // STM32F4                                env:Anet_ET4_OpenBLT
-#elif MB(FYSETC_CHEETAH_V20)
-  #include "stm32f4/pins_FYSETC_CHEETAH_V20.h"  // STM32F4                                env:FYSETC_CHEETAH_V20
 
 //
 // ARM Cortex M7

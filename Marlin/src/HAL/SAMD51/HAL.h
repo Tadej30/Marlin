@@ -32,19 +32,15 @@
   #include "MarlinSerial_AGCM4.h"
 
   // Serial ports
-  typedef ForwardSerial0Type< decltype(Serial) > DefaultSerial;
-  extern DefaultSerial MSerial;
-  typedef ForwardSerial0Type< decltype(Serial1) > DefaultSerial1;
-  extern DefaultSerial1 MSerial1;
 
   // MYSERIAL0 required before MarlinSerial includes!
 
-  #define __MSERIAL(X) MSerial##X
+  #define __MSERIAL(X) Serial##X
   #define _MSERIAL(X) __MSERIAL(X)
   #define MSERIAL(X) _MSERIAL(INCREMENT(X))
 
   #if SERIAL_PORT == -1
-    #define MYSERIAL0 MSerial
+    #define MYSERIAL0 Serial
   #elif WITHIN(SERIAL_PORT, 0, 3)
     #define MYSERIAL0 MSERIAL(SERIAL_PORT)
   #else
@@ -53,7 +49,7 @@
 
   #ifdef SERIAL_PORT_2
     #if SERIAL_PORT_2 == -1
-      #define MYSERIAL1 MSerial
+      #define MYSERIAL1 Serial
     #elif WITHIN(SERIAL_PORT_2, 0, 3)
       #define MYSERIAL1 MSERIAL(SERIAL_PORT_2)
     #else
@@ -61,19 +57,9 @@
     #endif
   #endif
 
-  #ifdef MMU2_SERIAL_PORT
-    #if MMU2_SERIAL_PORT == -1
-      #define MMU2_SERIAL MSerial
-    #elif WITHIN(MMU2_SERIAL_PORT, 0, 3)
-      #define MMU2_SERIAL MSERIAL(MMU2_SERIAL_PORT)
-    #else
-      #error "MMU2_SERIAL_PORT must be from -1 to 3. Please update your configuration."
-    #endif
-  #endif
-
   #ifdef LCD_SERIAL_PORT
     #if LCD_SERIAL_PORT == -1
-      #define LCD_SERIAL MSerial
+      #define LCD_SERIAL Serial
     #elif WITHIN(LCD_SERIAL_PORT, 0, 3)
       #define LCD_SERIAL MSERIAL(LCD_SERIAL_PORT)
     #else

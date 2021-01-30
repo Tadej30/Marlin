@@ -320,7 +320,6 @@
 // FSMC/SPI TFT Panels (LVGL)
 #if ENABLED(TFT_LVGL_UI)
   #define HAS_TFT_LVGL_UI 1
-  #define SERIAL_RUNTIME_HOOK 1
 #endif
 
 // FSMC/SPI TFT Panels
