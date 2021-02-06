@@ -34,24 +34,18 @@
 
 // Use one of these or SDCard-based Emulation will be used
 #if NO_EEPROM_SELECTED
-//#define SRAM_EEPROM_EMULATION                 // Use BackSRAM-based EEPROM emulation
-//#define FLASH_EEPROM_EMULATION                  // Use Flash-based EEPROM emulation
+  //#define SRAM_EEPROM_EMULATION                 // Use BackSRAM-based EEPROM emulation
+  #define FLASH_EEPROM_EMULATION                  // Use Flash-based EEPROM emulation
 #endif
 
 #if ENABLED(FLASH_EEPROM_EMULATION)
-// Decrease delays and flash wear by spreading writes across the
-// 128 kB sector allocated for EEPROM emulation.
-#define FLASH_EEPROM_LEVELING
+  // Decrease delays and flash wear by spreading writes across the
+  // 128 kB sector allocated for EEPROM emulation.
+  #define FLASH_EEPROM_LEVELING
 #endif
 
 // USB Flash Drive support
 #define HAS_OTG_USB_HOST_SUPPORT
-
-//
-// USB OTG Host
-//
-#define USB_OTG_DM_PIN                      PA11
-#define USB_OTG_DP_PIN                      PA12
 
 //
 // Servos
@@ -62,134 +56,134 @@
 //
 // Trinamic Stallguard pins
 //
-#define X_DIAG_PIN PB10    // X-
-#define Y_DIAG_PIN PE12    // Y-
-#define Z_DIAG_PIN PG8     // Z-
-#define E0_DIAG_PIN PE15   // E0
-#define E1_DIAG_PIN PE10   // E1
-#define E2_DIAG_PIN PG5    // E2
+#define X_DIAG_PIN                          PB10  // X-
+#define Y_DIAG_PIN                          PE12  // Y-
+#define Z_DIAG_PIN                          PG8   // Z-
+#define E0_DIAG_PIN                         PE15  // E0
+#define E1_DIAG_PIN                         PE10  // E1
+#define E2_DIAG_PIN                         PG5   // E2
 
 //
 // Limit Switches
 //
 #ifdef X_STALL_SENSITIVITY
-#define X_STOP_PIN X_DIAG_PIN
-#if X_HOME_DIR < 0
-#define X_MAX_PIN PE15 // E0
+  #define X_STOP_PIN                  X_DIAG_PIN
+  #if X_HOME_DIR < 0
+    #define X_MAX_PIN                       PE15  // E0
+  #else
+    #define X_MIN_PIN                       PE15  // E0
+  #endif
 #else
-#define X_MIN_PIN PE15 // E0
-#endif
-#else
-#define X_MIN_PIN PB10 // X-
-#define X_MAX_PIN PE15 // E0
+  #define X_MIN_PIN                         PB10  // X-
+  #define X_MAX_PIN                         PE15  // E0
 #endif
 
 #ifdef Y_STALL_SENSITIVITY
-#define Y_STOP_PIN Y_DIAG_PIN
-#if Y_HOME_DIR < 0
-#define Y_MAX_PIN PE10 // E1
+  #define Y_STOP_PIN                  Y_DIAG_PIN
+  #if Y_HOME_DIR < 0
+    #define Y_MAX_PIN                       PE10  // E1
+  #else
+    #define Y_MIN_PIN                       PE10  // E1
+  #endif
 #else
-#define Y_MIN_PIN PE10 // E1
-#endif
-#else
-#define Y_MIN_PIN PE12 // Y-
-#define Y_MAX_PIN PE10 // E1
+  #define Y_MIN_PIN                         PE12  // Y-
+  #define Y_MAX_PIN                         PE10  // E1
 #endif
 
 #ifdef Z_STALL_SENSITIVITY
-#define Z_STOP_PIN Z_DIAG_PIN
-#if Z_HOME_DIR < 0
-#define Z_MAX_PIN PG5 // E2
+  #define Z_STOP_PIN                  Z_DIAG_PIN
+  #if Z_HOME_DIR < 0
+    #define Z_MAX_PIN                       PG5   // E2
+  #else
+    #define Z_MIN_PIN                       PG5   // E2
+  #endif
 #else
-#define Z_MIN_PIN PG5 // E2
-#endif
-#else
-#define Z_MIN_PIN PG8 // Z-
-#define Z_MAX_PIN PG5 // E2
+  #define Z_MIN_PIN                         PG8   // Z-
+  #define Z_MAX_PIN                         PG5   // E2
 #endif
 
 //
 // Z Probe must be this pin
 //
 #ifndef Z_MIN_PROBE_PIN
-#define Z_MIN_PROBE_PIN PA2
+  #define Z_MIN_PROBE_PIN                   PA2
 #endif
 
 //
 // Filament Runout Sensor
 //
 #ifndef FIL_RUNOUT_PIN
-#define FIL_RUNOUT_PIN PE15
+  #define FIL_RUNOUT_PIN                    PE15
 #endif
 #ifndef FIL_RUNOUT2_PIN
-#define FIL_RUNOUT2_PIN PE10
+  #define FIL_RUNOUT2_PIN                   PE10
 #endif
 #ifndef FIL_RUNOUT3_PIN
-#define FIL_RUNOUT3_PIN PG5
+  #define FIL_RUNOUT3_PIN                   PG5
 #endif
 
 //
 // Steppers
 //
-#define X_STEP_PIN PE9
-#define X_DIR_PIN PF1
-#define X_ENABLE_PIN PF2
+#define X_STEP_PIN                          PE9
+#define X_DIR_PIN                           PF1
+#define X_ENABLE_PIN                        PF2
 #ifndef X_CS_PIN
-#define X_CS_PIN PA15
+  #define X_CS_PIN                          PA15
 #endif
 
-#define Y_STEP_PIN PE11
-#define Y_DIR_PIN PE8
-#define Y_ENABLE_PIN PD7
-#ifndef Y_CS_PIN
-#define Y_CS_PIN PB8
+#define Y_STEP_PIN                          PE11
+#define Y_DIR_PIN                           PE8
+#define Y_ENABLE_PIN                        PD7
+ #ifndef Y_CS_PIN
+  #define Y_CS_PIN                          PB8
 #endif
 
-#define Z_STEP_PIN PE13
-#define Z_DIR_PIN PC2
-#define Z_ENABLE_PIN PC0
+#define Z_STEP_PIN                          PE13
+#define Z_DIR_PIN                           PC2
+#define Z_ENABLE_PIN                        PC0
 #ifndef Z_CS_PIN
-#define Z_CS_PIN PB9
+  #define Z_CS_PIN                          PB9
 #endif
 
-#define E0_STEP_PIN PE14
-#define E0_DIR_PIN PA0
-#define E0_ENABLE_PIN PC3
+#define E0_STEP_PIN                         PE14
+#define E0_DIR_PIN                          PA0
+#define E0_ENABLE_PIN                       PC3
 #ifndef E0_CS_PIN
-#define E0_CS_PIN PB3
+  #define E0_CS_PIN                         PB3
 #endif
 
-#define E1_STEP_PIN PD15
-#define E1_DIR_PIN PE7
-#define E1_ENABLE_PIN PA3
+#define E1_STEP_PIN                         PD15
+#define E1_DIR_PIN                          PE7
+#define E1_ENABLE_PIN                       PA3
 #ifndef E1_CS_PIN
-#define E1_CS_PIN PG15
+  #define E1_CS_PIN                         PG15
 #endif
 
-#define E2_STEP_PIN PD13
-#define E2_DIR_PIN PG9
-#define E2_ENABLE_PIN PF0
+#define E2_STEP_PIN                         PD13
+#define E2_DIR_PIN                          PG9
+#define E2_ENABLE_PIN                       PF0
 #ifndef E2_CS_PIN
-#define E2_CS_PIN PG12
+  #define E2_CS_PIN                         PG12
 #endif
 
 //
 // Software SPI pins for TMC2130 stepper drivers
 //
 #if ENABLED(TMC_USE_SW_SPI)
-#ifndef TMC_SW_MOSI
-#define TMC_SW_MOSI PC12
-#endif
-#ifndef TMC_SW_MISO
-#define TMC_SW_MISO PC11
-#endif
-#ifndef TMC_SW_SCK
-#define TMC_SW_SCK PC10
-#endif
+  #ifndef TMC_SW_MOSI
+    #define TMC_SW_MOSI                     PC12
+  #endif
+  #ifndef TMC_SW_MISO
+    #define TMC_SW_MISO                     PC11
+  #endif
+  #ifndef TMC_SW_SCK
+    #define TMC_SW_SCK                      PC10
+  #endif
 #endif
 
 #if HAS_TMC_UART
-/**
+  /**
    * TMC2208/TMC2209 stepper drivers
    *
    * Hardware serial communication ports.
@@ -206,59 +200,53 @@
   //#define E2_HARDWARE_SERIAL Serial1
   //#define E3_HARDWARE_SERIAL Serial1
   //#define E4_HARDWARE_SERIAL Serial1
-  
-//
-// Software serial
-//
-#define X_SERIAL_TX_PIN PC13
-#define X_SERIAL_RX_PIN PC13
 
-#define Y_SERIAL_TX_PIN PE3
-#define Y_SERIAL_RX_PIN PE3
+  //
+  // Software serial
+  //
+  #define X_SERIAL_TX_PIN                   PC13
+  #define X_SERIAL_RX_PIN                   PC13
 
-#define Z_SERIAL_TX_PIN PE1
-#define Z_SERIAL_RX_PIN PE1
+  #define Y_SERIAL_TX_PIN                   PE3
+  #define Y_SERIAL_RX_PIN                   PE3
 
-#define E0_SERIAL_TX_PIN PD4
-#define E0_SERIAL_RX_PIN PD4
+  #define Z_SERIAL_TX_PIN                   PE1
+  #define Z_SERIAL_RX_PIN                   PE1
 
-#define E1_SERIAL_TX_PIN PD1
-#define E1_SERIAL_RX_PIN PD1
+  #define E0_SERIAL_TX_PIN                  PD4
+  #define E0_SERIAL_RX_PIN                  PD4
 
-#define E2_SERIAL_TX_PIN PD6
-#define E2_SERIAL_RX_PIN PD6
+  #define E1_SERIAL_TX_PIN                  PD1
+  #define E1_SERIAL_RX_PIN                  PD1
 
-// Reduce baud rate to improve software serial reliability
-#define TMC_BAUD_RATE 19200
+  #define E2_SERIAL_TX_PIN                  PD6
+  #define E2_SERIAL_RX_PIN                  PD6
+
+  // Reduce baud rate to improve software serial reliability
+  #define TMC_BAUD_RATE                    19200
 #endif
 
-// Extension Header 1
-
-// Extension Header 2
-
-#define PS_ON_PIN      PF15
-#define POWER_LOSS_PIN PF14
-
+//
 // Temperature Sensors
 //
-#define TEMP_0_PIN     PF4   // T1 <-> (E0) Hot End temp.sensor
-#define TEMP_1_PIN     PF5   // T2 <-> (E1) Electronic temp. sensor
-#define TEMP_2_PIN     PF6   // T3 <-> E2
-#define TEMP_BED_PIN   PF3   // T0 <-> Bed temp.sensor
+#define TEMP_0_PIN                          PF4   // T1 <-> E0
+#define TEMP_1_PIN                          PF5   // T2 <-> E1
+#define TEMP_2_PIN                          PF6   // T3 <-> E2
+#define TEMP_BED_PIN                        PF3   // T0 <-> Bed
 
 //
 // Heaters / Fans
 //
-#define HEATER_0_PIN PB1    // Heater0 = Hotend
-#define HEATER_1_PIN PD14   // Heater1 = CASE Light
-#define HEATER_2_PIN PB0    // Heater2
-#define HEATER_BED_PIN PD12 // Hotbed
-#define FAN_PIN PE5    // Fan0 = LAYER FAN
-#define FAN1_PIN PC8   // Fan1 = EXTRUDER FAN
-#define FAN2_PIN PE6   // Fan2 = SKR PRO 1.1 CONTROLLER FAN
+#define HEATER_0_PIN                        PB1   // Heater0
+#define HEATER_1_PIN                        PD14  // Heater1
+#define HEATER_2_PIN                        PB0   // Heater1
+#define HEATER_BED_PIN                      PD12  // Hotbed
+#define FAN_PIN                             PC8   // Fan0
+#define FAN1_PIN                            PE5   // Fan1
+#define FAN2_PIN                            PE6
 
 #ifndef E0_AUTO_FAN_PIN
-#define E0_AUTO_FAN_PIN FAN1_PIN
+  #define E0_AUTO_FAN_PIN               FAN1_PIN
 #endif
 
 //
@@ -371,14 +359,6 @@
 
 #endif // BTT_MOTOR_EXPANSION
 
- // EEPROM Robot_dyn AT24C256
-
-#define I2C_EEPROM
-#ifdef E2END
-#undef E2END
-#endif
-#define E2END 0x7FFF // EEPROM end address AT24C256 (32kB)
-
 //
 // LCDs and Controllers
 //
@@ -473,7 +453,9 @@
   #endif
 #endif
 
+//
 // WIFI
+//
 
 /**
  *          -----
@@ -484,9 +466,9 @@
  *          -----
  *            W1
  */
-//#define ESP_WIFI_MODULE_COM                    6  // Must also set either SERIAL_PORT or SERIAL_PORT_2 to this
-//#define ESP_WIFI_MODULE_BAUDRATE        BAUDRATE  // Must use same BAUDRATE as SERIAL_PORT & SERIAL_PORT_2
-//#define ESP_WIFI_MODULE_RESET_PIN           PG0
-//#define ESP_WIFI_MODULE_ENABLE_PIN          PG1
-//#define ESP_WIFI_MODULE_GPIO0_PIN           PF14
-//#define ESP_WIFI_MODULE_GPIO2_PIN           PF15
+#define ESP_WIFI_MODULE_COM                    6  // Must also set either SERIAL_PORT or SERIAL_PORT_2 to this
+#define ESP_WIFI_MODULE_BAUDRATE        BAUDRATE  // Must use same BAUDRATE as SERIAL_PORT & SERIAL_PORT_2
+#define ESP_WIFI_MODULE_RESET_PIN           PG0
+#define ESP_WIFI_MODULE_ENABLE_PIN          PG1
+#define ESP_WIFI_MODULE_GPIO0_PIN           PF14
+#define ESP_WIFI_MODULE_GPIO2_PIN           PF15

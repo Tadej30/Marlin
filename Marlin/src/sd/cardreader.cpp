@@ -57,6 +57,11 @@
 #include "../core/debug_out.h"
 #include "../libs/hex_print.h"
 
+// extern
+
+PGMSTR(M23_STR, "M23 %s");
+PGMSTR(M24_STR, "M24");
+
 // public:
 
 card_flags_t CardReader::flag;
@@ -394,7 +399,7 @@ void CardReader::mount() {
 
   if (flag.mounted)
     cdroot();
-  #if EITHER(USB_FLASH_DRIVE_SUPPORT, USB_HOST_MSC_FLASH_SUPPORT) || PIN_EXISTS(SD_DETECT)
+  #if ENABLED(USB_FLASH_DRIVE_SUPPORT) || PIN_EXISTS(SD_DETECT)
     else if (marlin_state != MF_INITIALIZING)
       ui.set_status_P(GET_TEXT(MSG_SD_INIT_FAIL), -1);
   #endif
@@ -480,7 +485,6 @@ void CardReader::release() {
  */
 void CardReader::openAndPrintFile(const char *name) {
   char cmd[4 + strlen(name) + 1 + 3 + 1]; // Room for "M23 ", filename, "\n", "M24", and null
-  extern const char M23_STR[];
   sprintf_P(cmd, M23_STR, name);
   for (char *c = &cmd[4]; *c; c++) *c = tolower(*c);
   strcat_P(cmd, PSTR("\nM24"));
