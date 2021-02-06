@@ -717,7 +717,7 @@ inline void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_a
 #if EXTRUDERS
   inline void invalid_extruder_error(const uint8_t e) {
     SERIAL_ECHO_START();
-    SERIAL_CHAR('T'); SERIAL_ECHO(int(e));
+    SERIAL_CHAR('T'); SERIAL_ECHO((int)e);
     SERIAL_CHAR(' '); SERIAL_ECHOLNPGM(STR_INVALID_EXTRUDER);
   }
 #endif
@@ -1217,8 +1217,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         gcode.process_subcommands_now_P(PSTR(EVENT_GCODE_AFTER_TOOLCHANGE));
     #endif
 
-    SERIAL_ECHO_START();
-    SERIAL_ECHOLNPAIR(STR_ACTIVE_EXTRUDER, int(active_extruder));
+    SERIAL_ECHO_MSG(STR_ACTIVE_EXTRUDER, int(active_extruder));
 
   #endif // HAS_MULTI_EXTRUDER
 }
