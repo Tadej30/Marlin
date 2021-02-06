@@ -238,8 +238,6 @@
 
 #define PS_ON_PIN      PF15
 #define POWER_LOSS_PIN PF14
-//#define SUICIDE_PIN                       PB2   // Enable MKSPWC support
-//#define KILL_PIN                          PA2   // Enable MKSPWC support
 
 // Temperature Sensors
 //
