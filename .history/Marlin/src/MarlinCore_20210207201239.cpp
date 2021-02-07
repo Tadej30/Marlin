@@ -897,26 +897,7 @@ void setup() {
   SERIAL_ECHOLNPGM("start");
 
   // Set up these pins early to prevent suicide
-  #if HAS_KILL
-    SETUP_LOG("KILL_PIN");
-    #if KILL_PIN_STATE
-      SET_INPUT_PULLDOWN(KILL_PIN);
-    #else
-      SET_INPUT_PULLUP(KILL_PIN);
-    #endif
-  #endif
-
-  #if HAS_SUICIDE
-    SETUP_LOG("SUICIDE_PIN");
-    OUT_WRITE(SUICIDE_PIN, !SUICIDE_PIN_INVERTING);
-  #endif
-
-  #if ENABLED(PSU_CONTROL)
-    SETUP_LOG("PSU_CONTROL");
-    powersupply_on = ENABLED(PSU_DEFAULT_OFF);
-    if (ENABLED(PSU_DEFAULT_OFF)) PSU_OFF(); else PSU_ON();
-  #endif
-
+  
   #if EITHER(DISABLE_DEBUG, DISABLE_JTAG)
     // Disable any hardware debug to free up pins for IO
     #if ENABLED(DISABLE_DEBUG) && defined(JTAGSWD_DISABLE)
