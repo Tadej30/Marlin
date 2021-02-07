@@ -25,15 +25,6 @@
   #error "BIGTREE SKR Pro V1.1 supports up to 3 hotends / E-steppers."
 #endif
 
-#if ENABLED(USB_HOST_MSC_FLASH_SUPPORT)
-  #if ENABLED(USBCON)
-    #error "For USB host MSC make sure USBCON is not defined. Remove -DUSBCON if present."
-  #endif
-  #if SERIAL_PORT == -1 || SERIAL_PORT_2 == -1
-    #error "USB host MSC and USB emulated serial port can't be enabled on BTT SKR Pro V1.1 at the same time."
-  #endif
-#endif
-
 #define BOARD_INFO_NAME "BTT SKR Pro V1.1"
 
 #include "pins_BTT_SKR_PRO_common.h"

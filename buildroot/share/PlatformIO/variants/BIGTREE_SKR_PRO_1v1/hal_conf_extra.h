@@ -13,7 +13,6 @@
 #define HAL_TIM_MODULE_ENABLED
 #define HAL_USART_MODULE_ENABLED
 #define HAL_CORTEX_MODULE_ENABLED
-#define HAL_HCD_MODULE_ENABLED    // USB Host
 //#define HAL_UART_MODULE_ENABLED // by default
 //#define HAL_PCD_MODULE_ENABLED  // Since STM32 v3.10700.191028 this is automatically added if any type of USB is enabled (as in Arduino IDE)
 
