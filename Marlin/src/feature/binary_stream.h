@@ -30,11 +30,23 @@
 #endif
 
 inline bool bs_serial_data_available(const uint8_t index) {
-  return SERIAL_IMPL.available(index);
+  switch (index) {
+    case 0: return MYSERIAL0.available();
+    #if HAS_MULTI_SERIAL
+      case 1: return MYSERIAL1.available();
+    #endif
+  }
+  return false;
 }
 
 inline int bs_read_serial(const uint8_t index) {
-  return SERIAL_IMPL.read(index);
+  switch (index) {
+    case 0: return MYSERIAL0.read();
+    #if HAS_MULTI_SERIAL
+      case 1: return MYSERIAL1.read();
+    #endif
+  }
+  return -1;
 }
 
 #if ENABLED(BINARY_STREAM_COMPRESSION)
@@ -285,7 +297,7 @@ public:
     millis_t transfer_window = millis() + RX_TIMESLICE;
 
     #if ENABLED(SDSUPPORT)
-      PORT_REDIRECT(SERIAL_PORTMASK(card.transfer_port_index));
+      PORT_REDIRECT(card.transfer_port_index);
     #endif
 
     #pragma GCC diagnostic push
@@ -352,7 +364,8 @@ public:
               }
             }
             else {
-              SERIAL_ECHO_MSG("Packet header(", packet.header.sync, "?) corrupt");
+              SERIAL_ECHO_START();
+              SERIAL_ECHOLNPAIR("Packet header(", packet.header.sync, "?) corrupt");
               stream_state = StreamState::PACKET_RESEND;
             }
           }
@@ -386,7 +399,8 @@ public:
               stream_state = StreamState::PACKET_PROCESS;
             }
             else {
-              SERIAL_ECHO_MSG("Packet(", packet.header.sync, ") payload corrupt");
+              SERIAL_ECHO_START();
+              SERIAL_ECHOLNPAIR("Packet(", packet.header.sync, ") payload corrupt");
               stream_state = StreamState::PACKET_RESEND;
             }
           }
@@ -404,7 +418,8 @@ public:
           if (packet_retries < MAX_RETRIES || MAX_RETRIES == 0) {
             packet_retries++;
             stream_state = StreamState::PACKET_RESET;
-            SERIAL_ECHO_MSG("Resend request ", int(packet_retries));
+            SERIAL_ECHO_START();
+            SERIAL_ECHOLNPAIR("Resend request ", int(packet_retries));
             SERIAL_ECHOLNPAIR("rs", sync);
           }
           else

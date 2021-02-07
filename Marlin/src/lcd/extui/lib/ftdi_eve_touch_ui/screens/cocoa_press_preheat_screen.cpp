@@ -20,18 +20,17 @@
  ****************************************************************************/
 
 #include "../config.h"
+
+#if ENABLED(TOUCH_UI_FTDI_EVE) && defined(TOUCH_UI_COCOA_PRESS)
+
 #include "screens.h"
 #include "screen_data.h"
-
-#ifdef FTDI_COCOA_PREHEAT_SCREEN
 
 #include "../ftdi_eve_lib/extras/circular_progress.h"
 
 using namespace FTDI;
 using namespace ExtUI;
 using namespace Theme;
-
-constexpr static PreheatTimerScreenData &mydata = screen_data.PreheatTimerScreen;
 
 #define GRID_COLS 2
 #define GRID_ROWS 8
@@ -55,7 +54,7 @@ void PreheatTimerScreen::draw_message(draw_mode_t what) {
 }
 
 uint16_t PreheatTimerScreen::secondsRemaining() {
-  const uint32_t elapsed_sec = (millis() - mydata.start_ms) / 1000;
+  const uint32_t elapsed_sec = (millis() - screen_data.PreheatTimerScreen.start_ms) / 1000;
   return (COCOA_PRESS_PREHEAT_SECONDS > elapsed_sec) ? COCOA_PRESS_PREHEAT_SECONDS - elapsed_sec : 0;
 }
 
@@ -119,7 +118,7 @@ void PreheatTimerScreen::draw_adjuster(draw_mode_t what, uint8_t tag, progmem_st
 }
 
 void PreheatTimerScreen::onEntry() {
-  mydata.start_ms = millis();
+  screen_data.PreheatTimerScreen.start_ms = millis();
 }
 
 void PreheatTimerScreen::onRedraw(draw_mode_t what) {
@@ -170,4 +169,4 @@ void PreheatTimerScreen::onIdle() {
   BaseScreen::onIdle();
 }
 
-#endif // FTDI_COCOA_PREHEAT_SCREEN
+#endif // TOUCH_UI_FTDI_EVE

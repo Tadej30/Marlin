@@ -1,6 +1,6 @@
-/**************************
- * temperature_screen.cpp *
- **************************/
+/*******************
+ * boot_screen.cpp *
+ *******************/
 
 /****************************************************************************
  *   Written By Mark Pelletier  2017 - Aleph Objects, Inc.                  *
@@ -21,9 +21,10 @@
  ****************************************************************************/
 
 #include "../config.h"
-#include "screens.h"
 
-#ifdef FTDI_TEMPERATURE_SCREEN
+#if ENABLED(TOUCH_UI_FTDI_EVE)
+
+#include "screens.h"
 
 using namespace FTDI;
 using namespace Theme;
@@ -115,4 +116,4 @@ bool TemperatureScreen::onTouchHeld(uint8_t tag) {
   return true;
 }
 
-#endif // FTDI_TEMPERATURE_SCREEN
+#endif // TOUCH_UI_FTDI_EVE

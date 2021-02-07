@@ -70,9 +70,7 @@
 #endif
 
 // LED driving pin
-#ifndef NEOPIXEL_PIN
-  #define NEOPIXEL_PIN                     P1_24
-#endif
+#define NEOPIXEL_PIN                       P1_24
 
 //
 // Power Loss Detection

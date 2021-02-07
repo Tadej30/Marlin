@@ -19,9 +19,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-# Generated files
+# Our automatic versioning scheme generates the following file
+# NEVER put it in the repository
 _Version.h
-bdf2u8g
 
 #
 # OS

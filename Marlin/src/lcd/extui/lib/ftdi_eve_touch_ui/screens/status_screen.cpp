@@ -21,10 +21,11 @@
  ****************************************************************************/
 
 #include "../config.h"
+
+#if ENABLED(TOUCH_UI_FTDI_EVE) && NONE(TOUCH_UI_LULZBOT_BIO, TOUCH_UI_COCOA_PRESS)
+
 #include "screens.h"
 #include "screen_data.h"
-
-#ifdef FTDI_STATUS_SCREEN
 
 #include "../archim2-flash/flash_storage.h"
 
@@ -461,4 +462,4 @@ bool StatusScreen::onTouchEnd(uint8_t tag) {
   return true;
 }
 
-#endif // FTDI_STATUS_SCREEN
+#endif // TOUCH_UI_FTDI_EVE

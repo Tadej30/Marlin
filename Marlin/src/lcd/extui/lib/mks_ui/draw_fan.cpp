@@ -25,6 +25,10 @@
 
 #include "draw_ui.h"
 #include <lv_conf.h>
+//#include "../lvgl/src/lv_objx/lv_imgbtn.h"
+//#include "../lvgl/src/lv_objx/lv_img.h"
+//#include "../lvgl/src/lv_core/lv_disp.h"
+//#include "../lvgl/src/lv_core/lv_refr.h"
 
 #include "../../../../module/temperature.h"
 #include "../../../../gcode/queue.h"
@@ -48,33 +52,38 @@ static uint8_t fanSpeed;
 
 static void event_handler(lv_obj_t *obj, lv_event_t event) {
   if (event != LV_EVENT_RELEASED) return;
-
   switch (obj->mks_obj_id) {
     case ID_F_ADD:
-      if (fanSpeed < 254) fanSpeed++;
+      if (fanSpeed + 1 <= 255) {
+        fanSpeed++;
+        sprintf_P(public_buf_l, PSTR("M106 S%d"), fanSpeed);
+        gcode.process_subcommands_now(public_buf_l);
+      }
       break;
     case ID_F_DEC:
-      if (fanSpeed > 0) fanSpeed--;
+      if (fanSpeed > 0) {
+        fanSpeed--;
+        sprintf_P(public_buf_l, PSTR("M106 S%d"), fanSpeed);
+        gcode.process_subcommands_now(public_buf_l);
+      }
       break;
     case ID_F_HIGH:
-      fanSpeed = 255;
+      gcode.process_subcommands_now_P(PSTR("M106 S255"));
       break;
     case ID_F_MID:
-      fanSpeed = 127;
+      gcode.process_subcommands_now_P(PSTR("M106 S127"));
       break;
     case ID_F_OFF:
       gcode.process_subcommands_now_P(PSTR("M107"));
-      return;
+      break;
     case ID_F_RETURN:
       clear_cur_ui();
       draw_return_ui();
-      return;
+      break;
   }
-  sprintf_P(public_buf_l, PSTR("M106 S%d"), fanSpeed);
-  gcode.process_subcommands_now(public_buf_l);
 }
 
-void lv_draw_fan() {
+void lv_draw_fan(void) {
   lv_obj_t *buttonAdd;
 
   #if HAS_FAN

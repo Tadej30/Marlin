@@ -27,8 +27,8 @@
 #include "../../ui_api.h"
 
 #include "../../../../libs/numtostr.h"
-#include "../../../../module/motion.h"  // for quickstop_stepper, A20 read printing speed, feedrate_percentage
-#include "../../../../MarlinCore.h"     // for disable_steppers
+#include "../../../../module/motion.h"  // for A20 read printing speed feedrate_percentage
+#include "../../../../MarlinCore.h"     // for quickstop_stepper and disable_steppers
 #include "../../../../inc/MarlinConfig.h"
 
 // command sending macro's with debugging capability
@@ -141,7 +141,9 @@ void AnycubicTFTClass::OnKillTFT() {
 
 void AnycubicTFTClass::OnSDCardStateChange(bool isInserted) {
   #if ENABLED(ANYCUBIC_LCD_DEBUG)
-    SERIAL_ECHOLNPAIR("TFT Serial Debug: OnSDCardStateChange event triggered...", (int)isInserted);
+    SERIAL_ECHOPGM("TFT Serial Debug: OnSDCardStateChange event triggered...");
+    SERIAL_ECHO(ui8tostr2(isInserted));
+    SERIAL_EOL();
   #endif
   DoSDCardStateCheck();
 }
@@ -162,7 +164,8 @@ void AnycubicTFTClass::OnFilamentRunout() {
 
 void AnycubicTFTClass::OnUserConfirmRequired(const char * const msg) {
   #if ENABLED(ANYCUBIC_LCD_DEBUG)
-    SERIAL_ECHOLNPAIR("TFT Serial Debug: OnUserConfirmRequired triggered... ", msg);
+    SERIAL_ECHOPGM("TFT Serial Debug: OnUserConfirmRequired triggered... ");
+    SERIAL_ECHOLN(msg);
   #endif
 
   #if ENABLED(SDSUPPORT)
@@ -271,12 +274,12 @@ void AnycubicTFTClass::HandleSpecialMenu() {
 
               case '6': // "<06SMeshLvl>"
                 SERIAL_ECHOLNPGM("Special Menu: Start Mesh Leveling");
-                ExtUI::injectCommands_P(PSTR("G29S1"));
+                ExtUI::injectCommands_P(PSTR("G29 S1"));
                 break;
 
               case '7': // "<07MeshNPnt>"
                 SERIAL_ECHOLNPGM("Special Menu: Next Mesh Point");
-                ExtUI::injectCommands_P(PSTR("G29S2"));
+                ExtUI::injectCommands_P(PSTR("G29 S2"));
                 break;
 
               case '8': // "<08HtEndPID>"
@@ -321,7 +324,7 @@ void AnycubicTFTClass::HandleSpecialMenu() {
 
               case '2': // "<02ABL>"
                 SERIAL_ECHOLNPGM("Special Menu: Auto Bed Leveling");
-                ExtUI::injectCommands_P(PSTR("G29N"));
+                ExtUI::injectCommands_P(PSTR("G28\nG29"));
                 break;
 
               case '3': // "<03HtendPID>"
@@ -552,8 +555,10 @@ void AnycubicTFTClass::GetCommandFromTFT() {
         a_command = ((int)((strtod(&TFTcmdbuffer[TFTbufindw][TFTstrchr_pointer - TFTcmdbuffer[TFTbufindw] + 1], nullptr))));
 
         #if ENABLED(ANYCUBIC_LCD_DEBUG)
-          if ((a_command > 7) && (a_command != 20))   // No debugging of status polls, please!
-            SERIAL_ECHOLNPAIR("TFT Serial Command: ", TFTcmdbuffer[TFTbufindw]);
+          if ((a_command > 7) && (a_command != 20)) { // No debugging of status polls, please!
+            SERIAL_ECHOPGM("TFT Serial Command: ");
+            SERIAL_ECHOLN(TFTcmdbuffer[TFTbufindw]);
+          }
         #endif
 
         switch (a_command) {
@@ -587,12 +592,15 @@ void AnycubicTFTClass::GetCommandFromTFT() {
           } break;
 
           case 5: { // A5 GET CURRENT COORDINATE
-            const float xPosition = ExtUI::getAxisPosition_mm(ExtUI::X),
-                        yPosition = ExtUI::getAxisPosition_mm(ExtUI::Y),
-                        zPosition = ExtUI::getAxisPosition_mm(ExtUI::Z);
-            SEND_PGM("A5V X: "); LCD_SERIAL.print(xPosition);
-            SEND_PGM(   " Y: "); LCD_SERIAL.print(yPosition);
-            SEND_PGM(   " Z: "); LCD_SERIAL.print(zPosition);
+            float xPostition = ExtUI::getAxisPosition_mm(ExtUI::X);
+            float yPostition = ExtUI::getAxisPosition_mm(ExtUI::Y);
+            float zPostition = ExtUI::getAxisPosition_mm(ExtUI::Z);
+            SEND_PGM("A5V X: ");
+            LCD_SERIAL.print(xPostition);
+            SEND_PGM(" Y: ");
+            LCD_SERIAL.print(yPostition);
+            SEND_PGM(" Z: ");
+            LCD_SERIAL.print(zPostition);
             SENDLINE_PGM("");
           } break;
 
@@ -753,14 +761,14 @@ void AnycubicTFTClass::GetCommandFromTFT() {
             if (!ExtUI::isPrinting() && !ExtUI::isPrintingFromMediaPaused()) {
               if (CodeSeen('X') || CodeSeen('Y') || CodeSeen('Z')) {
                 if (CodeSeen('X'))
-                  ExtUI::injectCommands_P(PSTR("G28X"));
+                  ExtUI::injectCommands_P(PSTR("G28 X"));
                 if (CodeSeen('Y'))
-                  ExtUI::injectCommands_P(PSTR("G28Y"));
+                  ExtUI::injectCommands_P(PSTR("G28 Y"));
                 if (CodeSeen('Z'))
-                  ExtUI::injectCommands_P(PSTR("G28Z"));
+                  ExtUI::injectCommands_P(PSTR("G28 Z"));
               }
               else if (CodeSeen('C')) {
-                ExtUI::injectCommands_P(G28_STR);
+                ExtUI::injectCommands_P(PSTR("G28"));
               }
             }
             break;

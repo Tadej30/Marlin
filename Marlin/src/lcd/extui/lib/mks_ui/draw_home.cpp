@@ -27,6 +27,10 @@
 #include "draw_set.h"
 #include "draw_ui.h"
 #include <lv_conf.h>
+//#include "../lvgl/src/lv_objx/lv_imgbtn.h"
+//#include "../lvgl/src/lv_objx/lv_img.h"
+//#include "../lvgl/src/lv_core/lv_disp.h"
+//#include "../lvgl/src/lv_core/lv_refr.h"
 
 #include "../../../../gcode/queue.h"
 #include "../../../../inc/MarlinConfig.h"
@@ -48,31 +52,31 @@ static void event_handler(lv_obj_t *obj, lv_event_t event) {
   if (event != LV_EVENT_RELEASED) return;
   switch (obj->mks_obj_id) {
     case ID_H_ALL:
-      queue.inject_P(G28_STR);
+      queue.inject_P(PSTR("G28"));
       break;
     case ID_H_X:
-      queue.inject_P(PSTR("G28X"));
+      queue.inject_P(PSTR("G28 X0"));
       break;
     case ID_H_Y:
-      queue.inject_P(PSTR("G28Y"));
+      queue.inject_P(PSTR("G28 Y0"));
       break;
     case ID_H_Z:
-      queue.inject_P(PSTR("G28Z"));
+      queue.inject_P(PSTR("G28 Z0"));
       break;
     case ID_H_OFF_ALL:
       queue.inject_P(PSTR("M84"));
       break;
     case ID_H_OFF_XY:
-      queue.inject_P(PSTR("M84XY"));
+      queue.inject_P(PSTR("M84 X Y"));
       break;
     case ID_H_RETURN:
-      clear_cur_ui();
-      draw_return_ui();
+      lv_clear_home();
+      lv_draw_tool();
       break;
   }
 }
 
-void lv_draw_home() {
+void lv_draw_home(void) {
   scr = lv_screen_create(ZERO_UI);
   lv_big_button_create(scr, "F:/bmp_zeroAll.bin", home_menu.home_all, INTERVAL_V, titleHeight, event_handler, ID_H_ALL);
   lv_big_button_create(scr, "F:/bmp_zeroX.bin", home_menu.home_x, BTN_X_PIXEL + INTERVAL_V * 2, titleHeight, event_handler, ID_H_X);

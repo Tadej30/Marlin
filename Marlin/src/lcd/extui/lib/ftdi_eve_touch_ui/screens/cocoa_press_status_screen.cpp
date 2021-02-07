@@ -22,9 +22,10 @@
  ****************************************************************************/
 
 #include "../config.h"
-#include "screens.h"
 
-#ifdef FTDI_COCOA_STATUS_SCREEN
+#if BOTH(TOUCH_UI_FTDI_EVE, TOUCH_UI_COCOA_PRESS)
+
+#include "screens.h"
 
 #include "../ftdi_eve_lib/extras/poly_ui.h"
 
@@ -303,4 +304,4 @@ void StatusScreen::onIdle() {
   }
 }
 
-#endif // FTDI_COCOA_STATUS_SCREEN
+#endif // TOUCH_UI_FTDI_EVE

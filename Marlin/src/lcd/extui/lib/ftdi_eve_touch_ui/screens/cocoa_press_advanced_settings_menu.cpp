@@ -21,9 +21,10 @@
  ****************************************************************************/
 
 #include "../config.h"
-#include "screens.h"
 
-#ifdef FTDI_COCOA_ADVANCED_SETTINGS_MENU
+#if BOTH(TOUCH_UI_FTDI_EVE, TOUCH_UI_COCOA_PRESS)
+
+#include "screens.h"
 
 using namespace FTDI;
 using namespace ExtUI;
@@ -98,4 +99,4 @@ bool AdvancedSettingsMenu::onTouchEnd(uint8_t tag) {
   }
   return true;
 }
-#endif // FTDI_COCOA_ADVANCED_SETTINGS_MENU
+#endif // TOUCH_UI_FTDI_EVE

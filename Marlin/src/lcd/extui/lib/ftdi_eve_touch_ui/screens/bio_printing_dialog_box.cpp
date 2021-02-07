@@ -21,9 +21,10 @@
  ****************************************************************************/
 
 #include "../config.h"
-#include "screens.h"
 
-#ifdef FTDI_BIO_PRINTING_DIALOG_BOX
+#if BOTH(TOUCH_UI_FTDI_EVE, TOUCH_UI_LULZBOT_BIO)
+
+#include "screens.h"
 
 #include "../ftdi_eve_lib/extras/circular_progress.h"
 
@@ -126,7 +127,8 @@ void BioPrintingDialogBox::setStatusMessage(const char* message) {
   storeBackground();
 
   #if ENABLED(TOUCH_UI_DEBUG)
-    SERIAL_ECHO_MSG("New status message: ", message);
+    SERIAL_ECHO_START();
+    SERIAL_ECHOLNPAIR("New status message: ", message);
   #endif
 
   if (AT_SCREEN(BioPrintingDialogBox))
@@ -146,4 +148,4 @@ void BioPrintingDialogBox::show() {
   GOTO_SCREEN(BioPrintingDialogBox);
 }
 
-#endif // FTDI_BIO_PRINTING_DIALOG_BOX
+#endif // TOUCH_UI_FTDI_EVE && TOUCH_UI_LULZBOT_BIO

@@ -60,15 +60,12 @@ extern "C" volatile uint32_t _millis;
   #define ST7920_DELAY_3 DELAY_NS(750)
 #endif
 
-typedef ForwardSerial0Type< decltype(UsbSerial) > DefaultSerial;
-extern DefaultSerial USBSerial;
-
 #define _MSERIAL(X) MSerial##X
 #define MSERIAL(X) _MSERIAL(X)
 #define MSerial0 MSerial
 
 #if SERIAL_PORT == -1
-  #define MYSERIAL0 USBSerial
+  #define MYSERIAL0 UsbSerial
 #elif WITHIN(SERIAL_PORT, 0, 3)
   #define MYSERIAL0 MSERIAL(SERIAL_PORT)
 #else
@@ -77,7 +74,7 @@ extern DefaultSerial USBSerial;
 
 #ifdef SERIAL_PORT_2
   #if SERIAL_PORT_2 == -1
-    #define MYSERIAL1 USBSerial
+    #define MYSERIAL1 UsbSerial
   #elif WITHIN(SERIAL_PORT_2, 0, 3)
     #define MYSERIAL1 MSERIAL(SERIAL_PORT_2)
   #else
@@ -85,19 +82,9 @@ extern DefaultSerial USBSerial;
   #endif
 #endif
 
-#ifdef MMU2_SERIAL_PORT
-  #if MMU2_SERIAL_PORT == -1
-    #define MMU2_SERIAL USBSerial
-  #elif WITHIN(MMU2_SERIAL_PORT, 0, 3)
-    #define MMU2_SERIAL MSERIAL(MMU2_SERIAL_PORT)
-  #else
-    #error "MMU2_SERIAL_PORT must be from -1 to 3. Please update your configuration."
-  #endif
-#endif
-
 #ifdef LCD_SERIAL_PORT
   #if LCD_SERIAL_PORT == -1
-    #define LCD_SERIAL USBSerial
+    #define LCD_SERIAL UsbSerial
   #elif WITHIN(LCD_SERIAL_PORT, 0, 3)
     #define LCD_SERIAL MSERIAL(LCD_SERIAL_PORT)
   #else
@@ -217,3 +204,16 @@ void HAL_clear_reset_source(void);
 uint8_t HAL_get_reset_source(void);
 
 inline void HAL_reboot() {}  // reboot the board or restart the bootloader
+
+// Add strcmp_P if missing
+#ifndef strcmp_P
+  #define strcmp_P(a, b) strcmp((a), (b))
+#endif
+
+#ifndef strcat_P
+  #define strcat_P(a, b) strcat((a), (b))
+#endif
+
+#ifndef strcpy_P
+  #define strcpy_P(a, b) strcpy((a), (b))
+#endif

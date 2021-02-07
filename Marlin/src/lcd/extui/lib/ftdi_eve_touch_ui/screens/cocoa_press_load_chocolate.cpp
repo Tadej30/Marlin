@@ -22,10 +22,11 @@
  ****************************************************************************/
 
 #include "../config.h"
+
+#if ENABLED(TOUCH_UI_FTDI_EVE) && ENABLED(TOUCH_UI_COCOA_PRESS)
+
 #include "screens.h"
 #include "screen_data.h"
-
-#ifdef FTDI_COCOA_LOAD_CHOCOLATE_SCREEN
 
 using namespace ExtUI;
 using namespace FTDI;
@@ -97,4 +98,4 @@ bool LoadChocolateScreen::onTouchHeld(uint8_t tag) {
   return false;
 }
 
-#endif // FTDI_COCOA_LOAD_CHOCOLATE_SCREEN
+#endif // TOUCH_UI_FTDI_EVE

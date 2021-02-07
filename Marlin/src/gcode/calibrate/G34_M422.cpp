@@ -320,6 +320,7 @@ void GcodeSuite::G34() {
         };
 
         #if ENABLED(Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS)
+
           // Check if the applied corrections go in the correct direction.
           // Calculate the sum of the absolute deviations from the mean of the probe measurements.
           // Compare to the last iteration to ensure it's getting better.
@@ -477,18 +478,32 @@ void GcodeSuite::M422() {
 
   const bool is_probe_point = parser.seen('S');
 
-  if (TERN0(Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS, is_probe_point && parser.seen('W'))) {
-    SERIAL_ECHOLNPGM("?(S) and (W) may not be combined.");
-    return;
-  }
+  #if ENABLED(Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS)
+    if (is_probe_point && parser.seen('W')) {
+      SERIAL_ECHOLNPGM("?(S) and (W) may not be combined.");
+      return;
+    }
+  #endif
 
   xy_pos_t *pos_dest = (
-    TERN_(Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS, !is_probe_point ? z_stepper_align.stepper_xy :)
+    #if ENABLED(Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS)
+      !is_probe_point ? z_stepper_align.stepper_xy :
+    #endif
     z_stepper_align.xy
   );
 
-  if (!is_probe_point && TERN1(Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS, !parser.seen('W'))) {
-    SERIAL_ECHOLNPGM("?(S)" TERN_(Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS, " or (W)") " is required.");
+  if (!is_probe_point
+    #if ENABLED(Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS)
+      && !parser.seen('W')
+    #endif
+  ) {
+    SERIAL_ECHOLNPGM(
+      #if ENABLED(Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS)
+        "?(S) or (W) is required."
+      #else
+        "?(S) is required."
+      #endif
+    );
     return;
   }
 
@@ -497,7 +512,7 @@ void GcodeSuite::M422() {
   if (is_probe_point) {
     position_index = parser.intval('S') - 1;
     if (!WITHIN(position_index, 0, int8_t(NUM_Z_STEPPER_DRIVERS) - 1)) {
-      SERIAL_ECHOLNPGM("?(S) Probe-position index invalid.");
+      SERIAL_ECHOLNPGM("?(S) Z-ProbePosition index invalid.");
       return;
     }
   }
@@ -505,7 +520,7 @@ void GcodeSuite::M422() {
     #if ENABLED(Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS)
       position_index = parser.intval('W') - 1;
       if (!WITHIN(position_index, 0, NUM_Z_STEPPER_DRIVERS - 1)) {
-        SERIAL_ECHOLNPGM("?(W) Z-stepper index invalid.");
+        SERIAL_ECHOLNPGM("?(W) Z-Stepper index invalid.");
         return;
       }
     #endif

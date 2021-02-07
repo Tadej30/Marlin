@@ -75,7 +75,9 @@ namespace FTDI {
 
     while (has_more_notes()) {
       onIdle();
-      TERN_(TOUCH_UI_FTDI_EVE, ExtUI::yield());
+      #ifdef EXTENSIBLE_UI
+        ExtUI::yield();
+      #endif
     }
   }
 

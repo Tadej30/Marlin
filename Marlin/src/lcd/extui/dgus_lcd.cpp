@@ -35,6 +35,8 @@
 #include "lib/dgus/DGUSDisplayDef.h"
 #include "lib/dgus/DGUSScreenHandler.h"
 
+extern const char NUL_STR[];
+
 namespace ExtUI {
 
   void onStartup() {

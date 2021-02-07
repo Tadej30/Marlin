@@ -22,9 +22,10 @@
  ****************************************************************************/
 
 #include "../config.h"
-#include "screens.h"
 
-#ifdef FTDI_BOOT_SCREEN
+#if ENABLED(TOUCH_UI_FTDI_EVE)
+
+#include "screens.h"
 
 #include "../ftdi_eve_lib/extras/poly_ui.h"
 #include "../archim2-flash/flash_storage.h"
@@ -126,4 +127,4 @@ void BootScreen::showSplashScreen() {
   ExtUI::delay_ms(2500);
 }
 
-#endif // FTDI_BOOT_SCREEN
+#endif // TOUCH_UI_FTDI_EVE

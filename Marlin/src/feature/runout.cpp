@@ -59,7 +59,6 @@ bool FilamentMonitorBase::enabled = true,
 // Filament Runout event handler
 //
 #include "../MarlinCore.h"
-#include "../feature/pause.h"
 #include "../gcode/queue.h"
 
 #if ENABLED(HOST_ACTION_COMMANDS)
@@ -72,7 +71,7 @@ bool FilamentMonitorBase::enabled = true,
 
 void event_filament_runout() {
 
-  if (did_pause_print) return;  // Action already in progress. Purge triggered repeated runout.
+  if (TERN0(ADVANCED_PAUSE_FEATURE, did_pause_print)) return;  // Action already in progress. Purge triggered repeated runout.
 
   #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
     if (migration.in_progress) {
