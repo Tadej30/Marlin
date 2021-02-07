@@ -711,6 +711,9 @@
  */
 //#define ENDSTOP_NOISE_THRESHOLD 2
 
+// Check for stuck or disconnected endstops during homing moves.
+#define DETECT_BROKEN_ENDSTOP
+
 //=============================================================================
 //============================== Movement Settings ============================
 //=============================================================================
@@ -804,7 +807,7 @@
  *
  * See:
  *   https://reprap.org/forum/read.php?1,739819
- *   http://blog.kyneticcnc.com/2018/10/computing-junction-deviation-for-marlin.html
+ *   https://blog.kyneticcnc.com/2018/10/computing-junction-deviation-for-marlin.html
  */
 #if DISABLED(CLASSIC_JERK)
   #define JUNCTION_DEVIATION_MM 0.013 // (mm) Distance from real junction edge
@@ -1057,7 +1060,7 @@
 #define Z_CLEARANCE_DEPLOY_PROBE    3 // Z Clearance for Deploy/Stow
 #define Z_CLEARANCE_BETWEEN_PROBES  3 // Z Clearance between probe points
 #define Z_CLEARANCE_MULTI_PROBE     3 // Z Clearance between multiple probes
-//#define Z_AFTER_PROBING             5 // Z position after probing is done
+//#define Z_AFTER_PROBING             3 // Z position after probing is done
 
 #define Z_PROBE_LOW_POINT          -2 // Farthest distance below the trigger-point to go before stopping
 
@@ -1146,7 +1149,7 @@
 #define Z_HOMING_HEIGHT  3      // (mm) Minimal Z height before homing (G28) for Z clearance above the bed, clamps, ...
                                   // Be sure to have this much clearance over your Z_MAX_POS to prevent grinding.
 
-//#define Z_AFTER_HOMING  5     // (mm) Height to move to after homing Z
+//#define Z_AFTER_HOMING  3     // (mm) Height to move to after homing Z
 
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
@@ -1164,9 +1167,9 @@
 #define X_MIN_POS 0
 #define Y_MIN_POS -10
 #define Z_MIN_POS 0
-#define X_MAX_POS 250
-#define Y_MAX_POS 220
-#define Z_MAX_POS 215
+#define X_MAX_POS X_BED_SIZE
+#define Y_MAX_POS Y_BED_SIZE
+#define Z_MAX_POS 210
 
 /**
  * Software Endstops
@@ -1442,7 +1445,7 @@
 #define LEVEL_BED_CORNERS
 
 #if ENABLED(LEVEL_BED_CORNERS)
-  #define LEVEL_CORNERS_INSET_LFRB { 26, 15, 15, 15 } // (mm) Left, Front, Right, Back insets
+  #define LEVEL_CORNERS_INSET_LFRB { 23, 15, 15, 15 } // (mm) Left, Front, Right, Back insets
   #define LEVEL_CORNERS_HEIGHT      0.2   // (mm) Z height of nozzle at leveling points
   #define LEVEL_CORNERS_Z_HOP       4.0   // (mm) Z height of nozzle between leveling points
   #define LEVEL_CENTER_TOO              // Move to the center after the last corner
@@ -1452,6 +1455,25 @@
     #define LEVEL_CORNERS_VERIFY_RAISED   // After adjustment triggers the probe, re-probe to verify
     #define LEVEL_CORNERS_AUDIO_FEEDBACK
   #endif
+
+  /**
+   * Corner Leveling Order
+   *
+   * Set 2 or 4 points. When 2 points are given, the 3rd is the center of the opposite edge.
+   *
+   *  LF  Left-Front    RF  Right-Front
+   *  LB  Left-Back     RB  Right-Back
+   *
+   * Examples:
+   *
+   *      Default        {LF,RB,LB,RF}         {LF,RF}           {LB,LF}
+   *  LB --------- RB   LB --------- RB    LB --------- RB   LB --------- RB
+   *  |  4       3  |   | 3         2 |    |     <3>     |   | 1           |
+   *  |             |   |             |    |             |   |          <3>|
+   *  |  1       2  |   | 1         4 |    | 1         2 |   | 2           |
+   *  LF --------- RF   LF --------- RF    LF --------- RF   LF --------- RF
+   */
+  #define LEVEL_CORNERS_LEVELING_ORDER { LF, RF, RB, LB }
 #endif
 
 /**
@@ -1463,11 +1485,11 @@
 // @section homing
 
 // The center of the bed is at (X=0, Y=0)
-//#define BED_CENTER_AT_125_105
+//#define BED_CENTER_AT_0_0
 
 // Manually set the home position. Leave these undefined for automatic settings.
 // For DELTA this is the top-center of the Cartesian print volume.
-//define MANUAL_X_HOME_POS 0
+//#define MANUAL_X_HOME_POS 0
 //#define MANUAL_Y_HOME_POS 0
 //#define MANUAL_Z_HOME_POS 0
 
@@ -1477,18 +1499,18 @@
 //
 // - Allow Z homing only after X and Y homing AND stepper drivers still enabled.
 // - If stepper drivers time out, it will need X and Y homing again before Z homing.
-// - Move the Z probe (or nozzle) to a defined XY point before Z Homing when homing all axes (G28).
+// - Move the Z probe (or nozzle) to a defined XY point before Z Homing.
 // - Prevent Z homing when the Z probe is outside bed area.
 //
 #define Z_SAFE_HOMING
 
 #if ENABLED(Z_SAFE_HOMING)
-  #define Z_SAFE_HOMING_X_POINT X_CENTER  // X point for Z homing when homing all axes (G28).
-  #define Z_SAFE_HOMING_Y_POINT Y_CENTER  // Y point for Z homing when homing all axes (G28).
+  #define Z_SAFE_HOMING_X_POINT X_CENTER  // X point for Z homing
+  #define Z_SAFE_HOMING_Y_POINT Y_CENTER  // Y point for Z homing
 #endif
 
 // Homing speeds (mm/min)
-#define HOMING_FEEDRATE_MM_M { (50*60), (50*60), (13*60) }
+#define HOMING_FEEDRATE_MM_M { (50*60), (50*60), (15*60) }
 
 // Validate that endstops are triggered on homing moves
 #define VALIDATE_HOMING_ENDSTOPS
@@ -1568,7 +1590,7 @@
 #define EEPROM_SETTINGS     // Persistent storage with M500 and M501
 //#define DISABLE_M503        // Saves ~2700 bytes of PROGMEM. Disable for release!
 #define EEPROM_CHITCHAT       // Give feedback on EEPROM commands. Disable to save PROGMEM.
-//#define EEPROM_BOOT_SILENT    // Keep M503 quiet and only give errors during first load
+#define EEPROM_BOOT_SILENT    // Keep M503 quiet and only give errors during first load
 #if ENABLED(EEPROM_SETTINGS)
   //#define EEPROM_AUTO_INIT  // Init EEPROM automatically on any errors.
 #endif
@@ -1623,7 +1645,7 @@
 
 #if ENABLED(NOZZLE_PARK_FEATURE)
   // Specify a park position as { X, Y, Z_raise }
-  #define NOZZLE_PARK_POINT { (X_MAX_POS - 0), (Y_MIN_POS + 0), 30 }
+  #define NOZZLE_PARK_POINT { (X_MIN_POS - 0), (Y_MIN_POS + 0), 30 }
   //#define NOZZLE_PARK_X_ONLY          // X move only is required to park
   //#define NOZZLE_PARK_Y_ONLY          // Y move only is required to park
   #define NOZZLE_PARK_Z_RAISE_MIN  20   // (mm) Always raise Z by at least this distance
@@ -1738,7 +1760,7 @@
  */
 #define PRINTCOUNTER
 #if ENABLED(PRINTCOUNTER)
-  #define PRINTCOUNTER_SAVE_INTERVAL 5 // (minutes) EEPROM save interval during print
+  #define PRINTCOUNTER_SAVE_INTERVAL 60 // (minutes) EEPROM save interval during print
 #endif
 /**
  * Password
@@ -1765,7 +1787,7 @@
   #define PASSWORD_ON_STARTUP
   #define PASSWORD_UNLOCK_GCODE             // Unlock with the M511 P<password> command. Disable to prevent brute-force attack.
   #define PASSWORD_CHANGE_GCODE             // Change the password with M512 P<old> S<new>.
-  #define PASSWORD_ON_SD_PRINT_MENU       // This does not prevent gcodes from running
+  //#define PASSWORD_ON_SD_PRINT_MENU       // This does not prevent gcodes from running
   //#define PASSWORD_AFTER_SD_PRINT_END
   //#define PASSWORD_AFTER_SD_PRINT_ABORT
   //#include "Configuration_Secure.h"       // External file with PASSWORD_DEFAULT_VALUE
@@ -1783,9 +1805,9 @@
  * Select the language to display on the LCD. These languages are available:
  *
  *   en, an, bg, ca, cz, da, de, el, el_gr, es, eu, fi, fr, gl, hr, hu, it,
- *   jp_kana, ko_KR, nl, pl, pt, pt_br, ro, ru, sk, tr, uk, vi, zh_CN, zh_TW, test
+ *   jp_kana, ko_KR, nl, pl, pt, pt_br, ro, ru, sk, sv, tr, uk, vi, zh_CN, zh_TW
  *
- * :{ 'en':'English', 'an':'Aragonese', 'bg':'Bulgarian', 'ca':'Catalan', 'cz':'Czech', 'da':'Danish', 'de':'German', 'el':'Greek', 'el_gr':'Greek (Greece)', 'es':'Spanish', 'eu':'Basque-Euskera', 'fi':'Finnish', 'fr':'French', 'gl':'Galician', 'hr':'Croatian', 'hu':'Hungarian', 'it':'Italian', 'jp_kana':'Japanese', 'ko_KR':'Korean (South Korea)', 'nl':'Dutch', 'pl':'Polish', 'pt':'Portuguese', 'pt_br':'Portuguese (Brazilian)', 'ro':'Romanian', 'ru':'Russian', 'sk':'Slovak', 'tr':'Turkish', 'uk':'Ukrainian', 'vi':'Vietnamese', 'zh_CN':'Chinese (Simplified)', 'zh_TW':'Chinese (Traditional)', 'test':'TEST' }
+ * :{ 'en':'English', 'an':'Aragonese', 'bg':'Bulgarian', 'ca':'Catalan', 'cz':'Czech', 'da':'Danish', 'de':'German', 'el':'Greek', 'el_gr':'Greek (Greece)', 'es':'Spanish', 'eu':'Basque-Euskera', 'fi':'Finnish', 'fr':'French', 'gl':'Galician', 'hr':'Croatian', 'hu':'Hungarian', 'it':'Italian', 'jp_kana':'Japanese', 'ko_KR':'Korean (South Korea)', 'nl':'Dutch', 'pl':'Polish', 'pt':'Portuguese', 'pt_br':'Portuguese (Brazilian)', 'ro':'Romanian', 'ru':'Russian', 'sk':'Slovak', 'sv':'Swedish', 'tr':'Turkish', 'uk':'Ukrainian', 'vi':'Vietnamese', 'zh_CN':'Chinese (Simplified)', 'zh_TW':'Chinese (Traditional)' }
  */
 #define LCD_LANGUAGE en
 
@@ -1826,22 +1848,14 @@
  * SD Card support is disabled by default. If your controller has an SD slot,
  * you must uncomment the following option or it won't work.
  */
-#define SDSUPPORT
-
-/**
- * USB HOST MSC
- *
- * USB Flash mounted in MCU USB OTG Host port
- * you need uncomment both SDSUPPORT and following option at the same time or it won't work.
- */
-//#define USB_HOST_MSC_FLASH_SUPPORT  (uncomment -DUSBCON -DUSBD_USE_CDC platform.ini row 728  )
+//#define SDSUPPORT
 
 /**
  * SD CARD: ENABLE CRC
  *
  * Use CRC checks and retries on the SD communication.
  */
-#define SD_CHECK_AND_RETRY
+//#define SD_CHECK_AND_RETRY
 
 /**
  * LCD Menu Items
@@ -1921,7 +1935,7 @@
 // Note: Test audio output with the G-Code:
 //  M300 S<frequency Hz> P<duration ms>
 //
-#define LCD_FEEDBACK_FREQUENCY_DURATION_MS 200
+#define LCD_FEEDBACK_FREQUENCY_DURATION_MS 20
 #define LCD_FEEDBACK_FREQUENCY_HZ 5000
 
 //=============================================================================
@@ -1931,7 +1945,7 @@
 
 //
 // RepRapDiscount Smart Controller.
-// http://reprap.org/wiki/RepRapDiscount_Smart_Controller
+// https://reprap.org/wiki/RepRapDiscount_Smart_Controller
 //
 // Note: Usually sold with a white PCB.
 //
@@ -1955,13 +1969,13 @@
 
 //
 // PanelOne from T3P3 (via RAMPS 1.4 AUX2/AUX3)
-// http://reprap.org/wiki/PanelOne
+// https://reprap.org/wiki/PanelOne
 //
 //#define PANEL_ONE
 
 //
 // GADGETS3D G3D LCD/SD Controller
-// http://reprap.org/wiki/RAMPS_1.3/1.4_GADGETS3D_Shield_with_Panel
+// https://reprap.org/wiki/RAMPS_1.3/1.4_GADGETS3D_Shield_with_Panel
 //
 // Note: Usually sold with a blue PCB.
 //
@@ -2048,7 +2062,7 @@
 
 //
 // 2-wire Non-latching LCD SR from https://goo.gl/aJJ4sH
-// LCD configuration: http://reprap.org/wiki/SAV_3D_LCD
+// LCD configuration: https://reprap.org/wiki/SAV_3D_LCD
 //
 //#define SAV_3DLCD
 
@@ -2083,7 +2097,7 @@
 
 //
 // RepRapDiscount FULL GRAPHIC Smart Controller
-// http://reprap.org/wiki/RepRapDiscount_Full_Graphic_Smart_Controller
+// https://reprap.org/wiki/RepRapDiscount_Full_Graphic_Smart_Controller
 //
 #define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
 
@@ -2096,20 +2110,20 @@
 //
 // Activate one of these if you have a Panucatt Devices
 // Viki 2.0 or mini Viki with Graphic LCD
-// http://panucatt.com
+// https://www.panucatt.com
 //
 //#define VIKI2
 //#define miniVIKI
 
 //
 // MakerLab Mini Panel with graphic
-// controller and SD support - http://reprap.org/wiki/Mini_panel
+// controller and SD support - https://reprap.org/wiki/Mini_panel
 //
 //#define MINIPANEL
 
 //
 // MaKr3d Makr-Panel with graphic controller and SD support.
-// http://reprap.org/wiki/MaKr3d_MaKrPanel
+// https://reprap.org/wiki/MaKr3d_MaKrPanel
 //
 //#define MAKRPANEL
 
@@ -2196,7 +2210,7 @@
 
 //
 // Silvergate GLCD controller
-// http://github.com/android444/Silvergate
+// https://github.com/android444/Silvergate
 //
 //#define SILVER_GATE_GLCD_CONTROLLER
 
@@ -2408,6 +2422,10 @@
 //#define TFT_COLOR_UI
 //#define TFT_LVGL_UI
 
+#if ENABLED(TFT_LVGL_UI)
+  //#define MKS_WIFI_MODULE  // MKS WiFi module
+#endif
+
 /**
  * TFT Rotation. Set to one of the following values:
  *
@@ -2421,11 +2439,6 @@
 //=============================================================================
 //============================  Other Controllers  ============================
 //=============================================================================
-
-//
-// Robin nano v2.0 SPI touch screen
-//
-//#define SPI_GRAPHICAL_TFT
 
 //
 // Ender-3 v2 OEM display. A DWIN display with Rotary Encoder.
