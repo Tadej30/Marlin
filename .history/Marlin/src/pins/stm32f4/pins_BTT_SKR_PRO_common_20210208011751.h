@@ -466,9 +466,9 @@
  *          -----
  *            W1
  */
-#define ESP_WIFI_MODULE_COM                    6  // Must also set either SERIAL_PORT or SERIAL_PORT_2 to this
-#define ESP_WIFI_MODULE_BAUDRATE        BAUDRATE  // Must use same BAUDRATE as SERIAL_PORT & SERIAL_PORT_2
-#define ESP_WIFI_MODULE_RESET_PIN           PG0
-#define ESP_WIFI_MODULE_ENABLE_PIN          PG1
-#define ESP_WIFI_MODULE_GPIO0_PIN           PF14
-#define ESP_WIFI_MODULE_GPIO2_PIN           PF15
+//#define ESP_WIFI_MODULE_COM                    6  // Must also set either SERIAL_PORT or SERIAL_PORT_2 to this
+//#define ESP_WIFI_MODULE_BAUDRATE        BAUDRATE  // Must use same BAUDRATE as SERIAL_PORT & SERIAL_PORT_2
+//#define ESP_WIFI_MODULE_RESET_PIN           PG0
+//#define ESP_WIFI_MODULE_ENABLE_PIN          PG1
+//#define ESP_WIFI_MODULE_GPIO0_PIN           PF14
+//#define ESP_WIFI_MODULE_GPIO2_PIN           PF15
