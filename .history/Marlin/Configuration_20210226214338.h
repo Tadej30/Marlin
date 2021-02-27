@@ -337,7 +337,7 @@
     #define AUTO_POWER_CHAMBER_FAN
     #define AUTO_POWER_E_TEMP         50  // (°C) Turn on PSU if any extruder is over this temperature
     #define AUTO_POWER_CHAMBER_TEMP   50  // (°C) Turn on PSU if the chamber is over this temperature
-    #define POWER_TIMEOUT             600 // (s) Turn off power if the machine is idle for this duration
+    #define POWER_TIMEOUT             300 // (s) Turn off power if the machine is idle for this duration
     #define POWER_OFF_DELAY           60  // (s) Delay of poweroff after M81 command. Useful to let fans run for extra time.
   #endif
 #endif
@@ -1514,7 +1514,7 @@
 #endif
 
 // Homing speeds (mm/min)
-#define HOMING_FEEDRATE_MM_M { (30*60), (30*60), (15*60) }
+#define HOMING_FEEDRATE_MM_M { (50*60), (50*60), (15*60) }
 
 // Validate that endstops are triggered on homing moves
 #define VALIDATE_HOMING_ENDSTOPS
