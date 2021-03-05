@@ -326,10 +326,10 @@
   //#define PSU_DEFAULT_OFF         // Keep power off until enabled directly with M80
   #define PSU_POWERUP_DELAY 250     // (ms) Delay for the PSU to warm up to full power
 
-  #define PSU_POWERUP_GCODE  "M355 S1"  // G-code to run after power-on (e.g., case light on)
-  #define PSU_POWEROFF_GCODE "M355 S0"  // G-code to run before power-off (e.g., case light off)
-  //#define PSU_POWEROFF_GCODE "M81"      // G-code to run before power-off (e.g., PSU OFF)
-  //#define PSU_POWEROFF_GCODE "M81 S"    // G-code to run before power-off (e.g., PSU OFF status)
+  //#define PSU_POWERUP_GCODE  "M355 S1"  // G-code to run after power-on (e.g., case light on)
+  //#define PSU_POWEROFF_GCODE "M355 S0"  // G-code to run before power-off (e.g., case light off)
+  #define PSU_POWEROFF_GCODE "M81"      // G-code to run before power-off (e.g., PSU OFF)
+  #define PSU_POWEROFF_GCODE "M81 S"    // G-code to run before power-off (e.g., PSU OFF status)
   
   #define AUTO_POWER_CONTROL        // Enable automatic control of the PS_ON pin
   #if ENABLED(AUTO_POWER_CONTROL)
