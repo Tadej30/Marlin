@@ -236,10 +236,10 @@
 //
 // Heaters / Fans
 //
-#define HEATER_0_PIN PB1      // Heater0 = Hotend
-#define HEATER_2_PIN PB0      // Heater2 = Fan3 = CHAMBER FAN
-#define HEATER_1_PIN PD14     // Heater1 = CASE Light
-#define HEATER_BED_PIN PD12   // Heated BED
+#define HEATER_0_PIN PB1    // Heater0 = Hotend
+#define HEATER_2_PIN PB0    // Heater2
+#define HEATER_1_PIN PD14   // Heater1 = CASE Light
+#define HEATER_BED_PIN PD12 // Heated BED
 
 #define FAN_PIN PE5    // Fan0 = LAYER FAN
 #define FAN1_PIN PC8   // Fan1 = EXTRUDER FAN
@@ -247,6 +247,10 @@
 
 #ifndef E0_AUTO_FAN_PIN
 #define E0_AUTO_FAN_PIN FAN1_PIN
+#endif
+
+#ifndef E1_AUTO_FAN_PIN
+#define E1_AUTO_FAN_PIN FAN2_PIN
 #endif
 
 

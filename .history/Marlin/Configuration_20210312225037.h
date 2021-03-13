@@ -331,9 +331,9 @@
     #define AUTO_POWER_CONTROLLERFAN
     #define AUTO_POWER_CHAMBER_FAN
     #define AUTO_POWER_COOLER_FAN
-    #define AUTO_POWER_E_TEMP          55 // (°C) Turn on PSU if any extruder is over this temperature
+    #define AUTO_POWER_E_TEMP          50 // (°C) Turn on PSU if any extruder is over this temperature
     #define AUTO_POWER_CHAMBER_TEMP    50 // (°C) Turn on PSU if the chamber is over this temperature
-    //#define AUTO_POWER_COOLER_TEMP   50 // (°C) Turn on PSU if the cooler is over this temperature
+    #define AUTO_POWER_COOLER_TEMP     50 // (°C) Turn on PSU if the cooler is over this temperature
     #define POWER_TIMEOUT             600 // (s) Turn off power if the machine is idle for this duration
     #define POWER_OFF_DELAY            60 // (s) Delay of poweroff after M81 command. Useful to let fans run for extra time.
   #endif
@@ -421,7 +421,7 @@
 #define TEMP_SENSOR_BED 1
 #define TEMP_SENSOR_PROBE 0
 #define TEMP_SENSOR_CHAMBER 0
-#define TEMP_SENSOR_COOLER 0
+#define TEMP_SENSOR_COOLER 1
 
 // Dummy thermistor constant temperature readings, for use with 998 and 999
 #define DUMMY_THERMISTOR_998_VALUE 25

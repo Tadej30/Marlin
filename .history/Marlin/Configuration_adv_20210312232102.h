@@ -157,10 +157,11 @@
 #endif
 
 #if TEMP_SENSOR_CHAMBER
-   //#define HEATER_CHAMBER_PIN      P2_04   // Required heater on/off pin ( // T2 <-> (E1) SKR PRO 1.1 temp. sensor
+    #define TEMP_CHAMBER_PIN  TEMP_2_PIN
+  //#define HEATER_CHAMBER_PIN      P2_04   // Required heater on/off pin ( // T2 <-> (E1) SKR PRO 1.1 temp. sensor
   //#define CHAMBER_LIMIT_SWITCHING)
   //#define HEATER_CHAMBER_INVERTING false
-  //#define FAN1_PIN                  PB0   // Fan3 = CHAMBER FAN
+  #define FAN3_PIN                  PB0   // Fan3 = CHAMBER FAN
 
   //#define CHAMBER_FAN               // Enable a fan on the chamber
   #if ENABLED(CHAMBER_FAN)

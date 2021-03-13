@@ -237,13 +237,14 @@
 // Heaters / Fans
 //
 #define HEATER_0_PIN PB1      // Heater0 = Hotend
-#define HEATER_2_PIN PB0      // Heater2 = Fan3 = CHAMBER FAN
+//#define HEATER_2_PIN PB0    // Heater2
 #define HEATER_1_PIN PD14     // Heater1 = CASE Light
 #define HEATER_BED_PIN PD12   // Heated BED
 
 #define FAN_PIN PE5    // Fan0 = LAYER FAN
 #define FAN1_PIN PC8   // Fan1 = EXTRUDER FAN
 #define FAN2_PIN PE6   // Fan2 = SKR PRO 1.1 CONTROLLER FAN
+#define FAN3_PIN PB0   // Fan3 = CHAMBER FAN
 
 #ifndef E0_AUTO_FAN_PIN
 #define E0_AUTO_FAN_PIN FAN1_PIN

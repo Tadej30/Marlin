@@ -157,10 +157,10 @@
 #endif
 
 #if TEMP_SENSOR_CHAMBER
-   //#define HEATER_CHAMBER_PIN      P2_04   // Required heater on/off pin ( // T2 <-> (E1) SKR PRO 1.1 temp. sensor
+  //#define HEATER_CHAMBER_PIN      P2_04   // Required heater on/off pin ( // T2 <-> (E1) SKR PRO 1.1 temp. sensor
   //#define CHAMBER_LIMIT_SWITCHING)
   //#define HEATER_CHAMBER_INVERTING false
-  //#define FAN1_PIN                  PB0   // Fan3 = CHAMBER FAN
+  //#define FAN1_PIN                  -1   // Remove the fan signal on pin P2_04 (example: SKR 1.4 Turbo HE1 plug)
 
   //#define CHAMBER_FAN               // Enable a fan on the chamber
   #if ENABLED(CHAMBER_FAN)
@@ -524,7 +524,7 @@
  * the fan will turn on when any selected extruder is above the threshold.
  */
 #define E0_AUTO_FAN_PIN FAN1_PIN // Fan1_PIN = PC8 EXTRUDER FAN
-#define E1_AUTO_FAN_PIN -1       //FAN2_PIN // Fan2_PIN = PE6 SKR PRO 1.1 CONTROLLER FAN
+#define E1_AUTO_FAN_PIN FAN2_PIN // Fan2_PIN = PE6 SKR PRO 1.1 CONTROLLER FAN
 #define E2_AUTO_FAN_PIN -1
 #define E3_AUTO_FAN_PIN -1
 #define E4_AUTO_FAN_PIN -1

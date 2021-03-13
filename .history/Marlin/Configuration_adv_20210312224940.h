@@ -157,10 +157,10 @@
 #endif
 
 #if TEMP_SENSOR_CHAMBER
-   //#define HEATER_CHAMBER_PIN      P2_04   // Required heater on/off pin ( // T2 <-> (E1) SKR PRO 1.1 temp. sensor
+  //#define HEATER_CHAMBER_PIN      P2_04   // Required heater on/off pin ( // T2 <-> (E1) SKR PRO 1.1 temp. sensor
   //#define CHAMBER_LIMIT_SWITCHING)
   //#define HEATER_CHAMBER_INVERTING false
-  //#define FAN1_PIN                  PB0   // Fan3 = CHAMBER FAN
+  //#define FAN1_PIN                  -1   // Remove the fan signal on pin P2_04 (example: SKR 1.4 Turbo HE1 plug)
 
   //#define CHAMBER_FAN               // Enable a fan on the chamber
   #if ENABLED(CHAMBER_FAN)
@@ -524,16 +524,16 @@
  * the fan will turn on when any selected extruder is above the threshold.
  */
 #define E0_AUTO_FAN_PIN FAN1_PIN // Fan1_PIN = PC8 EXTRUDER FAN
-#define E1_AUTO_FAN_PIN -1       //FAN2_PIN // Fan2_PIN = PE6 SKR PRO 1.1 CONTROLLER FAN
+#define E1_AUTO_FAN_PIN -1
 #define E2_AUTO_FAN_PIN -1
 #define E3_AUTO_FAN_PIN -1
 #define E4_AUTO_FAN_PIN -1
 #define E5_AUTO_FAN_PIN -1
 #define E6_AUTO_FAN_PIN -1
 #define E7_AUTO_FAN_PIN -1
-#define CHAMBER_AUTO_FAN_PIN -1
-#define COOLER_AUTO_FAN_PIN -1
-#define COOLER_FAN_PIN -1      
+#define CHAMBER_AUTO_FAN_PIN 
+#define COOLER_AUTO_FAN_PIN FAN2_PIN // Fan2_PIN = PE6 SKR PRO 1.1 CONTROLLER FAN
+#define COOLER_FAN_PIN -1
 
 #define EXTRUDER_AUTO_FAN_TEMPERATURE 55
 #define EXTRUDER_AUTO_FAN_SPEED 255   // 255 == full speed
@@ -1537,14 +1537,14 @@
   #define STATUS_HOTEND_ANIM          // Use a second bitmap to indicate hotend heating
   #define STATUS_BED_ANIM             // Use a second bitmap to indicate bed heating
   #define STATUS_CHAMBER_ANIM         // Use a second bitmap to indicate chamber heating
+  //#define STATUS_CUTTER_ANIM          // Use a second bitmap to indicate spindle / laser active
   //#define STATUS_CUTTER_ANIM        // Use a second bitmap to indicate spindle / laser active
-  //#define STATUS_CUTTER_ANIM        // Use a second bitmap to indicate spindle / laser active
-  //#define STATUS_COOLER_ANIM        // Use a second bitmap to indicate laser cooling
-  #define STATUS_ALT_BED_BITMAP       // Use the alternative bed bitmap
-  #define STATUS_ALT_FAN_BITMAP       // Use the alternative fan bitmap
-  #define STATUS_FAN_FRAMES 4         // :[0,1,2,3,4] Number of fan animation frames
-  #define STATUS_HEAT_PERCENT         // Show heating in a progress bar
-  #define BOOT_MARLIN_LOGO_ANIMATED   // Animated Marlin logo. Costs ~‭3260 (or ~940) bytes of PROGMEM.
+  #define STATUS_COOLER_ANIM        // Use a second bitmap to indicate laser cooling
+  #define STATUS_ALT_BED_BITMAP     // Use the alternative bed bitmap
+  #define STATUS_ALT_FAN_BITMAP     // Use the alternative fan bitmap
+  #define STATUS_FAN_FRAMES 4       // :[0,1,2,3,4] Number of fan animation frames
+  #define STATUS_HEAT_PERCENT       // Show heating in a progress bar
+  #define BOOT_MARLIN_LOGO_ANIMATED // Animated Marlin logo. Costs ~‭3260 (or ~940) bytes of PROGMEM.
 
   // Frivolous Game Options
   //#define MARLIN_BRICKOUT
