@@ -322,12 +322,12 @@ typedef struct { int16_t value, celsius; } temp_entry_t;
 
 // The SCAN_THERMISTOR_TABLE macro needs alteration?
 static_assert(
-     TEMPTABLE_0_LEN < 255 && TEMPTABLE_1_LEN < 255
-  && TEMPTABLE_2_LEN < 255 && TEMPTABLE_3_LEN < 255
-  && TEMPTABLE_4_LEN < 255 && TEMPTABLE_5_LEN < 255
-  && TEMPTABLE_6_LEN < 255 && TEMPTABLE_7_LEN < 255
-  && TEMPTABLE_BED_LEN < 255 && TEMPTABLE_CHAMBER_LEN < 255
-  && TEMPTABLE_COOLER_LEN < 255 && TEMPTABLE_PROBE_LEN < 255,
+     TEMPTABLE_0_LEN < 256 && TEMPTABLE_1_LEN < 256
+  && TEMPTABLE_2_LEN < 256 && TEMPTABLE_3_LEN < 256
+  && TEMPTABLE_4_LEN < 256 && TEMPTABLE_5_LEN < 256
+  && TEMPTABLE_6_LEN < 256 && TEMPTABLE_7_LEN < 256
+  && TEMPTABLE_BED_LEN < 256 && TEMPTABLE_CHAMBER_LEN < 256
+  && TEMPTABLE_COOLER_LEN < 256 && TEMPTABLE_PROBE_LEN < 256,
   "Temperature conversion tables over 255 entries need special consideration."
 );
 
