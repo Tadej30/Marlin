@@ -420,7 +420,7 @@
 #define TEMP_SENSOR_7 0
 #define TEMP_SENSOR_BED 1
 #define TEMP_SENSOR_PROBE 0
-#define TEMP_SENSOR_CHAMBER 1
+#define TEMP_SENSOR_CHAMBER 0
 #define TEMP_SENSOR_COOLER 0
 
 // Dummy thermistor constant temperature readings, for use with 998 and 999
@@ -508,9 +508,9 @@
     // If fewer than EXTRUDER values are provided, the last element will be repeated.
     // PID Tuning the Nozle: 1. FAN ON M106 S255 / 2. Nozle ON M303 E0 S200 C10
 
-    #define DEFAULT_Kp_LIST {  22.20,  22.20 }
-    #define DEFAULT_Ki_LIST {   1.08,   1.08 }
-    #define DEFAULT_Kd_LIST { 114.00, 114.00 }
+    //#define DEFAULT_Kp_LIST {  22.20,  22.20 }
+    //#define DEFAULT_Ki_LIST {   1.08,   1.08 }
+    //#define DEFAULT_Kd_LIST { 114.00, 114.00 }
   #else
    #define DEFAULT_Kp 14.5274
    #define DEFAULT_Ki 0.7488
@@ -622,7 +622,7 @@
  * *** IT IS HIGHLY RECOMMENDED TO LEAVE THIS OPTION ENABLED! ***
  */
 #define PREVENT_COLD_EXTRUSION
-#define EXTRUDE_MINTEMP 170
+#define EXTRUDE_MINTEMP 180
 
 /**
  * Prevent a single extrusion longer than EXTRUDE_MAXLENGTH.
@@ -1705,13 +1705,13 @@
 #define PREHEAT_1_LABEL       "PLA"
 #define PREHEAT_1_TEMP_HOTEND 200
 #define PREHEAT_1_TEMP_BED     70
-#define PREHEAT_1_TEMP_CHAMBER 35
+//#define PREHEAT_1_TEMP_CHAMBER  0
 #define PREHEAT_1_FAN_SPEED     0 // Value from 0 to 255
 
 #define PREHEAT_2_LABEL       "ABS"
 #define PREHEAT_2_TEMP_HOTEND 230
 #define PREHEAT_2_TEMP_BED    110
-#define PREHEAT_2_TEMP_CHAMBER 35
+//#define PREHEAT_2_TEMP_CHAMBER  0
 #define PREHEAT_2_FAN_SPEED     0 // Value from 0 to 255
 
 /**

@@ -243,7 +243,7 @@
 #define FAN_PIN PE5    // Fan0 = LAYER FAN
 #define FAN1_PIN PC8   // Fan1 = EXTRUDER FAN
 #define FAN2_PIN PE6   // Fan2 = SKR PRO 1.1 CONTROLLER FAN
-#define FAN3_PIN PB0   // Fan3 = CHAMBER FAN
+#define FAN3_PIN PB0   // Heater2 = Fan3 = CHAMBER FAN
 
 #ifndef E0_AUTO_FAN_PIN
 #define E0_AUTO_FAN_PIN FAN1_PIN

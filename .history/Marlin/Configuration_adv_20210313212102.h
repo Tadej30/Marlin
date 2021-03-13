@@ -160,16 +160,16 @@
    //#define HEATER_CHAMBER_PIN      P2_04   // Required heater on/off pin ( // T2 <-> (E1) SKR PRO 1.1 temp. sensor
   //#define CHAMBER_LIMIT_SWITCHING)
   //#define HEATER_CHAMBER_INVERTING false
-  #define FAN3_PIN  PB0   // Fan3 = CHAMBER FAN
+  //#define FAN1_PIN                  PB0   // Fan3 = CHAMBER FAN
 
-  #define CHAMBER_FAN               // Enable a fan on the chamber
+  //#define CHAMBER_FAN               // Enable a fan on the chamber
   #if ENABLED(CHAMBER_FAN)
-    #define CHAMBER_FAN_MODE 1        // Fan control mode: 0=Static; 1=Linear increase when temp is higher than target; 2=V-shaped curve.
+    #define CHAMBER_FAN_MODE 2        // Fan control mode: 0=Static; 1=Linear increase when temp is higher than target; 2=V-shaped curve.
     #if CHAMBER_FAN_MODE == 0
       #define CHAMBER_FAN_BASE  255   // Chamber fan PWM (0-255)
     #elif CHAMBER_FAN_MODE == 1
       #define CHAMBER_FAN_BASE  152   // Base chamber fan PWM (0-255); turns on when chamber temperature is above the target
-      #define CHAMBER_FAN_FACTOR 30   // PWM increase per °C above target
+      #define CHAMBER_FAN_FACTOR 25   // PWM increase per °C above target
     #elif CHAMBER_FAN_MODE == 2
       #define CHAMBER_FAN_BASE  128   // Minimum chamber fan PWM (0-255)
       #define CHAMBER_FAN_FACTOR 25   // PWM increase per °C difference from target
@@ -2412,7 +2412,7 @@
 
   #if AXIS_IS_TMC(X)
     #define X_CURRENT       900        // (mA) RMS current. Multiply by 1.414 for peak current.
-    #define X_CURRENT_HOME  500  // (mA) RMS current for sensorless homing
+    #define X_CURRENT_HOME  X_CURRENT  // (mA) RMS current for sensorless homing
     #define X_MICROSTEPS     16        // 0..256
     #define X_RSENSE          0.11
     #define X_CHAIN_POS      -1        // -1..0: Not chained. 1: MCU MOSI connected. 2: Next in chain, ...
@@ -2430,7 +2430,7 @@
 
   #if AXIS_IS_TMC(Y)
     #define Y_CURRENT       900
-    #define Y_CURRENT_HOME  500
+    #define Y_CURRENT_HOME  Y_CURRENT
     #define Y_MICROSTEPS     16
     #define Y_RSENSE          0.11
     #define Y_CHAIN_POS      -1
