@@ -246,10 +246,10 @@ xyz_pos_t Probe::offset; // Initialized by settings.load()
     TERN_(PROBING_HEATERS_OFF, thermalManager.pause(dopause));
     TERN_(PROBING_FANS_OFF, thermalManager.set_fans_paused(dopause));
     #if ENABLED(PROBING_STEPPERS_OFF)
-      IF_DISABLED(DELTA, static uint8_t old_trusted);
+      IF_DISABLED(DELTA, static uint8_t old_known);
       if (dopause) {
         #if DISABLED(DELTA)
-          old_trusted = axis_trusted;
+          old_known = axis_known_position;
           DISABLE_AXIS_X();
           DISABLE_AXIS_Y();
         #endif
@@ -257,10 +257,10 @@ xyz_pos_t Probe::offset; // Initialized by settings.load()
       }
       else {
         #if DISABLED(DELTA)
-          if (TEST(old_trusted, X_AXIS)) ENABLE_AXIS_X();
-          if (TEST(old_trusted, Y_AXIS)) ENABLE_AXIS_Y();
+          if (TEST(old_known, X_AXIS)) ENABLE_AXIS_X();
+          if (TEST(old_known, Y_AXIS)) ENABLE_AXIS_Y();
         #endif
-        axis_trusted = old_trusted;
+        axis_known_position = old_trusted;
       }
     #endif
     if (dopause) safe_delay(_MAX(DELAY_BEFORE_PROBING, 25));
