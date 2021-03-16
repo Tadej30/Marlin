@@ -205,7 +205,7 @@ void menu_temperature() {
     DEFINE_SINGLENOZZLE_ITEM();
 
     #if HAS_FAN0
-      _FAN_EDIT_ITEMS(0,FAN_SPEED);
+      _FAN_EDIT_ITEMS(0,LAYER_FAN_SPEED);
     #endif
     #if HAS_FAN1
       FAN_EDIT_ITEMS(1);

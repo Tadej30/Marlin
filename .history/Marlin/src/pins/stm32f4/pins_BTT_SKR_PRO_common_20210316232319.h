@@ -227,11 +227,11 @@
 //
 // Temperature Sensors
 //
-#define TEMP_BED_PIN      PF3 // T0 <-> Bed temp.sensor
-#define TEMP_0_PIN        PF4 // T1 <-> (E0) Hot End temp.sensor
-#define TEMP_SENSOR_1     PF5 // T2 <-> (E1) SKR PRO 1.1 temp. sensor 
-#define TEMP_CHAMBER_PIN  PF6 // T3 <-> (E2) CHAMBER temperature pin
- 
+#define TEMP_BED_PIN         PF3 // T0 <-> Bed temp.sensor
+#define TEMP_0_PIN           PF4 // T1 <-> (E0) Hot End temp.sensor
+//#define TEMP_1_PIN         PF5 // T2 <-> (E1) SKR PRO 1.1 temp. sensor 
+#define TEMP_CHAMBER_PIN     PF6 // T3 <-> (E2) CHAMBER temperature pin
+#define TEMP_SENSOR_CHAMBER2 PF5 // T2 <-> (E1) SKR PRO 1.1 temp. sensor
 
 
 //

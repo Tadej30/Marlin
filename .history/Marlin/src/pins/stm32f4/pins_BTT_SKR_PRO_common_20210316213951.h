@@ -229,7 +229,7 @@
 //
 #define TEMP_BED_PIN      PF3 // T0 <-> Bed temp.sensor
 #define TEMP_0_PIN        PF4 // T1 <-> (E0) Hot End temp.sensor
-#define TEMP_SENSOR_1     PF5 // T2 <-> (E1) SKR PRO 1.1 temp. sensor 
+#define TEMP_1_PIN        PF5 // T2 <-> (E1) SKR PRO 1.1 temp. sensor 
 #define TEMP_CHAMBER_PIN  PF6 // T3 <-> (E2) CHAMBER temperature pin
  
 
@@ -244,7 +244,7 @@
 #define FAN_PIN PE5  // Fan0 = LAYER FAN
 #define FAN1_PIN PC8 // Fan1 = EXTRUDER FAN
 #define FAN2_PIN PE6 // Fan2 = SKR PRO 1.1 CONTROLLER FAN
-#define FAN3_PIN PB0 // Fan3 = CHAMBER FAN
+//#define FAN3_PIN PB0 // Fan3 = CHAMBER FAN
 
 #ifndef E0_AUTO_FAN_PIN
 #define E0_AUTO_FAN_PIN FAN1_PIN

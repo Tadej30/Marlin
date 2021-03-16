@@ -279,8 +279,8 @@ namespace Language_en {
   PROGMEM Language_Str MSG_COOLER                          = _UxGT("Laser Coolant");
   PROGMEM Language_Str MSG_COOLER_TOGGLE                   = _UxGT("Toggle Cooler");
   PROGMEM Language_Str MSG_LASER                           = _UxGT("Laser");
-  PROGMEM Language_Str MSG_FAN_SPEED                       = _UxGT("LAYER Fan");
-  PROGMEM Language_Str MSG_FAN_SPEED_N                     = _UxGT("CHAMBER Fan");
+  PROGMEM Language_Str MSG_FAN_SPEED                       = _UxGT("Fan Speed");
+  PROGMEM Language_Str MSG_FAN_SPEED_N                     = _UxGT("Fan Speed ~");
   PROGMEM Language_Str MSG_STORED_FAN_N                    = _UxGT("Stored Fan ~");
   PROGMEM Language_Str MSG_EXTRA_FAN_SPEED                 = _UxGT("Extra Fan Speed");
   PROGMEM Language_Str MSG_EXTRA_FAN_SPEED_N               = _UxGT("Extra Fan Speed ~");

@@ -279,8 +279,8 @@ namespace Language_en {
   PROGMEM Language_Str MSG_COOLER                          = _UxGT("Laser Coolant");
   PROGMEM Language_Str MSG_COOLER_TOGGLE                   = _UxGT("Toggle Cooler");
   PROGMEM Language_Str MSG_LASER                           = _UxGT("Laser");
-  PROGMEM Language_Str MSG_FAN_SPEED                       = _UxGT("LAYER Fan");
-  PROGMEM Language_Str MSG_FAN_SPEED_N                     = _UxGT("CHAMBER Fan");
+  PROGMEM Language_Str MSG_FAN_SPEED                       = _UxGT("Layer Fan Speed");
+  PROGMEM Language_Str MSG_FAN_SPEED_N                     = _UxGT("Chamber Fan Speed");
   PROGMEM Language_Str MSG_STORED_FAN_N                    = _UxGT("Stored Fan ~");
   PROGMEM Language_Str MSG_EXTRA_FAN_SPEED                 = _UxGT("Extra Fan Speed");
   PROGMEM Language_Str MSG_EXTRA_FAN_SPEED_N               = _UxGT("Extra Fan Speed ~");
@@ -311,7 +311,7 @@ namespace Language_en {
   PROGMEM Language_Str MSG_PID_D                           = _UxGT("PID-D");
   PROGMEM Language_Str MSG_PID_D_E                         = _UxGT("PID-D *");
   PROGMEM Language_Str MSG_PID_C                           = _UxGT("PID-C");
-  PROGMEM Language_Str MSG_PID_C_E                         = _UxGT("PID-C *");
+  PROGMEM Language_Str MSG_PID_C_E                         = _UxGT("PID-C *);
   PROGMEM Language_Str MSG_PID_F                           = _UxGT("PID-F");
   PROGMEM Language_Str MSG_PID_F_E                         = _UxGT("PID-F *");
   PROGMEM Language_Str MSG_SELECT                          = _UxGT("Select");
