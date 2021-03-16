@@ -90,7 +90,7 @@
 #define SHOW_CUSTOM_BOOTSCREEN
 
 // Show the bitmap in Marlin/_Statusscreen.h on the status screen.
-#define CUSTOM_STATUS_SCREEN_IMAGE
+//#define CUSTOM_STATUS_SCREEN_IMAGE
 
 // @section machine
 
@@ -1667,6 +1667,16 @@
   //#define EEPROM_AUTO_INIT  // Init EEPROM automatically on any errors.
 #endif
 
+#define I2C_EEPROM
+#ifdef MARLIN_EEPROM_SIZE
+   #undef MARLIN_EEPROM_SIZE<br>#endif
+// uncomment the size of EEPROM you are using.
+#define MARLIN_EEPROM_SIZE 0x7FFF // EEPROM end address AT24C256 (32kB)
+//#define MARLIN_EEPROM_SIZE 0x3FFF // EEPROM end address AT24C128 (16kB)
+//#define MARLIN_EEPROM_SIZE 0x1FFF // EEPROM end address AT24C64 (8kB)
+//#define MARLIN_EEPROM_SIZE 0x0FFF // EEPROM end address AT24C32 (4kB)
+
+//
 // Host Keepalive
 //
 // When enabled Marlin will send a busy status message to the host
@@ -1697,18 +1707,11 @@
 #define PREHEAT_1_TEMP_CHAMBER 35
 #define PREHEAT_1_FAN_SPEED     0 // Value from 0 to 255
 
-#define PREHEAT_2_LABEL       "PETG"
-#define PREHEAT_2_TEMP_HOTEND 220
-#define PREHEAT_2_TEMP_BED     80
+#define PREHEAT_2_LABEL       "ABS"
+#define PREHEAT_2_TEMP_HOTEND 230
+#define PREHEAT_2_TEMP_BED    110
 #define PREHEAT_2_TEMP_CHAMBER 35
 #define PREHEAT_2_FAN_SPEED     0 // Value from 0 to 255
-
-#define PREHEAT_3_LABEL       "ABS"
-#define PREHEAT_3_TEMP_HOTEND 230
-#define PREHEAT_3_TEMP_BED    110
-#define PREHEAT_3_TEMP_CHAMBER 35
-#define PREHEAT_3_FAN_SPEED     0 // Value from 0 to 255
-
 
 /**
  * Nozzle Park

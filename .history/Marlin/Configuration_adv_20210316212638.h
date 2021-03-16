@@ -531,7 +531,7 @@
 #define E5_AUTO_FAN_PIN -1
 #define E6_AUTO_FAN_PIN -1
 #define E7_AUTO_FAN_PIN -1
-//#define CHAMBER_AUTO_FAN_PIN FAN3_PIN // Fan3 = CHAMBER FAN
+#define CHAMBER_AUTO_FAN_PIN FAN3_PIN // Fan3 = CHAMBER FAN
 #define COOLER_AUTO_FAN_PIN -1
 #define COOLER_FAN_PIN -1      
 
@@ -1532,7 +1532,7 @@
    * Custom status screens can forcibly override these settings.
    */
   //#define STATUS_COMBINE_HEATERS    // Use combined heater images instead of separate ones
-  //#define STATUS_HOTEND_NUMBERLESS  // Use plain hotend icons instead of numbered ones (with 2+ hotends)
+  #define STATUS_HOTEND_NUMBERLESS    // Use plain hotend icons instead of numbered ones (with 2+ hotends)
   #define STATUS_HOTEND_INVERTED      // Show solid nozzle bitmaps when heating (Requires STATUS_HOTEND_ANIM)
   #define STATUS_HOTEND_ANIM          // Use a second bitmap to indicate hotend heating
   #define STATUS_BED_ANIM             // Use a second bitmap to indicate bed heating

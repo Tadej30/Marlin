@@ -160,7 +160,7 @@
   //#define HEATER_CHAMBER_PIN      P2_04   // Required heater on/off pin ( // T2 <-> (E1) SKR PRO 1.1 temp. sensor
   //#define CHAMBER_LIMIT_SWITCHING)
   //#define HEATER_CHAMBER_INVERTING false
-  //#define FAN3_PIN  PB0   // Fan3 = CHAMBER FAN
+  #define FAN3_PIN  PB0   // Fan3 = CHAMBER FAN
 
   #define CHAMBER_FAN               // Enable a fan on the chamber
   #if ENABLED(CHAMBER_FAN)
@@ -190,18 +190,18 @@
 // Laser Cooler options
 //
 #if TEMP_SENSOR_COOLER
-  #define COOLER_MINTEMP           8  // (°C)
-  #define COOLER_MAXTEMP          26  // (°C)
-  #define COOLER_DEFAULT_TEMP     16  // (°C)
-  #define TEMP_COOLER_HYSTERESIS   1  // (°C) Temperature proximity considered "close enough" to the target
-  #define COOLER_PIN               8  // Laser cooler on/off pin used to control power to the cooling element e.g. TEC, External chiller via relay
-  #define COOLER_INVERTING     false
-  #define TEMP_COOLER_PIN         15  // Laser/Cooler temperature sensor pin. ADC is required.
-  #define COOLER_FAN                  // Enable a fan on the cooler, Fan# 0,1,2,3 etc.
-  #define COOLER_FAN_INDEX         0  // FAN number 0, 1, 2 etc. e.g.
+  //#define COOLER_MINTEMP          10  // (°C)
+  //#define COOLER_MAXTEMP          65  // (°C)
+  //#define COOLER_DEFAULT_TEMP     50  // (°C)
+  //#define TEMP_COOLER_HYSTERESIS   1  // (°C) Temperature proximity considered "close enough" to the target
+  //#define COOLER_PIN               8  // Laser cooler on/off pin used to control power to the cooling element e.g. TEC, External chiller via relay
+ // #define COOLER_INVERTING     false
+  #define TEMP_COOLER_PIN         PF5  // Laser/Cooler temperature sensor pin. ADC is required// T2 <-> (E1) SKR PRO 1.1 temp. sensor
+ // #define COOLER_FAN                  // Enable a fan on the cooler, Fan# 0,1,2,3 etc.
+ //#define COOLER_FAN_INDEX         0  // FAN number 0, 1, 2 etc. e.g.
   #if ENABLED(COOLER_FAN)
-    #define COOLER_FAN_BASE      100  // Base Cooler fan PWM (0-255); turns on when Cooler temperature is above the target
-    #define COOLER_FAN_FACTOR     25  // PWM increase per °C above target
+    //#define COOLER_FAN_BASE      100  // Base Cooler fan PWM (0-255); turns on when Cooler temperature is above the target
+    //#define COOLER_FAN_FACTOR     25  // PWM increase per °C above target
   #endif
 #endif
 
@@ -531,11 +531,11 @@
 #define E5_AUTO_FAN_PIN -1
 #define E6_AUTO_FAN_PIN -1
 #define E7_AUTO_FAN_PIN -1
-//#define CHAMBER_AUTO_FAN_PIN FAN3_PIN // Fan3 = CHAMBER FAN
+#define CHAMBER_AUTO_FAN_PIN -1
 #define COOLER_AUTO_FAN_PIN -1
 #define COOLER_FAN_PIN -1      
 
-#define EXTRUDER_AUTO_FAN_TEMPERATURE 50
+#define EXTRUDER_AUTO_FAN_TEMPERATURE 55
 #define EXTRUDER_AUTO_FAN_SPEED 255   // 255 == full speed
 #define CHAMBER_AUTO_FAN_TEMPERATURE 30
 #define CHAMBER_AUTO_FAN_SPEED 255
@@ -1532,14 +1532,14 @@
    * Custom status screens can forcibly override these settings.
    */
   //#define STATUS_COMBINE_HEATERS    // Use combined heater images instead of separate ones
-  //#define STATUS_HOTEND_NUMBERLESS  // Use plain hotend icons instead of numbered ones (with 2+ hotends)
+  #define STATUS_HOTEND_NUMBERLESS  // Use plain hotend icons instead of numbered ones (with 2+ hotends)
   #define STATUS_HOTEND_INVERTED      // Show solid nozzle bitmaps when heating (Requires STATUS_HOTEND_ANIM)
   #define STATUS_HOTEND_ANIM          // Use a second bitmap to indicate hotend heating
   #define STATUS_BED_ANIM             // Use a second bitmap to indicate bed heating
   #define STATUS_CHAMBER_ANIM         // Use a second bitmap to indicate chamber heating
- //#define STATUS_CUTTER_ANIM         // Use a second bitmap to indicate spindle / laser active
- //#define STATUS_CUTTER_ANIM         // Use a second bitmap to indicate spindle / laser active
- //#define STATUS_COOLER_ANIM         // Use a second bitmap to indicate laser cooling
+  //#define STATUS_CUTTER_ANIM        // Use a second bitmap to indicate spindle / laser active
+  //#define STATUS_CUTTER_ANIM        // Use a second bitmap to indicate spindle / laser active
+  #define STATUS_COOLER_ANIM          // Use a second bitmap to indicate laser cooling
   #define STATUS_ALT_BED_BITMAP       // Use the alternative bed bitmap
   #define STATUS_ALT_FAN_BITMAP       // Use the alternative fan bitmap
   #define STATUS_FAN_FRAMES 4         // :[0,1,2,3,4] Number of fan animation frames

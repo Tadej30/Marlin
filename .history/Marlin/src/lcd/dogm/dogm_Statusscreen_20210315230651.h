@@ -32,10 +32,8 @@
 #include "marlinui_DOGM.h"
 
 #define BW(N) ((N + 7) / 8)
-#define STATUS_HOTEND1_X 5
+#define STATUS_CHAMBER_X 75
 #define STATUS_BED_X 25
-//#define STATUS_SKRPRO_X 40
-#define STATUS_CHAMBER_X 77
 //#define STATUS_FAN_X 100
 
 #if ENABLED(CUSTOM_STATUS_SCREEN_IMAGE) && DISABLED(STATUS_COMBINE_HEATERS)
@@ -50,7 +48,7 @@
    *
    * See the included examples for guidance
    */
-  //#include "status/skrpro.h"
+  #include "../../../_Statusscreen.h"
 
   #ifdef STATUS_SCREENWIDTH
     #error "Your custom _Statusscreen.h needs to be converted for Marlin 2.0."
