@@ -1876,7 +1876,6 @@
   //#define PASSWORD_AFTER_SD_PRINT_END
   //#define PASSWORD_AFTER_SD_PRINT_ABORT
   //#include "Configuration_Secure.h"       // External file with PASSWORD_DEFAULT_VALUE
-  #define PASSWORD_DEFAULT_VALUE 1234
 #endif
 
 //=============================================================================
