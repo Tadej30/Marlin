@@ -49,18 +49,30 @@ void eeprom_init() {
   #define EEPROM_DEVICE_ADDRESS  0x50
 #endif
 
+#define I2C_EEPROM
+#ifdef MARLIN_EEPROM_SIZE
+   #undef MARLIN_EEPROM_SIZE<br>#endif
+// uncomment the size of EEPROM you are using.
+#define MARLIN_EEPROM_SIZE 0x7FFF // EEPROM end address AT24C256 (32kB)
+//#define MARLIN_EEPROM_SIZE 0x3FFF // EEPROM end address AT24C128 (16kB)
+//#define MARLIN_EEPROM_SIZE 0x1FFF // EEPROM end address AT24C64 (8kB)
+//#define MARLIN_EEPROM_SIZE 0x0FFF // EEPROM end address AT24C32 (4kB)
+
 static constexpr uint8_t eeprom_device_address = I2C_ADDRESS(EEPROM_DEVICE_ADDRESS);
 
 // ------------------------
 // Public functions
 // ------------------------
 
-void eeprom_write_byte(uint8_t *pos, unsigned char value) {
+static void _eeprom_begin(uint8_t * const pos) {
   const unsigned eeprom_address = (unsigned)pos;
-
   Wire.beginTransmission(eeprom_device_address);
-  Wire.write(int(eeprom_address >> 8));   // MSB
-  Wire.write(int(eeprom_address & 0xFF)); // LSB
+  Wire.write(int(eeprom_address >> 8));   // Address High
+  Wire.write(int(eeprom_address & 0xFF)); // Address Low
+}
+
+void eeprom_write_byte(uint8_t *pos, uint8_t value) {
+  _eeprom_begin(pos);
   Wire.write(value);
   Wire.endTransmission();
 
@@ -70,11 +82,7 @@ void eeprom_write_byte(uint8_t *pos, unsigned char value) {
 }
 
 uint8_t eeprom_read_byte(uint8_t *pos) {
-  const unsigned eeprom_address = (unsigned)pos;
-
-  Wire.beginTransmission(eeprom_device_address);
-  Wire.write(int(eeprom_address >> 8));   // MSB
-  Wire.write(int(eeprom_address & 0xFF)); // LSB
+  _eeprom_begin(pos);
   Wire.endTransmission();
   Wire.requestFrom(eeprom_device_address, (byte)1);
   return Wire.available() ? Wire.read() : 0xFF;
