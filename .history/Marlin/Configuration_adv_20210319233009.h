@@ -1540,8 +1540,8 @@
   #define STATUS_CUTTER_ANIM        // Use a second bitmap to indicate spindle / laser active
   #define STATUS_COOLER_ANIM        // Use a second bitmap to indicate laser cooling
   //#define STATUS_ALT_BED_BITMAP       // Use the alternative bed bitmap
-  //#define STATUS_ALT_FAN_BITMAP       // Use the alternative fan bitmap
-  //#define STATUS_FAN_FRAMES 4         // :[0,1,2,3,4] Number of fan animation frames
+  #define STATUS_ALT_FAN_BITMAP       // Use the alternative fan bitmap
+  #define STATUS_FAN_FRAMES 4         // :[0,1,2,3,4] Number of fan animation frames
   //#define STATUS_HEAT_PERCENT         // Show heating in a progress bar
   #define BOOT_MARLIN_LOGO_ANIMATED   // Animated Marlin logo. Costs ~‭3260 (or ~940) bytes of PROGMEM.
 
@@ -2569,10 +2569,10 @@
    * The default SW SPI pins are defined the respective pins files,
    * but you can override or define them here.
    */
-  //#define TMC_USE_SW_SPI
-  //#define TMC_SW_MOSI       66
-  //#define TMC_SW_MISO       44
-  //#define TMC_SW_SCK        64
+  #define TMC_USE_SW_SPI
+  #define TMC_SW_MOSI       66
+  #define TMC_SW_MISO       44
+  #define TMC_SW_SCK        64
 
   /**
    * Four TMC2209 drivers can use the same HW/SW serial port with hardware configured addresses.
@@ -3312,7 +3312,7 @@
 /**
  * Disable all Volumetric extrusion options
  */
-#define NO_VOLUMETRICS
+//#define NO_VOLUMETRICS
 
 #if DISABLED(NO_VOLUMETRICS)
   /**
