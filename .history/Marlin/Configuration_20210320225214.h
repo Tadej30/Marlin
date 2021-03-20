@@ -419,7 +419,7 @@
 #define TEMP_SENSOR_7 0
 #define TEMP_SENSOR_BED 0
 #define TEMP_SENSOR_PROBE 0
-#define TEMP_SENSOR_CHAMBER 0
+#define TEMP_SENSOR_CHAMBER 1
 #define TEMP_SENSOR_COOLER 0
 
 // Dummy thermistor constant temperature readings, for use with 998 and 999
