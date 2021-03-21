@@ -127,7 +127,7 @@
 
 // Choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
-  #define MOTHERBOARD BOARD_RAMPS_14_EFF
+  #define MOTHERBOARD BOARD_RAMPS_14_SF 
 #endif
 
 // Name displayed in the LCD "Ready" message and Info menu
@@ -800,7 +800,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {  100, 100, 400, 100 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {  100, 100, 400, 0 }
 
 /**
  * Default Max Feed Rate (mm/s)
