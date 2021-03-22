@@ -312,7 +312,7 @@
  * Specify whether the power supply is active HIGH or active LOW.
  */
 //#define PSU_CONTROL
-#define PSU_NAME "ATX 12V"
+#define PSU_NAME "Power Supply 24V"
 
 #if ENABLED(PSU_CONTROL)
   #define PSU_ACTIVE_STATE LOW     // Set 'LOW' for ATX, 'HIGH' for X-Box
@@ -419,7 +419,7 @@
 #define TEMP_SENSOR_7 0
 #define TEMP_SENSOR_BED 0
 #define TEMP_SENSOR_PROBE 0
-#define TEMP_SENSOR_CHAMBER 1
+#define TEMP_SENSOR_CHAMBER 0
 #define TEMP_SENSOR_COOLER 0
 
 // Dummy thermistor constant temperature readings, for use with 998 and 999
@@ -1691,9 +1691,9 @@
 // Preheat Constants - Up to 5 are supported without changes
 //
 #define PREHEAT_1_LABEL       "PLA"
-#define PREHEAT_1_TEMP_HOTEND   0
-#define PREHEAT_1_TEMP_BED      0
-#define PREHEAT_1_TEMP_CHAMBER  0
+#define PREHEAT_1_TEMP_HOTEND 200
+#define PREHEAT_1_TEMP_BED     70
+#define PREHEAT_1_TEMP_CHAMBER 35
 #define PREHEAT_1_FAN_SPEED     0 // Value from 0 to 255
 
 //#define PREHEAT_2_LABEL       "PETG"
