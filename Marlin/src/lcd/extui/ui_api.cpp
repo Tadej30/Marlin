@@ -825,6 +825,26 @@ namespace ExtUI {
           TERN_(ABL_BILINEAR_SUBDIVISION, bed_level_virt_interpolate());
         }
       }
+      void moveToMeshPoint(const xy_uint8_t &pos, const float &z) {
+        #if EITHER(MESH_BED_LEVELING, AUTO_BED_LEVELING_UBL)
+          const feedRate_t old_feedrate = feedrate_mm_s;
+          feedrate_mm_s = Z_PROBE_FEEDRATE_FAST;
+          destination = current_position;
+          destination[Z_AXIS] = Z_CLEARANCE_BETWEEN_PROBES;
+          prepare_line_to_destination();
+          feedrate_mm_s = XY_PROBE_FEEDRATE;
+          destination[X_AXIS] = MESH_MIN_X + pos.x * MESH_X_DIST;
+          destination[Y_AXIS] = MESH_MIN_Y + pos.y * MESH_Y_DIST;
+          prepare_line_to_destination();
+          feedrate_mm_s = Z_PROBE_FEEDRATE_FAST;
+          destination[Z_AXIS] = z;
+          prepare_line_to_destination();
+          feedrate_mm_s = old_feedrate;
+        #else
+          UNUSED(pos);
+          UNUSED(z);
+        #endif
+      }
     #endif
   #endif
 
@@ -904,7 +924,7 @@ namespace ExtUI {
     enableHeater(heater);
     switch (heater) {
       #if HAS_HEATED_CHAMBER
-        case CHAMBER: thermalManager.setTargetChamber(LROUND(constrain(value, 0, CHAMBER_MAXTEMP - 10))); break;
+        case CHAMBER: thermalManager.setTargetChamber(LROUND(constrain(value, 0, CHAMBER_MAX_TARGET))); break;
       #endif
       #if HAS_COOLER
         case COOLER: thermalManager.setTargetCooler(LROUND(constrain(value, 0, COOLER_MAXTEMP))); break;
@@ -915,7 +935,7 @@ namespace ExtUI {
       default: {
         #if HAS_HOTEND
           const int16_t e = heater - H0;
-          thermalManager.setTargetHotend(LROUND(constrain(value, 0, thermalManager.heater_maxtemp[e] - HOTEND_OVERSHOOT)), e);
+          thermalManager.setTargetHotend(LROUND(constrain(value, 0, thermalManager.hotend_max_target(e))), e);
         #endif
       } break;
     }
@@ -929,7 +949,7 @@ namespace ExtUI {
     #if HAS_HOTEND
       const int16_t e = extruder - E0;
       enableHeater(extruder);
-      thermalManager.setTargetHotend(LROUND(constrain(value, 0, thermalManager.heater_maxtemp[e] - HOTEND_OVERSHOOT)), e);
+      thermalManager.setTargetHotend(LROUND(constrain(value, 0, thermalManager.hotend_max_target(e))), e);
     #endif
   }
 
