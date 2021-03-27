@@ -65,6 +65,13 @@ extern uint32_t upload_time;
 extern uint32_t upload_size;
 extern bool temps_update_flag;
 
+//#define CANCEL_ON_RIGHT   // Put 'Cancel' on the right (as it was before)
+
+#define BTN_OK_X      TERN(CANCEL_ON_RIGHT, 100, 280)
+#define BTN_CANCEL_X  TERN(CANCEL_ON_RIGHT, 280, 100)
+#define BTN_OK_Y      180
+#define BTN_CANCEL_Y  180
+
 static void btn_ok_event_cb(lv_obj_t *btn, lv_event_t event) {
   if (event != LV_EVENT_RELEASED) return;
   if (DIALOG_IS(TYPE_PRINT_FILE)) {
@@ -515,7 +522,7 @@ void filament_dialog_handle() {
   }
 
   if (uiCfg.filament_load_heat_flg) {
-    const int16_t diff = thermalManager.degHotend(uiCfg.extruderIndex) - gCfgItems.filament_limit_temp;
+    const celsius_t diff = thermalManager.degHotend(uiCfg.extruderIndex) - gCfgItems.filament_limit_temp;
     if (abs(diff) < 2 || diff > 0) {
       uiCfg.filament_load_heat_flg = false;
       lv_clear_dialog();
@@ -531,7 +538,7 @@ void filament_dialog_handle() {
   }
 
   if (uiCfg.filament_unload_heat_flg) {
-    const int16_t diff = thermalManager.degHotend(uiCfg.extruderIndex) - gCfgItems.filament_limit_temp;
+    const celsius_t diff = thermalManager.degHotend(uiCfg.extruderIndex) - gCfgItems.filament_limit_temp;
     if (abs(diff) < 2 || diff > 0) {
       uiCfg.filament_unload_heat_flg = false;
       lv_clear_dialog();
