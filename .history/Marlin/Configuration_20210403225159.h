@@ -802,7 +802,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {100, 100, 400, 168.54}
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {  100, 100, 400, 345 }
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -1052,7 +1052,7 @@
  *     |    [-]    |
  *     O-- FRONT --+
  */
-#define NOZZLE_TO_PROBE_OFFSET { 23, 0, -0.540}  // old -1.675
+#define NOZZLE_TO_PROBE_OFFSET { 23, 0, -0.690}  // old -1.675
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
@@ -1668,16 +1668,6 @@
 //#define EEPROM_BOOT_SILENT // Keep M503 quiet and only give errors during first load
 #if ENABLED(EEPROM_SETTINGS)
   //#define EEPROM_AUTO_INIT  // Init EEPROM automatically on any errors.
-#endif
-
-#define I2C_EEPROM
-#ifdef MARLIN_EEPROM_SIZE
-   #undef MARLIN_EEPROM_SIZE<br>#endif
-// uncomment the size of EEPROM you are using.
-#define MARLIN_EEPROM_SIZE 0x7FFF // EEPROM end address AT24C256 (32kB)
-//#define MARLIN_EEPROM_SIZE 0x3FFF // EEPROM end address AT24C128 (16kB)
-//#define MARLIN_EEPROM_SIZE 0x1FFF // EEPROM end address AT24C64 (8kB)
-//#define MARLIN_EEPROM_SIZE 0x0FFF // EEPROM end address AT24C32 (4kB)
 #endif
 
 // Host Keepalive
