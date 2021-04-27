@@ -1,6 +1,5 @@
-#
-# Convert the ELF to an SREC file suitable for some bootloaders
-#
+# Generate the firmware as OpenBLT needs
+
 import os,sys
 from os.path import join
 
@@ -11,5 +10,5 @@ env.AddPostAction(
     env.VerboseAction(" ".join([
         "$OBJCOPY", "-O", "srec",
         "\"$BUILD_DIR/${PROGNAME}.elf\"", "\"$BUILD_DIR/${PROGNAME}.srec\""
-    ]), "Building " + join("$BUILD_DIR", "${PROGNAME}.srec"))
+    ]), "Building " + join("$BUILD_DIR","${PROGNAME}.srec"))
 )

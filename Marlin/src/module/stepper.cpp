@@ -1697,12 +1697,12 @@ void Stepper::pulse_phase_isr() {
       #if EITHER(LIN_ADVANCE, MIXING_EXTRUDER)
         delta_error.e += advance_dividend.e;
         if (delta_error.e >= 0) {
+          count_position.e += count_direction.e;
           #if ENABLED(LIN_ADVANCE)
             delta_error.e -= advance_divisor;
             // Don't step E here - But remember the number of steps to perform
             motor_direction(E_AXIS) ? --LA_steps : ++LA_steps;
           #else
-            count_position.e += count_direction.e;
             step_needed.e = true;
           #endif
         }
@@ -1988,18 +1988,9 @@ uint32_t Stepper::block_phase_isr() {
     // Anything in the buffer?
     if ((current_block = planner.get_current_block())) {
 
-      // Sync block? Sync the stepper counts or fan speeds and return
-      while (current_block->flag & BLOCK_MASK_SYNC) {
-
-        #if ENABLED(LASER_SYNCHRONOUS_M106_M107)
-          const bool is_sync_fans = TEST(current_block->flag, BLOCK_BIT_SYNC_FANS);
-          if (is_sync_fans) planner.sync_fan_speeds(current_block->fan_speed);
-        #else
-          constexpr bool is_sync_fans = false;
-        #endif
-
-        if (!is_sync_fans) _set_position(current_block->position);
-
+      // Sync block? Sync the stepper counts and return
+      while (TEST(current_block->flag, BLOCK_BIT_SYNC_POSITION)) {
+        _set_position(current_block->position);
         discard_current_block();
 
         // Try to get a new block
@@ -2139,7 +2130,9 @@ uint32_t Stepper::block_phase_isr() {
       accelerate_until = current_block->accelerate_until << oversampling;
       decelerate_after = current_block->decelerate_after << oversampling;
 
-      TERN_(MIXING_EXTRUDER, mixer.stepper_setup(current_block->b_color))
+      #if ENABLED(MIXING_EXTRUDER)
+        MIXER_STEPPER_SETUP();
+      #endif
 
       TERN_(HAS_MULTI_EXTRUDER, stepper_extruder = current_block->extruder);
 
@@ -2283,23 +2276,15 @@ uint32_t Stepper::block_phase_isr() {
     #if ENABLED(MIXING_EXTRUDER)
       // We don't know which steppers will be stepped because LA loop follows,
       // with potentially multiple steps. Set all.
-      if (LA_steps > 0) {
+      if (LA_steps > 0)
         MIXER_STEPPER_LOOP(j) NORM_E_DIR(j);
-        count_direction.e = 1;
-      }
-      else if (LA_steps < 0) {
+      else if (LA_steps < 0)
         MIXER_STEPPER_LOOP(j) REV_E_DIR(j);
-        count_direction.e = -1;
-      }
     #else
-      if (LA_steps > 0) {
+      if (LA_steps > 0)
         NORM_E_DIR(stepper_extruder);
-        count_direction.e = 1;
-      }
-      else if (LA_steps < 0) {
+      else if (LA_steps < 0)
         REV_E_DIR(stepper_extruder);
-        count_direction.e = -1;
-      }
     #endif
 
     DIR_WAIT_AFTER();
@@ -2319,8 +2304,6 @@ uint32_t Stepper::block_phase_isr() {
         else
           AWAIT_LOW_PULSE();
       #endif
-
-      count_position.e += count_direction.e;
 
       // Set the STEP pulse ON
       #if ENABLED(MIXING_EXTRUDER)
@@ -2372,7 +2355,7 @@ uint32_t Stepper::block_phase_isr() {
 // Check if the given block is busy or not - Must not be called from ISR contexts
 // The current_block could change in the middle of the read by an Stepper ISR, so
 // we must explicitly prevent that!
-bool Stepper::is_block_busy(const block_t * const block) {
+bool Stepper::is_block_busy(const block_t* const block) {
   #ifdef __AVR__
     // A SW memory barrier, to ensure GCC does not overoptimize loops
     #define sw_barrier() asm volatile("": : :"memory");
@@ -2382,7 +2365,7 @@ bool Stepper::is_block_busy(const block_t * const block) {
     // This works because stepper ISRs happen at a slower rate than
     // successive reads of a variable, so 2 consecutive reads with
     // the same value means no interrupt updated it.
-    block_t *vold, *vnew = current_block;
+    block_t* vold, *vnew = current_block;
     sw_barrier();
     do {
       vold = vnew;

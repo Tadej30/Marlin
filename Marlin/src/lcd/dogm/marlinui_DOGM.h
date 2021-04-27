@@ -123,10 +123,9 @@
     #define U8G_CLASS U8GLIB_SSD1306_128X64                     // 8 stripes
   #endif
 
-#elif EITHER(FYSETC_242_OLED_12864, K3D_242_OLED_CONTROLLER)
+#elif ENABLED(FYSETC_242_OLED_12864)
 
-  // FYSETC OLED 2.42" 128 × 64 Full Graphics Controller
-  // or K3D OLED 2.42" 128 × 64 Full Graphics Controller
+  // FYSETC OLED 2.42" 128 × 64 FULL GRAPHICS CONTROLLER
 
   #define FORCE_SOFT_SPI                                        // SW-SPI
 

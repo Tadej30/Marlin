@@ -45,10 +45,6 @@
  *         7 | 11
  */
 
-#if ENABLED(AZSMZ_12864) && DISABLED(ALLOW_SAM3X8E)
-  #error "No pins defined for RAMPS with AZSMZ_12864."
-#endif
-
 #include "env_validate.h"
 
 // Custom flags and defines for the build
@@ -724,6 +720,9 @@
     #elif ENABLED(AZSMZ_12864)
 
       // Pins only defined for RAMPS_SMART currently
+      #if DISABLED(IS_RAMPS_SMART)
+        #error "No pins defined for RAMPS with AZSMZ_12864."
+      #endif
 
     #elif IS_TFTGLCD_PANEL
 

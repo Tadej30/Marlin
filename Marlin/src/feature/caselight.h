@@ -34,9 +34,7 @@
 class CaseLight {
 public:
   static bool on;
-  #if ENABLED(CASELIGHT_USES_BRIGHTNESS)
-    static uint8_t brightness;
-  #endif
+  TERN_(CASELIGHT_USES_BRIGHTNESS, static uint8_t brightness);
 
   static bool pin_is_pwm() { return TERN0(NEED_CASE_LIGHT_PIN, PWM_PIN(CASE_LIGHT_PIN)); }
   static bool has_brightness() { return TERN0(CASELIGHT_USES_BRIGHTNESS, TERN(CASE_LIGHT_USE_NEOPIXEL, true, pin_is_pwm())); }
@@ -52,10 +50,8 @@ public:
   static inline void update_brightness() { update(false); }
   static inline void update_enabled()    { update(true);  }
 
-  #if ENABLED(CASE_LIGHT_IS_COLOR_LED)
-    private:
-      static LEDColor color;
-  #endif
+private:
+  TERN_(CASE_LIGHT_IS_COLOR_LED, static LEDColor color);
 };
 
 extern CaseLight caselight;

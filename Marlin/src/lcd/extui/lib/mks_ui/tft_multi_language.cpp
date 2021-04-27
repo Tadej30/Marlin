@@ -56,7 +56,6 @@ tool_menu_def                tool_menu;
 MachinePara_menu_def         MachinePara_menu;
 pause_msg_def                pause_msg_menu;
 eeprom_def                   eeprom_menu;
-media_select_menu_def        media_select_menu;
 
 machine_common_def machine_menu;
 void machine_setting_disp() {
@@ -120,7 +119,7 @@ void machine_setting_disp() {
 
     machine_menu.LevelingParaConfTitle   = LEVELING_CONF_TITLE_CN;
     machine_menu.LevelingParaConf        = LEVELING_PARA_CONF_CN;
-    machine_menu.TrammingPosConf         = TRAMMING_POS_CN;
+    machine_menu.LevelingManuPosConf     = LEVELING_MANUAL_POS_CN;
     machine_menu.LevelingAutoCommandConf = LEVELING_AUTO_COMMAND_CN;
     machine_menu.LevelingAutoZoffsetConf = LEVELING_AUTO_ZOFFSET_CN;
 
@@ -348,7 +347,7 @@ void machine_setting_disp() {
 
     machine_menu.LevelingParaConfTitle   = LEVELING_CONF_TITLE_T_CN;
     machine_menu.LevelingParaConf        = LEVELING_PARA_CONF_T_CN;
-    machine_menu.TrammingPosConf         = TRAMMING_POS_T_CN;
+    machine_menu.LevelingManuPosConf     = LEVELING_MANUAL_POS_T_CN;
     machine_menu.LevelingAutoCommandConf = LEVELING_AUTO_COMMAND_T_CN;
     machine_menu.LevelingAutoZoffsetConf = LEVELING_AUTO_ZOFFSET_T_CN;
 
@@ -577,7 +576,7 @@ void machine_setting_disp() {
 
     machine_menu.LevelingParaConfTitle   = LEVELING_CONF_TITLE_EN;
     machine_menu.LevelingParaConf        = LEVELING_PARA_CONF_EN;
-    machine_menu.TrammingPosConf         = TRAMMING_POS_EN;
+    machine_menu.LevelingManuPosConf     = LEVELING_MANUAL_POS_EN;
     machine_menu.LevelingAutoCommandConf = LEVELING_AUTO_COMMAND_EN;
     machine_menu.LevelingAutoZoffsetConf = LEVELING_AUTO_ZOFFSET_EN;
 
@@ -816,15 +815,11 @@ void disp_language_init() {
   wifi_menu.disconnected = WIFI_DISCONNECTED_TEXT;
   wifi_menu.exception    = WIFI_EXCEPTION_TEXT;
 
-  printing_menu.temp1    = TEXT_VALUE_TARGET;
-  printing_menu.temp2    = TEXT_VALUE_TARGET;
-  printing_menu.bed_temp = TEXT_VALUE_TARGET;
+  printing_menu.temp1    = TEXT_VALUE;
+  printing_menu.temp2    = TEXT_VALUE;
+  printing_menu.bed_temp = TEXT_VALUE;
 
   filament_menu.stat_temp = TEXT_VALUE;
-
-  media_select_menu.title    = MEDIA_SELECT_TITLE_EN;
-  media_select_menu.sd_disk  = SD_CARD_TITLE_EN;
-  media_select_menu.usb_disk = USB_DRIVE_TITLE_EN;
 
   machine_menu.key_0     = KEYBOARD_KEY0_EN;
   machine_menu.key_1     = KEYBOARD_KEY1_EN;
@@ -1713,7 +1708,7 @@ void disp_language_init() {
 
             machine_menu.LevelingParaConfTitle   = LEVELING_CONF_TITLE_RU;
             machine_menu.LevelingParaConf        = LEVELING_PARA_CONF_RU;
-            machine_menu.TrammingPosConf         = TRAMMING_POS_RU;
+            machine_menu.LevelingManuPosConf     = LEVELING_MANUAL_POS_RU;
             machine_menu.LevelingAutoCommandConf = LEVELING_AUTO_COMMAND_RU;
             machine_menu.LevelingAutoZoffsetConf = LEVELING_AUTO_ZOFFSET_RU;
 

@@ -33,7 +33,7 @@
 // Use one of these or SDCard-based Emulation will be used
 #if NO_EEPROM_SELECTED
   //#define SRAM_EEPROM_EMULATION                 // Use BackSRAM-based EEPROM emulation
-  //#define FLASH_EEPROM_EMULATION                // Use Flash-based EEPROM emulation
+  #define FLASH_EEPROM_EMULATION                  // Use Flash-based EEPROM emulation
 #endif
 
 #if ENABLED(FLASH_EEPROM_EMULATION)
@@ -133,7 +133,7 @@
 #define Y_STEP_PIN                          PE11
 #define Y_DIR_PIN                           PE8
 #define Y_ENABLE_PIN                        PD7
- #ifndef Y_CS_PIN
+#ifndef Y_CS_PIN
   #define Y_CS_PIN                          PB8
 #endif
 
@@ -227,29 +227,25 @@
 //
 // Temperature Sensors
 //
-#define TEMP_BED_PIN     PF3 // T0 <-> Bed temp.sensor
-#define TEMP_0_PIN       PF4 // T1 <-> (E0) Hot End temp.sensor
-#define TEMP_1_PIN       PF6 // T2 <-> (E1) CHAMBER temperature pin 
-#define TEMP_CHAMBER_PIN PF5 // T3 <-> (E2) SKR PRO 1.1 temp. sensor
- 
-
+#define TEMP_0_PIN                          PF4   // T1 <-> E0
+#define TEMP_1_PIN                          PF5   // T2 <-> E1
+#define TEMP_2_PIN                          PF6   // T3 <-> E2
+#define TEMP_BED_PIN                        PF3   // T0 <-> Bed
 
 //
 // Heaters / Fans
 //
-#define HEATER_0_PIN PB1    // Heater0 = Hotend
-#define HEATER_1_PIN PD14   // Heater1 = CASE Light
-#define HEATER_BED_PIN PD12 // Heated BED
-
-#define FAN_PIN PE5  // Fan0 = LAYER FAN
-#define FAN1_PIN PC8 // Fan1 = EXTRUDER FAN
-#define FAN2_PIN PE6 // Fan2 = SKR PRO 1.1 CONTROLLER FAN
-#define FAN3_PIN PB0 // Fan3 = CHAMBER FAN
+#define HEATER_0_PIN                        PB1   // Heater0
+#define HEATER_1_PIN                        PD14  // Heater1
+#define HEATER_2_PIN                        PB0   // Heater1
+#define HEATER_BED_PIN                      PD12  // Hotbed
+#define FAN_PIN                             PC8   // Fan0
+#define FAN1_PIN                            PE5   // Fan1
+#define FAN2_PIN                            PE6   // Fan2
 
 #ifndef E0_AUTO_FAN_PIN
-#define E0_AUTO_FAN_PIN FAN1_PIN
+  #define E0_AUTO_FAN_PIN               FAN1_PIN
 #endif
-
 
 //
 // Misc. Functions
@@ -445,10 +441,10 @@
 // Alter timing for graphical display
 #if HAS_MARLINUI_U8GLIB
   #ifndef BOARD_ST7920_DELAY_1
-    #define BOARD_ST7920_DELAY_1    DELAY_NS(125)
+    #define BOARD_ST7920_DELAY_1    DELAY_NS(96)
   #endif
   #ifndef BOARD_ST7920_DELAY_2
-    #define BOARD_ST7920_DELAY_2    DELAY_NS(90)
+    #define BOARD_ST7920_DELAY_2    DELAY_NS(48)
   #endif
   #ifndef BOARD_ST7920_DELAY_3
     #define BOARD_ST7920_DELAY_3   DELAY_NS(600)

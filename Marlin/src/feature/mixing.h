@@ -61,6 +61,9 @@ enum MixTool {
 #define MAX_VTOOLS TERN(HAS_MIXER_SYNC_CHANNEL, 254, 255)
 static_assert(NR_MIXING_VIRTUAL_TOOLS <= MAX_VTOOLS, "MIXING_VIRTUAL_TOOLS must be <= " STRINGIFY(MAX_VTOOLS) "!");
 
+#define MIXER_BLOCK_FIELD       mixer_comp_t b_color[MIXING_STEPPERS]
+#define MIXER_POPULATE_BLOCK()  mixer.populate_block(block->b_color)
+#define MIXER_STEPPER_SETUP()   mixer.stepper_setup(current_block->b_color)
 #define MIXER_STEPPER_LOOP(VAR) for (uint_fast8_t VAR = 0; VAR < MIXING_STEPPERS; VAR++)
 
 #if ENABLED(GRADIENT_MIX)
@@ -70,11 +73,9 @@ static_assert(NR_MIXING_VIRTUAL_TOOLS <= MAX_VTOOLS, "MIXING_VIRTUAL_TOOLS must 
     mixer_comp_t color[MIXING_STEPPERS];  // The current gradient color
     float start_z, end_z;                 // Region for gradient
     int8_t start_vtool, end_vtool;        // Start and end virtual tools
-    mixer_perc_t start_mix[MIXING_STEPPERS],  // Start and end mixes from those tools
+    mixer_perc_t start_mix[MIXING_STEPPERS],   // Start and end mixes from those tools
                  end_mix[MIXING_STEPPERS];
-    #if ENABLED(GRADIENT_VTOOL)
-      int8_t vtool_index;                 // Use this virtual tool number as index
-    #endif
+    TERN_(GRADIENT_VTOOL, int8_t vtool_index); // Use this virtual tool number as index
   } gradient_t;
 
 #endif
@@ -180,9 +181,9 @@ class Mixer {
     static float prev_z;
 
     // Update the current mix from the gradient for a given Z
-    static void update_gradient_for_z(const_float_t z);
+    static void update_gradient_for_z(const float z);
     static void update_gradient_for_planner_z();
-    static inline void gradient_control(const_float_t z) {
+    static inline void gradient_control(const float z) {
       if (gradient.enabled) {
         if (z >= gradient.end_z)
           T(gradient.end_vtool);

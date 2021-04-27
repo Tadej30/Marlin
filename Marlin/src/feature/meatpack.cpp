@@ -42,6 +42,7 @@
 #if HAS_MEATPACK
 
 #include "meatpack.h"
+MeatPack meatpack;
 
 #define MeatPack_ProtocolVersion "PV01"
 //#define MP_DEBUG
@@ -57,9 +58,7 @@ uint8_t meatPackLookupTable[16] = {
   '\0' // Unused. 0b1111 indicates a literal character
 };
 
-#if ENABLED(MP_DEBUG)
-  uint8_t chars_decoded = 0;  // Log the first 64 bytes after each reset
-#endif
+TERN_(MP_DEBUG, uint8_t chars_decoded = 0); // Log the first 64 bytes after each reset
 
 void MeatPack::reset_state() {
   state = 0;
@@ -205,7 +204,7 @@ void MeatPack::handle_rx_char(const uint8_t c, const serial_index_t serial_ind) 
   handle_rx_char_inner(c);                // Other characters are passed on for MeatPack decoding
 }
 
-uint8_t MeatPack::get_result_char(char * const __restrict out) {
+uint8_t MeatPack::get_result_char(char* const __restrict out) {
   uint8_t res = 0;
   if (char_out_count) {
     res = char_out_count;
