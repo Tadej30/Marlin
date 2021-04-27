@@ -2208,10 +2208,17 @@ static_assert(hbm[Z_AXIS] >= 0, "HOMING_BUMP_MM.Z must be greater than or equal 
 #endif
 
 /**
- * emergency-command parser
+ * Emergency Command Parser
  */
 #if ENABLED(EMERGENCY_PARSER) && defined(__AVR__) && defined(USBCON)
   #error "EMERGENCY_PARSER does not work on boards with AT90USB processors (USBCON)."
+#endif
+
+/**
+ * Software Reset on Kill option
+ */
+#if ENABLED(SOFT_RESET_ON_KILL) && !BUTTON_EXISTS(ENC)
+  #error "An encoder button is required or SOFT_RESET_ON_KILL will reset the printer without notice!"
 #endif
 
 /**
@@ -3289,6 +3296,13 @@ static_assert(   _ARR_TEST(3,0) && _ARR_TEST(3,1) && _ARR_TEST(3,2)
   _CLEAN_ASSERT(4); _CLEAN_ASSERT(5);
   _CLEAN_ASSERT(6); _CLEAN_ASSERT(7);
   #undef _CLEAN_ASSERT
+#endif
+
+/**
+ * Sanity check for MIXING_EXTRUDER & DISTINCT_E_FACTORS these are not compatible
+ */
+#if ENABLED(MIXING_EXTRUDER) && ENABLED(DISTINCT_E_FACTORS)
+  #error "MIXING_EXTRUDER can't be used with DISTINCT_E_FACTORS. But you may use SINGLENOZZLE with DISTINCT_E_FACTORS."
 #endif
 
 /**
