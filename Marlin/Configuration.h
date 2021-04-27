@@ -69,7 +69,7 @@
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "(T.Sprem 17.4.2021)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "(T.Sprem 27.4.2021)" // Who made the changes.
 #define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
 
 /**
@@ -440,15 +440,15 @@
 
 #define TEMP_RESIDENCY_TIME         10  // (seconds) Time to wait for hotend to "settle" in M109
 #define TEMP_WINDOW                  1  // (°C) Temperature proximity for the "temperature reached" timer
-#define TEMP_HYSTERESIS              3  // (°C) Temperature proximity considered "close enough" to the target
+#define TEMP_HYSTERESIS              2  // (°C) Temperature proximity considered "close enough" to the target
 
 #define TEMP_BED_RESIDENCY_TIME     10  // (seconds) Time to wait for bed to "settle" in M190
 #define TEMP_BED_WINDOW              1  // (°C) Temperature proximity for the "temperature reached" timer
-#define TEMP_BED_HYSTERESIS          3  // (°C) Temperature proximity considered "close enough" to the target
+#define TEMP_BED_HYSTERESIS          2  // (°C) Temperature proximity considered "close enough" to the target
 
 #define TEMP_CHAMBER_RESIDENCY_TIME 10  // (seconds) Time to wait for chamber to "settle" in M191
 #define TEMP_CHAMBER_WINDOW          1  // (°C) Temperature proximity for the "temperature reached" timer
-#define TEMP_CHAMBER_HYSTERESIS      3  // (°C) Temperature proximity considered "close enough" to the target
+#define TEMP_CHAMBER_HYSTERESIS      2  // (°C) Temperature proximity considered "close enough" to the target
 
 // Below this temperature the heater will be switched off
 // because it probably indicates a broken thermistor wire.
@@ -485,7 +485,7 @@
  */
 #define HOTEND_OVERSHOOT 15 // (°C) Forbid temperatures over MAXTEMP - OVERSHOOT
 #define BED_OVERSHOOT    10 // (°C) Forbid temperatures over MAXTEMP - OVERSHOOT
-#define COOLER_OVERSHOOT  2 // (°C) Forbid temperatures closer than OVERSHOOT
+#define COOLER_OVERSHOOT  5 // (°C) Forbid temperatures closer than OVERSHOOT
 
 //===========================================================================
 //============================= PID Settings ================================

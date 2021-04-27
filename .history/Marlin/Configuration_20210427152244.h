@@ -69,7 +69,7 @@
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "(T.Sprem)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "(T.Sprem 27.4.2021)" // Who made the changes.
 #define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
 
 /**
@@ -109,7 +109,7 @@
  * Currently Ethernet (-2) is only supported on Teensy 4.1 boards.
  * :[-2, -1, 0, 1, 2, 3, 4, 5, 6, 7]
  */
-//#define SERIAL_PORT_2 1
+#define SERIAL_PORT_2 1
 
 /**
  * This setting determines the communication speed of the printer.
@@ -160,11 +160,11 @@
  * Multi-Material Unit
  * Set to one of these predefined models:
  *
- *   PRUSA_MMU1      : Průša MMU1 (The "multiplexer" version)
- *   PRUSA_MMU2      : Průša MMU2
- *   PRUSA_MMU2S     : Průša MMU2S (Requires MK3S extruder with motion sensor, EXTRUDERS = 5)
- *   SMUFF_EMU_MMU2  : Technik Gegg SMuFF (Průša MMU2 emulation mode)
- *   SMUFF_EMU_MMU2S : Technik Gegg SMuFF (Průša MMU2S emulation mode)
+ *   PRUSA_MMU1           : Průša MMU1 (The "multiplexer" version)
+ *   PRUSA_MMU2           : Průša MMU2
+ *   PRUSA_MMU2S          : Průša MMU2S (Requires MK3S extruder with motion sensor, EXTRUDERS = 5)
+ *   EXTENDABLE_EMU_MMU2  : MMU with configurable number of filaments (ERCF, SMuFF or similar with Průša MMU2 compatible firmware)
+ *   EXTENDABLE_EMU_MMU2S : MMUS with configurable number of filaments (ERCF, SMuFF or similar with Průša MMU2 compatible firmware)
  *
  * Requires NOZZLE_PARK_FEATURE to park print head in case MMU unit fails.
  * See additional options in Configuration_adv.h.
@@ -329,13 +329,13 @@
     #define AUTO_POWER_FANS         // Turn on PSU if fans need power
     #define AUTO_POWER_E_FANS
     #define AUTO_POWER_CONTROLLERFAN
-    #define AUTO_POWER_CHAMBER_FAN
-    #define AUTO_POWER_COOLER_FAN
+    //#define AUTO_POWER_CHAMBER_FAN
+    //#define AUTO_POWER_COOLER_FAN
     #define AUTO_POWER_E_TEMP          55 // (°C) Turn on PSU if any extruder is over this temperature
-    #define AUTO_POWER_CHAMBER_TEMP    50 // (°C) Turn on PSU if the chamber is over this temperature
-    #define AUTO_POWER_COOLER_TEMP     50 // (°C) Turn on PSU if the cooler is over this temperature
+    //#define AUTO_POWER_CHAMBER_TEMP  50 // (°C) Turn on PSU if the chamber is over this temperature
+    //#define AUTO_POWER_COOLER_TEMP   50 // (°C) Turn on PSU if the cooler is over this temperature
     #define POWER_TIMEOUT             600 // (s) Turn off power if the machine is idle for this duration
-    #define POWER_OFF_DELAY            60 // (s) Delay of poweroff after M81 command. Useful to let fans run for extra time.
+    #define POWER_OFF_DELAY             1 // (s) Delay of poweroff after M81 command. Useful to let fans run for extra time.
   #endif
 #endif
 
@@ -438,17 +438,17 @@
 //#define TEMP_SENSOR_1_AS_REDUNDANT
 #define MAX_REDUNDANT_TEMP_SENSOR_DIFF 10
 
-#define TEMP_RESIDENCY_TIME      10 // (seconds) Time to wait for hotend to "settle" in M109
-#define TEMP_WINDOW              1  // (°C) Temperature proximity for the "temperature reached" timer
-#define TEMP_HYSTERESIS          1  // (°C) Temperature proximity considered "close enough" to the target
+#define TEMP_RESIDENCY_TIME         10  // (seconds) Time to wait for hotend to "settle" in M109
+#define TEMP_WINDOW                  1  // (°C) Temperature proximity for the "temperature reached" timer
+#define TEMP_HYSTERESIS              2  // (°C) Temperature proximity considered "close enough" to the target
 
-#define TEMP_BED_RESIDENCY_TIME  10 // (seconds) Time to wait for bed to "settle" in M190
-#define TEMP_BED_WINDOW          1  // (°C) Temperature proximity for the "temperature reached" timer
-#define TEMP_BED_HYSTERESIS      1  // (°C) Temperature proximity considered "close enough" to the target
+#define TEMP_BED_RESIDENCY_TIME     10  // (seconds) Time to wait for bed to "settle" in M190
+#define TEMP_BED_WINDOW              1  // (°C) Temperature proximity for the "temperature reached" timer
+#define TEMP_BED_HYSTERESIS          2  // (°C) Temperature proximity considered "close enough" to the target
 
 #define TEMP_CHAMBER_RESIDENCY_TIME 10  // (seconds) Time to wait for chamber to "settle" in M191
-#define TEMP_CHAMBER_WINDOW      1  // (°C) Temperature proximity for the "temperature reached" timer
-#define TEMP_CHAMBER_HYSTERESIS  3  // (°C) Temperature proximity considered "close enough" to the target
+#define TEMP_CHAMBER_WINDOW          1  // (°C) Temperature proximity for the "temperature reached" timer
+#define TEMP_CHAMBER_HYSTERESIS      2  // (°C) Temperature proximity considered "close enough" to the target
 
 // Below this temperature the heater will be switched off
 // because it probably indicates a broken thermistor wire.
@@ -483,8 +483,9 @@
  * (especially before PID tuning). Setting the target temperature too close to MAXTEMP guarantees
  * a MAXTEMP shutdown! Use these values to forbid temperatures being set too close to MAXTEMP.
  */
-#define HOTEND_OVERSHOOT 15   // (°C) Forbid temperatures over MAXTEMP - OVERSHOOT
-#define BED_OVERSHOOT    10   // (°C) Forbid temperatures over MAXTEMP - OVERSHOOT
+#define HOTEND_OVERSHOOT 15 // (°C) Forbid temperatures over MAXTEMP - OVERSHOOT
+#define BED_OVERSHOOT    10 // (°C) Forbid temperatures over MAXTEMP - OVERSHOOT
+#define COOLER_OVERSHOOT  5 // (°C) Forbid temperatures closer than OVERSHOOT
 
 //===========================================================================
 //============================= PID Settings ================================
@@ -512,9 +513,9 @@
     #define DEFAULT_Ki_LIST {   1.08,   1.08 }
     #define DEFAULT_Kd_LIST { 114.00, 114.00 }
   #else
-   #define DEFAULT_Kp 14.5274
-   #define DEFAULT_Ki 0.7488
-   #define DEFAULT_Kd 70.4579
+#define DEFAULT_Kp 14.6423
+#define DEFAULT_Ki 0.7515
+#define DEFAULT_Kd 71.3188
   #endif
 #endif // PIDTEMP
 
@@ -553,9 +554,10 @@
 
   // 120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   // from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
-    #define DEFAULT_bedKp 41.87
-    #define DEFAULT_bedKi 1.68
-    #define DEFAULT_bedKd 694.42
+  
+#define DEFAULT_bedKp 23.4276
+#define DEFAULT_bedKi 0.5737
+#define DEFAULT_bedKd 637.8245
 
   // FIND YOUR OWN: "M303 E-1 C10 S80" to run autotune on the bed at 80 degreesC for 10 cycles.
 #endif // PIDTEMPBED
@@ -801,7 +803,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {  100, 100, 400, 345 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {100, 100, 400, 168.54}
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -1051,7 +1053,7 @@
  *     |    [-]    |
  *     O-- FRONT --+
  */
-#define NOZZLE_TO_PROBE_OFFSET { 23, 0, -1.625}  // old -1.675
+#define NOZZLE_TO_PROBE_OFFSET { 23, 0, -0.540}  // old -1.675
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
@@ -1122,13 +1124,13 @@
 #define Z_CLEARANCE_DEPLOY_PROBE    3 // Z Clearance for Deploy/Stow
 #define Z_CLEARANCE_BETWEEN_PROBES  3 // Z Clearance between probe points
 #define Z_CLEARANCE_MULTI_PROBE     3 // Z Clearance between multiple probes
-//#define Z_AFTER_PROBING             3 // Z position after probing is done
+#define Z_AFTER_PROBING             3 // Z position after probing is done
 
 #define Z_PROBE_LOW_POINT          -2 // Farthest distance below the trigger-point to go before stopping
 
 // For M851 give a range for adjusting the Z probe offset
-#define Z_PROBE_OFFSET_RANGE_MIN -20
-#define Z_PROBE_OFFSET_RANGE_MAX 20
+#define Z_PROBE_OFFSET_RANGE_MIN -2
+#define Z_PROBE_OFFSET_RANGE_MAX  2
 
 // Enable the M48 repeatability test to test probe accuracy
 #define Z_MIN_PROBE_REPEATABILITY_TEST
@@ -1481,6 +1483,8 @@
   #define GRID_MAX_POINTS_X 10      // Don't use more than 15 points per axis, implementation limited.
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
+  //#define UBL_HILBERT_CURVE       // Use Hilbert distribution for less travel when probing multiple points
+
   #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
   #define UBL_SAVE_ACTIVE_ON_M500   // Save the currently active mesh in the current slot on M500
 
@@ -1667,8 +1671,16 @@
   //#define EEPROM_AUTO_INIT  // Init EEPROM automatically on any errors.
 #endif
 
+#define I2C_EEPROM
+#ifdef MARLIN_EEPROM_SIZE
+   #undef MARLIN_EEPROM_SIZE<br>#endif
+// uncomment the size of EEPROM you are using.
+#define MARLIN_EEPROM_SIZE 0x7FFF // EEPROM end address AT24C256 (32kB)
+//#define MARLIN_EEPROM_SIZE 0x3FFF // EEPROM end address AT24C128 (16kB)
+//#define MARLIN_EEPROM_SIZE 0x1FFF // EEPROM end address AT24C64 (8kB)
+//#define MARLIN_EEPROM_SIZE 0x0FFF // EEPROM end address AT24C32 (4kB)
+#endif
 
-//
 // Host Keepalive
 //
 // When enabled Marlin will send a busy status message to the host
@@ -1699,11 +1711,23 @@
 #define PREHEAT_1_TEMP_CHAMBER 35
 #define PREHEAT_1_FAN_SPEED     0 // Value from 0 to 255
 
-#define PREHEAT_2_LABEL       "ABS"
-#define PREHEAT_2_TEMP_HOTEND 230
-#define PREHEAT_2_TEMP_BED    110
+#define PREHEAT_2_LABEL       "PETG"
+#define PREHEAT_2_TEMP_HOTEND 220
+#define PREHEAT_2_TEMP_BED     70
 #define PREHEAT_2_TEMP_CHAMBER 35
 #define PREHEAT_2_FAN_SPEED     0 // Value from 0 to 255
+
+#define PREHEAT_3_LABEL       "ABS"
+#define PREHEAT_3_TEMP_HOTEND 230
+#define PREHEAT_3_TEMP_BED    110
+#define PREHEAT_3_TEMP_CHAMBER 35
+#define PREHEAT_3_FAN_SPEED     0 // Value from 0 to 255
+
+#define PREHEAT_4_LABEL       "FLEX"
+#define PREHEAT_4_TEMP_HOTEND 235
+#define PREHEAT_4_TEMP_BED     30
+#define PREHEAT_4_TEMP_CHAMBER 35
+#define PREHEAT_4_FAN_SPEED     0 // Value from 0 to 255
 
 /**
  * Nozzle Park
@@ -1866,6 +1890,7 @@
   //#define PASSWORD_AFTER_SD_PRINT_END
   //#define PASSWORD_AFTER_SD_PRINT_ABORT
   //#include "Configuration_Secure.h"       // External file with PASSWORD_DEFAULT_VALUE
+  #define PASSWORD_DEFAULT_VALUE 1234
 #endif
 
 //=============================================================================
@@ -2373,7 +2398,11 @@
 //#define DGUS_LCD_UI_ORIGIN
 //#define DGUS_LCD_UI_FYSETC
 //#define DGUS_LCD_UI_HIPRECY
+
 //#define DGUS_LCD_UI_MKS
+#if ENABLED(DGUS_LCD_UI_MKS)
+  #define USE_MKS_GREEN_UI
+#endif
 
 //
 // Touch-screen LCD for Malyan M200/M300 printers
@@ -2397,6 +2426,14 @@
 #if EITHER(ANYCUBIC_LCD_I3MEGA, ANYCUBIC_LCD_CHIRON)
   #define LCD_SERIAL_PORT 3  // Default is 3 for Anycubic
   //#define ANYCUBIC_LCD_DEBUG
+#endif
+
+//
+// 320x240 Nextion 2.8" serial TFT Resistive Touch Screen NX3224T028
+//
+//#define NEXTION_TFT
+#if ENABLED(NEXTION_TFT)
+  #define LCD_SERIAL_PORT 1  // Default is 1 for Nextion
 #endif
 
 //
@@ -2483,6 +2520,11 @@
 // 480x320, 3.5", FSMC Stock Display from ET5
 //
 //#define ANET_ET5_TFT35
+
+//
+// 1024x600, 7", RGB Stock Display from BIQU-BX
+//
+//#define BIQU_BX_TFT70
 
 //
 // Generic TFT with detailed options
