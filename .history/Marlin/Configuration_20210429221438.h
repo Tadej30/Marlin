@@ -69,7 +69,7 @@
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "(T.Sprem 2.5.2021)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "(T.Sprem 29.4.2021)" // Who made the changes.
 #define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
 
 /**
@@ -803,7 +803,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {200, 200, 800, 168.0}
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {100, 100, 400, 168.54}
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -1052,7 +1052,7 @@
  *     |    [-]    |
  *     O-- FRONT --+
  */
-#define NOZZLE_TO_PROBE_OFFSET { 23, 0,-0.555}  // old -1.675
+#define NOZZLE_TO_PROBE_OFFSET { 23, 0,-0.550}  // old -1.675
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.

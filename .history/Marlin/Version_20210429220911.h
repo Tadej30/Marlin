@@ -28,7 +28,7 @@
 /**
  * Marlin release version identifier
  */
-#define SHORT_BUILD_VERSION "2.0.8"
+#define SHORT_BUILD_VERSION "2.0.7.2"
 
 /**
  * Verbose version identifier which should contain a reference to the location
@@ -41,7 +41,7 @@
  * here we define this default string as the date where the latest release
  * version was tagged.
  */
-#define STRING_DISTRIBUTION_DATE "2.5.2021"
+#define STRING_DISTRIBUTION_DATE "29.4.2021"
 
 /**
  * Defines a generic printer name to be output to the LCD after booting Marlin.
@@ -54,7 +54,7 @@
  * has a distinct Github fork— the Source Code URL should just be the main
  * Marlin repository.
  */
-#define SOURCE_CODE_URL "https://github.com/Tadej30/Marlin/tree/Prusa-Mk3/s-Stable"
+#define SOURCE_CODE_URL "https://github.com/Tadej30/Marlin/tree/My_Marlin_2.0.x"
 
 /**
  * Default generic printer UUID.
