@@ -2763,22 +2763,22 @@
    */
   #define HYBRID_THRESHOLD
 
-  #define X_HYBRID_THRESHOLD     140  // [mm/s]
-  #define X2_HYBRID_THRESHOLD    140
-  #define Y_HYBRID_THRESHOLD     140
-  #define Y2_HYBRID_THRESHOLD    140
-  #define Z_HYBRID_THRESHOLD      30
-  #define Z2_HYBRID_THRESHOLD     30
-  #define Z3_HYBRID_THRESHOLD     30
-  #define Z4_HYBRID_THRESHOLD     30
-  #define E0_HYBRID_THRESHOLD     40
-  #define E1_HYBRID_THRESHOLD     40
-  #define E2_HYBRID_THRESHOLD     40
-  #define E3_HYBRID_THRESHOLD     40
-  #define E4_HYBRID_THRESHOLD     40
-  #define E5_HYBRID_THRESHOLD     40
-  #define E6_HYBRID_THRESHOLD     40
-  #define E7_HYBRID_THRESHOLD     40
+  #define X_HYBRID_THRESHOLD     100  // [mm/s]
+  #define X2_HYBRID_THRESHOLD    100
+  #define Y_HYBRID_THRESHOLD     100
+  #define Y2_HYBRID_THRESHOLD    100
+  #define Z_HYBRID_THRESHOLD      3
+  #define Z2_HYBRID_THRESHOLD     3
+  #define Z3_HYBRID_THRESHOLD     3
+  #define Z4_HYBRID_THRESHOLD     3
+  #define E0_HYBRID_THRESHOLD     30
+  #define E1_HYBRID_THRESHOLD     30
+  #define E2_HYBRID_THRESHOLD     30
+  #define E3_HYBRID_THRESHOLD     30
+  #define E4_HYBRID_THRESHOLD     30
+  #define E5_HYBRID_THRESHOLD     30
+  #define E6_HYBRID_THRESHOLD     30
+  #define E7_HYBRID_THRESHOLD     30
 
   /**
    * Use StallGuard to home / probe X, Y, Z.
@@ -2831,13 +2831,13 @@
    *
    * Values from 0..1023, -1 to disable homing phase for that axis.
    */
-  #define TMC_HOME_PHASE { 896, 896, 896 }
+  // #define TMC_HOME_PHASE { 896, 896, 896 }
 
   /**
    * Beta feature!
    * Create a 50/50 square wave step pulse optimal for stepper drivers.
    */
-  //#define SQUARE_WAVE_STEPPING
+  #define SQUARE_WAVE_STEPPING
 
   /**
    * Enable M122 debugging command for TMC stepper drivers.
