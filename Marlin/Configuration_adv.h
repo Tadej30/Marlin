@@ -2300,14 +2300,15 @@
 #endif // HAS_MULTI_EXTRUDER
 
 /**
- * Advanced Pause
- * Experimental feature for filament change support and for parking the nozzle when paused.
- * Adds the GCode M600 for initiating filament change.
- * If PARK_HEAD_ON_PAUSE enabled, adds the GCode M125 to pause printing and park the nozzle.
+ * Advanced Pause for Filament Change
+ *  - Adds the G-code M600 Filament Change to initiate a filament change.
+ *  - This feature is required for the default FILAMENT_RUNOUT_SCRIPT.
  *
- * Requires an LCD display.
- * Requires NOZZLE_PARK_FEATURE.
- * This feature is required for the default FILAMENT_RUNOUT_SCRIPT.
+ * Requirements:
+ *  - For Filament Change parking enable and configure NOZZLE_PARK_FEATURE.
+ *  - For user interaction enable an LCD display, HOST_PROMPT_SUPPORT, or EMERGENCY_PARSER.
+ *
+ * Enable PARK_HEAD_ON_PAUSE to add the G-code M125 Pause and Park.
  */
  #define ADVANCED_PAUSE_FEATURE
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
@@ -2492,8 +2493,8 @@
 
   #if AXIS_IS_TMC(X)
     #define X_CURRENT       900 // (mA) RMS current. Multiply by 1.414 for peak current.
-    #define X_CURRENT_HOME  300 // (mA) RMS current for sensorless homing
-    #define X_MICROSTEPS     16 // 0..256
+    #define X_CURRENT_HOME  400 // (mA) RMS current for sensorless homing
+    #define X_MICROSTEPS     32 // 0..256
     #define X_RSENSE       0.11
     #define X_CHAIN_POS      -1 // -1..0: Not chained. 1: MCU MOSI connected. 2: Next in chain, ...
     #define X_INTERPOLATE  true // Enable to override 'INTERPOLATE' for the X axis
@@ -2510,8 +2511,8 @@
 
   #if AXIS_IS_TMC(Y)
     #define Y_CURRENT       900
-    #define Y_CURRENT_HOME  300
-    #define Y_MICROSTEPS     16
+    #define Y_CURRENT_HOME  400
+    #define Y_MICROSTEPS     32
     #define Y_RSENSE       0.11
     #define Y_CHAIN_POS      -1
     #define Y_INTERPOLATE  true
@@ -2529,7 +2530,7 @@
   #if AXIS_IS_TMC(Z)
     #define Z_CURRENT       650
     #define Z_CURRENT_HOME  400
-    #define Z_MICROSTEPS     16
+    #define Z_MICROSTEPS     32
     #define Z_RSENSE       0.11
     #define Z_CHAIN_POS      -1
     #define Z_INTERPOLATE  true
@@ -2811,7 +2812,7 @@
     // TMC2209: 0...255. TMC2130: -64...63
     #define X_STALL_SENSITIVITY  1
     #define X2_STALL_SENSITIVITY X_STALL_SENSITIVITY
-    #define Y_STALL_SENSITIVITY  1
+    #define Y_STALL_SENSITIVITY  2
     #define Y2_STALL_SENSITIVITY Y_STALL_SENSITIVITY
     #define Z_STALL_SENSITIVITY  1
     #define Z2_STALL_SENSITIVITY Z_STALL_SENSITIVITY
@@ -3165,13 +3166,19 @@
   //#define AIR_EVACUATION                     // Cutter Vacuum / Laser Blower motor control with G-codes M10-M11
   #if ENABLED(AIR_EVACUATION)
     #define AIR_EVACUATION_ACTIVE       LOW    // Set to "HIGH" if the on/off function is active HIGH
-    #define AIR_EVACUATION_PIN          42     // Override the default Cutter Vacuum or Laser Blower pin
+    //#define AIR_EVACUATION_PIN        42     // Override the default Cutter Vacuum or Laser Blower pin
   #endif
 
-  //#define SPINDLE_SERVO         // A servo converting an angle to spindle power
+  //#define AIR_ASSIST                         // Air Assist control with G-codes M8-M9
+  #if ENABLED(AIR_ASSIST)
+    #define AIR_ASSIST_ACTIVE           LOW    // Active state on air assist pin
+    //#define AIR_ASSIST_PIN            44     // Override the default Air Assist pin
+  #endif
+
+  //#define SPINDLE_SERVO                      // A servo converting an angle to spindle power
   #ifdef SPINDLE_SERVO
-    #define SPINDLE_SERVO_NR   0  // Index of servo used for spindle control
-    #define SPINDLE_SERVO_MIN 10  // Minimum angle for servo spindle
+    #define SPINDLE_SERVO_NR   0               // Index of servo used for spindle control
+    #define SPINDLE_SERVO_MIN 10               // Minimum angle for servo spindle
   #endif
 
   /**
@@ -3477,7 +3484,7 @@
 #define PROPORTIONAL_FONT_RATIO 1.0
 
 /**
- * Spend 28 bytes of SRAM to optimize the GCode parser
+ * Spend 28 bytes of SRAM to optimize the G-code parser
  */
 #define FASTER_GCODE_PARSER
 
