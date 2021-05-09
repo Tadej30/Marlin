@@ -56,7 +56,7 @@
  */
 void GcodeSuite::M125() {
   // Initial retract before move to filament change position
-  const float retract = -ABS(parser.seen('L') ? parser.value_axis_units(E_AXIS) : (PAUSE_PARK_RETRACT_LENGTH));
+  const float retract = -ABS(parser.axisunitsval('L', E_AXIS, PAUSE_PARK_RETRACT_LENGTH));
 
   xyz_pos_t park_point = NOZZLE_PARK_POINT;
 
@@ -81,7 +81,7 @@ void GcodeSuite::M125() {
   TERN_(POWER_LOSS_RECOVERY, if (recovery.enabled) recovery.save(true));
 
   if (pause_print(retract, park_point, show_lcd, 0)) {
-    if (ENABLED(EXTENSIBLE_UI) || !sd_printing || show_lcd) {
+    if (ENABLED(EXTENSIBLE_UI) || BOTH(EMERGENCY_PARSER, HOST_PROMPT_SUPPORT) || !sd_printing || show_lcd) {
       wait_for_confirmation(false, 0);
       resume_print(0, 0, -retract, 0);
     }
