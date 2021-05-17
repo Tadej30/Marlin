@@ -32,9 +32,6 @@
 #include "marlinui_DOGM.h"
 
 #define BW(N) ((N + 7) / 8)
-#define STATUS_CHAMBER_X 70
-#define STATUS_BED_X 35
-//#define STATUS_FAN_X 100
 
 #if ENABLED(CUSTOM_STATUS_SCREEN_IMAGE) && DISABLED(STATUS_COMBINE_HEATERS)
 
@@ -48,7 +45,7 @@
    *
    * See the included examples for guidance
    */
-  //#include "status/skrpro.h"
+  #include "../../../_Statusscreen.h"
 
   #ifdef STATUS_SCREENWIDTH
     #error "Your custom _Statusscreen.h needs to be converted for Marlin 2.0."
@@ -126,72 +123,7 @@
 // Chamber
 //
 #if !STATUS_CHAMBER_WIDTH && HAS_TEMP_CHAMBER && ((HOTENDS <= 4 && !HAS_HEATED_BED) || (HOTENDS <= 3 && HAS_HEATED_BED))
-  #define STATUS_CHAMBER_WIDTH 21
-  #if STATUS_HEATERS_WIDTH
-    #if ENABLED(STATUS_COMBINE_HEATERS)
-      #define STATUS_CHAMBER_X (LCD_PIXEL_WIDTH - 2 - (STATUS_CHAMBER_BYTEWIDTH) * 8)
-    #elif HAS_FAN0 && HAS_HEATED_BED && HOTENDS <= 2
-      #define STATUS_CHAMBER_X (LCD_PIXEL_WIDTH - 2 - (STATUS_HEATERS_BYTEWIDTH - STATUS_CHAMBER_BYTEWIDTH) * 8)
-    #elif HAS_FAN0 && !HAS_HEATED_BED
-      #define STATUS_CHAMBER_X (LCD_PIXEL_WIDTH - (STATUS_CHAMBER_BYTEWIDTH + STATUS_FAN_BYTEWIDTH) * 8)
-    #else
-      #define STATUS_CHAMBER_X (LCD_PIXEL_WIDTH - (STATUS_CHAMBER_BYTEWIDTH) * 8)
-    #endif
-  #endif
-
-  #ifdef STATUS_CHAMBER_ANIM
-
-    const unsigned char status_chamber_bmp[] PROGMEM = {
-
-      B11111111,B11111111,B11111111, // ########################
-      B10000000,B00000000,B00000001, // #......................#
-      B10001010,B10101010,B10101001, // #...#.#.#.#.#.#.#.#.#..#
-      B10011111,B11111111,B11111101, // #..###################.#
-      B10011001,B01010100,B01110101, // #..##..#.#.#.#...###.#.#
-      B10010111,B01010101,B10111101, // #..#.###.#.#.#.##.####.#
-      B10010111,B00010100,B01111101, // #..#.###...#.#...#####.#
-      B10011001,B01010101,B11111101, // #..##..#.#.#.#.#######.#
-      B10011111,B11111111,B11111101, // #..###################.#
-      B10001010,B10101010,B10101001, // #...#.#.#.#.#.#.#.#.#..#
-      B10000000,B00000000,B00000001, // #......................#
-      B11111111,B11111111,B11111111  // ########################
-  
-
-};
-
-      const unsigned char status_chamber_on_bmp[] PROGMEM = {
-      B00011111,B11111111,B11111000,
-      B00010000,B00000000,B00001000,
-      B00010000,B10000100,B00001000,
-      B00010000,B01000010,B00001000,
-      B00010000,B01000010,B00001000,
-      B00010000,B10000100,B00001000,
-      B00010001,B00001000,B00001000,
-      B00010001,B00001000,B00001000,
-      B00010000,B10000100,B00001000,
-      B00010000,B00000000,B00001000,
-      B00011111,B11111111,B11111000,
-      B00011111,B11111111,B11111000
-    };
-
-  #else
-
-    const unsigned char status_chamber_bmp[] PROGMEM = {
-      B00011111,B11111111,B11111000,
-      B00010000,B00000000,B00001000,
-      B00010000,B10000100,B00001000,
-      B00010000,B01000010,B00001000,
-      B00010000,B01000010,B00001000,
-      B00010000,B10000100,B00001000,
-      B00010001,B00001000,B00001000,
-      B00010001,B00001000,B00001000,
-      B00010000,B10000100,B00001000,
-      B00010000,B00000000,B00001000,
-      B00011111,B11111111,B11111000,
-      B00011111,B11111111,B11111000
-    };
-
-  #endif
+  #include "status/chamber.h"
 #endif
 #ifndef STATUS_CHAMBER_WIDTH
   #define STATUS_CHAMBER_WIDTH 0
