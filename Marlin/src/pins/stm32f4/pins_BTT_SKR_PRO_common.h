@@ -23,22 +23,17 @@
 
 #include "env_validate.h"
 
-// If you have the BigTreeTech driver expansion module, enable BTT_MOTOR_EXPANSION
-// https://github.com/bigtreetech/BTT-Expansion-module/tree/master/BTT%20EXP-MOT
+// BigTreeTech driver expansion module https://bit.ly/3ptRRoj
 //#define BTT_MOTOR_EXPANSION
 
 #if BOTH(HAS_WIRED_LCD, BTT_MOTOR_EXPANSION)
-  #if EITHER(CR10_STOCKDISPLAY, ENDER2_STOCKDISPLAY)
-    #define EXP_MOT_USE_EXP2_ONLY 1
-  #else
-    #error "You can't use both an LCD and a Motor Expansion Module on EXP1/EXP2 at the same time."
-  #endif
+  #error "It's not possible to have both LCD and motor expansion module on EXP1/EXP2."
 #endif
 
 // Use one of these or SDCard-based Emulation will be used
 #if NO_EEPROM_SELECTED
   //#define SRAM_EEPROM_EMULATION                 // Use BackSRAM-based EEPROM emulation
-  #define FLASH_EEPROM_EMULATION                  // Use Flash-based EEPROM emulation
+  //#define FLASH_EEPROM_EMULATION                // Use Flash-based EEPROM emulation
 #endif
 
 #if ENABLED(FLASH_EEPROM_EMULATION)
@@ -138,7 +133,7 @@
 #define Y_STEP_PIN                          PE11
 #define Y_DIR_PIN                           PE8
 #define Y_ENABLE_PIN                        PD7
-#ifndef Y_CS_PIN
+ #ifndef Y_CS_PIN
   #define Y_CS_PIN                          PB8
 #endif
 
@@ -232,25 +227,29 @@
 //
 // Temperature Sensors
 //
-#define TEMP_0_PIN                          PF4   // T1 <-> E0
-#define TEMP_1_PIN                          PF5   // T2 <-> E1
-#define TEMP_2_PIN                          PF6   // T3 <-> E2
-#define TEMP_BED_PIN                        PF3   // T0 <-> Bed
+#define TEMP_BED_PIN     PF3 // T0 <-> Bed temp.sensor
+#define TEMP_0_PIN       PF4 // T1 <-> (E0) Hot End temp.sensor
+#define TEMP_1_PIN       PF6 // T2 <-> (E1) CHAMBER temperature pin 
+#define TEMP_CHAMBER_PIN PF5 // T3 <-> (E2) SKR PRO 1.1 temp. sensor
+ 
+
 
 //
 // Heaters / Fans
 //
-#define HEATER_0_PIN                        PB1   // Heater0
-#define HEATER_1_PIN                        PD14  // Heater1
-#define HEATER_2_PIN                        PB0   // Heater1
-#define HEATER_BED_PIN                      PD12  // Hotbed
-#define FAN_PIN                             PC8   // Fan0
-#define FAN1_PIN                            PE5   // Fan1
-#define FAN2_PIN                            PE6   // Fan2
+#define HEATER_0_PIN PB1    // Heater0 = Hotend
+#define HEATER_1_PIN PD14   // Heater1 = CASE Light
+#define HEATER_BED_PIN PD12 // Heated BED
+
+#define FAN_PIN PE5  // Fan0 = LAYER FAN
+#define FAN1_PIN PC8 // Fan1 = EXTRUDER FAN
+#define FAN2_PIN PE6 // Fan2 = SKR PRO 1.1 CONTROLLER FAN
+#define FAN3_PIN PB0 // Fan3 = CHAMBER FAN
 
 #ifndef E0_AUTO_FAN_PIN
-  #define E0_AUTO_FAN_PIN               FAN1_PIN
+#define E0_AUTO_FAN_PIN FAN1_PIN
 #endif
+
 
 //
 // Misc. Functions
@@ -316,59 +315,48 @@
 #endif
 
 #if ENABLED(BTT_MOTOR_EXPANSION)
-  /**       _____                        _____
-   *    NC | . . | GND               NC | . . | GND
-   *    NC | . . | M1EN            M2EN | . . | M3EN
-   * M1STP | . .   M1DIR           M1RX | . .   M1DIAG
-   * M2DIR | . . | M2STP           M2RX | . . | M2DIAG
-   * M3DIR | . . | M3STP           M3RX | . . | M3DIAG
-   *        -----                        -----
-   *        EXP2                         EXP1
-   *
-   * NB In EXP_MOT_USE_EXP2_ONLY mode EXP1 is not used and M2EN and M3EN need to be jumpered to M1EN
+  /**
+   *               _____                                      _____
+   *           NC | · · | GND                             NC | · · | GND
+   *           NC | · · | PF12 (M1EN)            (M2EN)  PG7 | · · | PG6  (M3EN)
+   * (M1STP) PB15 | · ·   PF11 (M1DIR)           (M1RX)  PG3 | · ·   PG2  (M1DIAG)
+   * (M2DIR) PB12 | · · | PG10 (M2STP)           (M2RX) PD10 | · · | PD11 (M2DIAG)
+   * (M3DIR) PB13 | · · | PB14 (M3STP)           (M3RX)  PA8 | · · | PG4  (M3DIAG)
+   *               -----                                      -----
+   *               EXP2                                       EXP1
    */
 
   // M1 on Driver Expansion Module
   #define E3_STEP_PIN                EXP2_05_PIN
   #define E3_DIR_PIN                 EXP2_06_PIN
   #define E3_ENABLE_PIN              EXP2_04_PIN
-  #if !EXP_MOT_USE_EXP2_ONLY
-    #define E3_DIAG_PIN              EXP1_06_PIN
-    #define E3_CS_PIN                EXP1_05_PIN
-    #if HAS_TMC_UART
-      #define E3_SERIAL_TX_PIN       EXP1_05_PIN
-      #define E3_SERIAL_RX_PIN       EXP1_05_PIN
-    #endif
+  #define E3_DIAG_PIN                EXP1_06_PIN
+  #define E3_CS_PIN                  EXP1_05_PIN
+  #if HAS_TMC_UART
+    #define E3_SERIAL_TX_PIN         EXP1_05_PIN
+    #define E3_SERIAL_RX_PIN         EXP1_05_PIN
   #endif
 
   // M2 on Driver Expansion Module
   #define E4_STEP_PIN                EXP2_08_PIN
   #define E4_DIR_PIN                 EXP2_07_PIN
-  #if !EXP_MOT_USE_EXP2_ONLY
-    #define E4_ENABLE_PIN            EXP1_03_PIN
-    #define E4_DIAG_PIN              EXP1_08_PIN
-    #define E4_CS_PIN                EXP1_07_PIN
-    #if HAS_TMC_UART
-      #define E4_SERIAL_TX_PIN       EXP1_07_PIN
-      #define E4_SERIAL_RX_PIN       EXP1_07_PIN
-    #endif
-  #else
-    #define E4_ENABLE_PIN            EXP2_04_PIN
+  #define E4_ENABLE_PIN              EXP1_03_PIN
+  #define E4_DIAG_PIN                EXP1_08_PIN
+  #define E4_CS_PIN                  EXP1_07_PIN
+  #if HAS_TMC_UART
+    #define E4_SERIAL_TX_PIN         EXP1_07_PIN
+    #define E4_SERIAL_RX_PIN         EXP1_07_PIN
   #endif
 
   // M3 on Driver Expansion Module
   #define E5_STEP_PIN                EXP2_10_PIN
   #define E5_DIR_PIN                 EXP2_09_PIN
-  #if !EXP_MOT_USE_EXP2_ONLY
-    #define E5_ENABLE_PIN            EXP1_04_PIN
-    #define E5_DIAG_PIN              EXP1_10_PIN
-    #define E5_CS_PIN                EXP1_09_PIN
-    #if HAS_TMC_UART
-      #define E5_SERIAL_TX_PIN       EXP1_09_PIN
-      #define E5_SERIAL_RX_PIN       EXP1_09_PIN
-    #endif
-  #else
-    #define E5_ENABLE_PIN            EXP2_04_PIN
+  #define E5_ENABLE_PIN              EXP1_04_PIN
+  #define E5_DIAG_PIN                EXP1_10_PIN
+  #define E5_CS_PIN                  EXP1_09_PIN
+  #if HAS_TMC_UART
+    #define E5_SERIAL_TX_PIN         EXP1_09_PIN
+    #define E5_SERIAL_RX_PIN         EXP1_09_PIN
   #endif
 
 #endif // BTT_MOTOR_EXPANSION

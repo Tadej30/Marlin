@@ -28,7 +28,7 @@
 /**
  * Marlin release version identifier
  */
-//#define SHORT_BUILD_VERSION "2.0.8.1"
+#define SHORT_BUILD_VERSION "2.0.7.2"
 
 /**
  * Verbose version identifier which should contain a reference to the location
@@ -41,12 +41,12 @@
  * here we define this default string as the date where the latest release
  * version was tagged.
  */
-//#define STRING_DISTRIBUTION_DATE "2021-05-15"
+#define STRING_DISTRIBUTION_DATE "29.4.2021"
 
 /**
  * Defines a generic printer name to be output to the LCD after booting Marlin.
  */
-//#define MACHINE_NAME "3D Printer"
+#define MACHINE_NAME "Prusa MK3/s"
 
 /**
  * The SOURCE_CODE_URL is the location where users will find the Marlin Source
@@ -54,18 +54,18 @@
  * has a distinct Github fork— the Source Code URL should just be the main
  * Marlin repository.
  */
-//#define SOURCE_CODE_URL "github.com/MarlinFirmware/Marlin"
+#define SOURCE_CODE_URL "https://github.com/Tadej30/Marlin/tree/My_Marlin_2.0.x"
 
 /**
  * Default generic printer UUID.
  */
-//#define DEFAULT_MACHINE_UUID "cede2a2f-41a2-4748-9b12-c55c62f367ff"
+#define DEFAULT_MACHINE_UUID "165f2846-12b6-4c04-8592-80f86a3e7b5d"
 
 /**
  * The WEBSITE_URL is the location where users can get more information such as
  * documentation about a specific Marlin release.
  */
-//#define WEBSITE_URL "marlinfw.org"
+#define WEBSITE_URL "marlinfw.org"
 
 /**
  * Set the vendor info the serial USB interface, if changable
