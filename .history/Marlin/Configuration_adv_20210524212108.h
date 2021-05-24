@@ -1303,7 +1303,7 @@
 
   #define EVENT_GCODE_SD_ABORT "G28 X5 Y210"    // G-code to run on SD Abort Print (e.g., "G28XY" or "G27")
   
-  //#define MEDIA_MENU_AT_TOP               // Force the media menu to be listed on the top of the main menu
+  #define MEDIA_MENU_AT_TOP               // Force the media menu to be listed on the top of the main menu
   
   #if ENABLED(PRINTER_EVENT_LEDS)
     #define PE_LEDS_COMPLETED_TIME  (2*60) // (seconds) Time to keep the LED "done" color before restoring normal illumination
