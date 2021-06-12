@@ -125,6 +125,12 @@
   #define PROBE_BETA                   3950    // Beta value
 #endif
 
+#if TEMP_SENSOR_REDUNDANT == 1000
+  #define REDUNDANT_PULLUP_RESISTOR_OHMS   4700    // Pullup resistor
+  #define REDUNDANT_RESISTANCE_25C_OHMS    100000  // Resistance at 25C
+  #define REDUNDANT_BETA                   3950    // Beta value
+#endif
+
 //
 // Hephestos 2 24V heated bed upgrade kit.
 // https://store.bq.com/en/heated-bed-kit-hephestos2
@@ -3417,8 +3423,18 @@
       #define SPINDLE_LASER_POWERDOWN_DELAY   50 // (ms) Delay to allow the spindle to stop
 
     #endif
+
+    //
+    // Laser I2C Ammeter (High precision INA226 low/high side module)
+    //
+    //#define I2C_AMMETER
+    #if ENABLED(I2C_AMMETER)
+      #define I2C_AMMETER_IMAX            0.1    // (Amps) Calibration value for the expected current range
+      #define I2C_AMMETER_SHUNT_RESISTOR  0.1    // (Ohms) Calibration shunt resistor value
+    #endif
+
   #endif
-#endif
+#endif // SPINDLE_FEATURE || LASER_FEATURE
 
 /**
  * Synchronous Laser Control with M106/M107

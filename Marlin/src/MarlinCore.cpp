@@ -282,8 +282,15 @@ bool wait_for_heatup = true;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnarrowing"
 
+#ifdef RUNTIME_ONLY_ANALOG_TO_DIGITAL
+  static const pin_t sensitive_pins[] PROGMEM = { SENSITIVE_PINS };
+#else
+  template <pin_t ...D>
+  constexpr pin_t OnlyPins<-2, D...>::table[sizeof...(D)];
+  #define sensitive_pins OnlyPins<SENSITIVE_PINS>::table
+#endif
+
 bool pin_is_protected(const pin_t pin) {
-  static const pin_t sensitive_pins[] PROGMEM = SENSITIVE_PINS;
   LOOP_L_N(i, COUNT(sensitive_pins)) {
     pin_t sensitive_pin;
     memcpy_P(&sensitive_pin, &sensitive_pins[i], sizeof(pin_t));
@@ -1119,6 +1126,7 @@ void setup() {
   #endif
 
   #if HAS_FREEZE_PIN
+    SETUP_LOG("FREEZE_PIN");
     SET_INPUT_PULLUP(FREEZE_PIN);
   #endif
 
@@ -1127,11 +1135,19 @@ void setup() {
     OUT_WRITE(SUICIDE_PIN, !SUICIDE_PIN_INVERTING);
   #endif
 
+  #ifdef JTAGSWD_RESET
+    SETUP_LOG("JTAGSWD_RESET");
+    JTAGSWD_RESET();
+  #endif
+
   #if EITHER(DISABLE_DEBUG, DISABLE_JTAG)
+    delay(10);
     // Disable any hardware debug to free up pins for IO
     #if ENABLED(DISABLE_DEBUG) && defined(JTAGSWD_DISABLE)
+      SETUP_LOG("JTAGSWD_DISABLE");
       JTAGSWD_DISABLE();
     #elif defined(JTAG_DISABLE)
+      SETUP_LOG("JTAG_DISABLE");
       JTAG_DISABLE();
     #else
       #error "DISABLE_(DEBUG|JTAG) is not supported for the selected MCU/Board."
@@ -1150,10 +1166,10 @@ void setup() {
   SETUP_RUN(HAL_init());
 
   // Init and disable SPI thermocouples; this is still needed
-  #if TEMP_SENSOR_0_IS_MAX_TC
+  #if TEMP_SENSOR_0_IS_MAX_TC || (TEMP_SENSOR_REDUNDANT_IS_MAX_TC && TEMP_SENSOR_REDUNDANT_SOURCE == 0)
     OUT_WRITE(MAX6675_SS_PIN, HIGH);  // Disable
   #endif
-  #if TEMP_SENSOR_1_IS_MAX_TC
+  #if TEMP_SENSOR_1_IS_MAX_TC || (TEMP_SENSOR_REDUNDANT_IS_MAX_TC && TEMP_SENSOR_REDUNDANT_SOURCE == 1)
     OUT_WRITE(MAX6675_SS2_PIN, HIGH); // Disable
   #endif
 

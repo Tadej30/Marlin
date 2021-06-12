@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2021 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -21,13 +21,19 @@
  */
 #pragma once
 
-// User-defined table 2
-// Dummy Thermistor table.. It will ALWAYS read a fixed value.
-#ifndef DUMMY_THERMISTOR_999_VALUE
-  #define DUMMY_THERMISTOR_999_VALUE 25
-#endif
+#include "../inc/MarlinConfigPre.h"
 
-constexpr temp_entry_t temptable_999[] PROGMEM = {
-  { OV(   1), DUMMY_THERMISTOR_999_VALUE },
-  { OV(1023), DUMMY_THERMISTOR_999_VALUE }
+#include <Wire.h>
+#include <INA226.h>
+
+class Ammeter {
+private:
+  static float scale;
+
+public:
+  static float current;
+  static void init();
+  static float read();
 };
+
+extern Ammeter ammeter;
