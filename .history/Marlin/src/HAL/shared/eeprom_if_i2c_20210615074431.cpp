@@ -52,7 +52,7 @@ void eeprom_init() {
   #define EEPROM_WRITE_DELAY    5
 #endif
 #ifndef EEPROM_DEVICE_ADDRESS
-  #define EEPROM_DEVICE_ADDRESS  0x7FFF 
+  #define EEPROM_DEVICE_ADDRESS  0x50
 #endif
 
 static constexpr uint8_t eeprom_device_address = I2C_ADDRESS(EEPROM_DEVICE_ADDRESS);
