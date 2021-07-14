@@ -231,7 +231,7 @@
 #define TEMP_0_PIN        PF4 // T1 <-> (E0) Hot End temp.sensor
 #define TEMP_1_PIN        PF6 // T2 <-> (E1) CHAMBER temperature pin 
 #define TEMP_CHAMBER_PIN  PF5 // T3 <-> (E2) SKR PRO 1.1 temp. sensor
-#define TEMP_BOARD_PIN    PF5 // T3 <-> (E2) SKR PRO 1.1 temp. sensor
+#define TEMP_SENSOR_BOARD PF5 // T3 <-> (E2) SKR PRO 1.1 temp. sensor
 
 
 //

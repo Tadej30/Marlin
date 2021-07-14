@@ -381,7 +381,7 @@
   #if ENABLED(AUTO_POWER_CONTROL)
     #define AUTO_POWER_FANS         // Turn on PSU if fans need power
     #define AUTO_POWER_E_FANS
-    //#define AUTO_POWER_CONTROLLERFAN
+    #define AUTO_POWER_CONTROLLERFAN
     //#define AUTO_POWER_CHAMBER_FAN
     //#define AUTO_POWER_COOLER_FAN
     #define AUTO_POWER_E_TEMP          55 // (°C) Turn on PSU if any extruder is over this temperature
@@ -497,7 +497,7 @@
 #define TEMP_SENSOR_PROBE 0
 #define TEMP_SENSOR_CHAMBER 1
 #define TEMP_SENSOR_COOLER 0
-#define TEMP_SENSOR_BOARD 1
+#define TEMP_SENSOR_BOARD 0
 #define TEMP_SENSOR_REDUNDANT 0
 
 // Dummy thermistor constant temperature readings, for use with 998 and 999
@@ -1170,7 +1170,7 @@
  *     |    [-]    |
  *     O-- FRONT --+
  */
-#define NOZZLE_TO_PROBE_OFFSET { 23, 0,-1.460}  // old -1.675
+#define NOZZLE_TO_PROBE_OFFSET { 23, 0,-1.480}  // old -1.675
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
@@ -2790,7 +2790,7 @@
 // However, control resolution will be halved for each increment;
 // at zero value, there are 128 effective control positions.
 // :[0,1,2,3,4,5,6,7]
-#define SOFT_PWM_SCALE 2
+#define SOFT_PWM_SCALE 0
 
 // If SOFT_PWM_SCALE is set to a value higher than 0, dithering can
 // be used to mitigate the associated resolution loss. If enabled,
