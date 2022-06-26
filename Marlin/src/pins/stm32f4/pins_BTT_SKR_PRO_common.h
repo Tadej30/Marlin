@@ -39,8 +39,8 @@
 
 // Use one of these or SDCard-based Emulation will be used
 #if NO_EEPROM_SELECTED
-  //#define SRAM_EEPROM_EMULATION                   // Use BackSRAM-based EEPROM emulation
-  //#define FLASH_EEPROM_EMULATION                  // Use Flash-based EEPROM emulation
+  //#define SRAM_EEPROM_EMULATION                 // Use BackSRAM-based EEPROM emulation
+  #define FLASH_EEPROM_EMULATION                  // Use Flash-based EEPROM emulation
 #endif
 
 #if ENABLED(FLASH_EEPROM_EMULATION)
@@ -157,11 +157,11 @@
   #define E0_CS_PIN                         PB3
 #endif
 
-#define Z2_STEP_PIN                         PD15
-#define Z2_DIR_PIN                          PE7
-#define Z2_ENABLE_PIN                       PA3
-#ifndef Z2_CS_PIN
-  #define Z2_CS_PIN                         PG15
+#define E1_STEP_PIN                         PD15
+#define E1_DIR_PIN                          PE7
+#define E1_ENABLE_PIN                       PA3
+#ifndef E1_CS_PIN
+  #define E1_CS_PIN                         PG15
 #endif
 
 #define E2_STEP_PIN                         PD13
@@ -231,28 +231,25 @@
 // Temperature Sensors
 // Use ADC pins without pullup for sensors that don't need a pullup.
 //
-
-#define TEMP_BOARD_PIN    PF5 // T3 <-> (E2) SKR PRO 1.1 temp. sensor
-
 #if TEMP_SENSOR_0_IS_AD8495 || TEMP_SENSOR_0 == 20
   #define TEMP_0_PIN                        PF8
 #else
-  #define TEMP_0_PIN                        PF4 // T1 <-> (E0) Hot End temp.sensor
+  #define TEMP_0_PIN                        PF4   // T1 <-> E0
 #endif
 #if TEMP_SENSOR_1_IS_AD8495 || TEMP_SENSOR_1 == 20
   #define TEMP_1_PIN                        PF9
 #else
-  #define TEMP_1_PIN                        PF6 // T2 <-> (E1) CHAMBER temperature pin 
+  #define TEMP_1_PIN                        PF5   // T2 <-> E1
 #endif
 #if TEMP_SENSOR_2_IS_AD8495 || TEMP_SENSOR_2 == 20
   #define TEMP_2_PIN                        PF10
 #else
-  #define TEMP_2_PIN                        PF5 // T3 <-> (E2) SKR PRO 1.1 temp. sensor
+  #define TEMP_2_PIN                        PF6   // T3 <-> E2
 #endif
 #if TEMP_SENSOR_BED_IS_AD8495 || TEMP_SENSOR_BED == 20
   #define TEMP_BED_PIN                      PF7
 #else
-  #define TEMP_BED_PIN                      PF3 // T0 <-> Bed temp.sensor
+  #define TEMP_BED_PIN                      PF3   // T0 <-> Bed
 #endif
 
 #if TEMP_SENSOR_PROBE && !defined(TEMP_PROBE_PIN)
@@ -282,30 +279,29 @@
 //
 // Heaters
 //
-#define HEATER_0_PIN                        PB1   // Heater0 = Hotend
-#define HEATER_1_PIN                        PD14  // Heater1 = CASE Light
-/**#if TEMP_SENSOR_CHAMBER && HOTENDS < 3
-  #define HEATER_CHAMBER_PIN                PB0   // Fan3 = CHAMBER FAN
+#define HEATER_0_PIN                        PB1   // Heater0
+#define HEATER_1_PIN                        PD14  // Heater1
+#if TEMP_SENSOR_CHAMBER && HOTENDS < 3
+  #define HEATER_CHAMBER_PIN                PB0   // Heater2
 #else
-  #define HEATER_2_PIN                      PB0   // Fan3 = CHAMBER FAN
-#endif*/
-#define HEATER_BED_PIN                      PD12  // Heated BED
+  #define HEATER_2_PIN                      PB0   // Heater2
+#endif
+#define HEATER_BED_PIN                      PD12  // Hotbed
 
 //
 // Fans
 //
-#define FAN_PIN                             PE5  // Fan0 = LAYER FAN
-#define FAN1_PIN                            PC8  // Fan1 = EXTRUDER FAN
-#define FAN3_PIN                            PB0  // Fan3 = CHAMBER FAN
+#define FAN_PIN                             PC8   // Fan0
+#define FAN1_PIN                            PE5   // Fan1
 
 #ifndef E0_AUTO_FAN_PIN
   #define E0_AUTO_FAN_PIN               FAN1_PIN
 #endif
 
 #if !defined(CONTROLLER_FAN_PIN) && ENABLED(USE_CONTROLLER_FAN) && HOTENDS < 2
-  #define CONTROLLER_FAN_PIN                PE6   // Fan2 = SKR PRO 1.1 CONTROLLER FAN
+  #define CONTROLLER_FAN_PIN                PE6   // Fan2
 #else
-  #define FAN2_PIN                          PE6   // Fan2 = SKR PRO 1.1 CONTROLLER FAN
+  #define FAN2_PIN                          PE6   // Fan2
 #endif
 
 //
