@@ -697,9 +697,9 @@
     #endif
   #endif
 
-  /**#if ENABLED(CHAMBER_FAN) && !defined(CHAMBER_FAN_INDEX)
+  #if ENABLED(CHAMBER_FAN) && !defined(CHAMBER_FAN_INDEX)
     #warning "Note: Auto-assigned CHAMBER_FAN_INDEX to the first free FAN pin. (Define NO_AUTO_ASSIGN_WARNING to suppress this warning.)"
-  #endif */
+  #endif
 
 #endif // !NO_AUTO_ASSIGN_WARNING
 
