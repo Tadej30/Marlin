@@ -35,8 +35,8 @@
   #warning "WARNING! Disable MARLIN_DEV_MODE for the final build!"
 #endif
 
-#if LINEAR_AXES_WARNING
-  #warning "Note: LINEAR_AXES is now based on the *_DRIVER_TYPE settings so you can remove LINEAR_AXES from Configuration.h."
+#if NUM_AXES_WARNING
+  #warning "Note: NUM_AXES is now based on the *_DRIVER_TYPE settings so you can remove NUM_AXES from Configuration.h."
 #endif
 
 // Safety Features
@@ -697,9 +697,9 @@
     #endif
   #endif
 
-  #if ENABLED(CHAMBER_FAN) && !defined(CHAMBER_FAN_INDEX)
+  /**#if ENABLED(CHAMBER_FAN) && !defined(CHAMBER_FAN_INDEX)
     #warning "Note: Auto-assigned CHAMBER_FAN_INDEX to the first free FAN pin. (Define NO_AUTO_ASSIGN_WARNING to suppress this warning.)"
-  #endif
+  #endif */
 
 #endif // !NO_AUTO_ASSIGN_WARNING
 
