@@ -4353,7 +4353,9 @@
 #endif
 
 /**
- * Postmortem Debugging captures misbehavior and outputs the CPU status and backtrace to serial.
+ * @brief 
+ * 
+ */
  * When running in the debugger it will break for debugging. This is useful to help understand
  * a crash from a remote location. Requires ~400 bytes of SRAM and 5Kb of flash.
  */
