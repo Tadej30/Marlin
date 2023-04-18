@@ -58,7 +58,7 @@ namespace Language_pl {
   LSTR MSG_MEDIA_USB_FAILED               = _UxGT("Błąd uruchomienia USB");
   LSTR MSG_LCD_ENDSTOPS                   = _UxGT("Krańców."); // Max length 8 characters
   LSTR MSG_LCD_SOFT_ENDSTOPS              = _UxGT("Progr. Krańcówki");
-  LSTR MSG_MAIN                           = _UxGT("Menu główne");
+  LSTR MSG_MAIN_MENU                      = _UxGT("Menu główne");
   LSTR MSG_ADVANCED_SETTINGS              = _UxGT("Ustawienie zaawansowane");
   LSTR MSG_CONFIGURATION                  = _UxGT("Konfiguracja");
   LSTR MSG_RUN_AUTO_FILES                 = _UxGT("Autostart");
@@ -538,11 +538,3 @@ namespace Language_pl {
   LSTR MSG_CALIBRATION_FAILED             = _UxGT("Kalibracja nie powiodła się");
 
 }
-
-#if FAN_COUNT == 1
-  #define MSG_FIRST_FAN_SPEED       MSG_FAN_SPEED
-  #define MSG_EXTRA_FIRST_FAN_SPEED MSG_EXTRA_FAN_SPEED
-#else
-  #define MSG_FIRST_FAN_SPEED       MSG_FAN_SPEED_N
-  #define MSG_EXTRA_FIRST_FAN_SPEED MSG_EXTRA_FAN_SPEED_N
-#endif

@@ -46,7 +46,7 @@ namespace Language_zh_TW {
   LSTR MSG_MEDIA_USB_FAILED               = _UxGT("USB啟動失敗");  // "USB start failed"
   LSTR MSG_LCD_ENDSTOPS                   = _UxGT("擋塊");     // "Endstops" // Max length 8 characters
   LSTR MSG_LCD_SOFT_ENDSTOPS              = _UxGT("軟體擋塊");    // "Soft Endstops"
-  LSTR MSG_MAIN                           = _UxGT("主選單");     // "Main"
+  LSTR MSG_MAIN_MENU                      = _UxGT("主選單");     // "Main"
   LSTR MSG_ADVANCED_SETTINGS              = _UxGT("進階設置");   // "Advanced Settings"
   LSTR MSG_CONFIGURATION                  = _UxGT("設置");    //Configuration
   LSTR MSG_RUN_AUTO_FILES                 = _UxGT("自動開始");     // "Autostart"
@@ -387,9 +387,6 @@ namespace Language_zh_TW {
   LSTR MSG_ERR_MINTEMP                    = _UxGT("錯誤：最低溫度");     // "Err: MINTEMP"
   LSTR MSG_HALTED                         = _UxGT("印表機停機");     // "PRINTER HALTED"
   LSTR MSG_PLEASE_RESET                   = _UxGT("請重置");     // "Please reset"
-  LSTR MSG_SHORT_DAY                      = _UxGT("天");     // "d" // One character only
-  LSTR MSG_SHORT_HOUR                     = _UxGT("時");     // "h" // One character only
-  LSTR MSG_SHORT_MINUTE                   = _UxGT("分");     // "m" // One character only
   LSTR MSG_HEATING                        = _UxGT("加熱中 ...");     // "Heating..."
   LSTR MSG_COOLING                        = _UxGT("冷卻中 ...");   // "Cooling..."
   LSTR MSG_BED_HEATING                    = _UxGT("加熱熱床中 ...");     // "Bed Heating..."
@@ -489,12 +486,8 @@ namespace Language_zh_TW {
     LSTR MSG_FILAMENT_CHANGE_CONT_PURGE   = _UxGT(MSG_1_LINE("按下完成.."));     // "Click to finish"
     LSTR MSG_FILAMENT_CHANGE_RESUME       = _UxGT(MSG_1_LINE("恢復中 ..."));     // "Resuming..."
   #endif // LCD_HEIGHT < 4
-}
 
-#if FAN_COUNT == 1
-  #define MSG_FIRST_FAN_SPEED       MSG_FAN_SPEED
-  #define MSG_EXTRA_FIRST_FAN_SPEED MSG_EXTRA_FAN_SPEED
-#else
-  #define MSG_FIRST_FAN_SPEED       MSG_FAN_SPEED_N
-  #define MSG_EXTRA_FIRST_FAN_SPEED MSG_EXTRA_FAN_SPEED_N
-#endif
+  LSTR MSG_SHORT_DAY                      = _UxGT("天");     // "d" // One character only
+  LSTR MSG_SHORT_HOUR                     = _UxGT("時");     // "h" // One character only
+  LSTR MSG_SHORT_MINUTE                   = _UxGT("分");     // "m" // One character only
+}

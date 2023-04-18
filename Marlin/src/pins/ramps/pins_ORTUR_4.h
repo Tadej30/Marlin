@@ -23,6 +23,7 @@
 
 /**
  * Ortur 4 Arduino Mega based on RAMPS v1.4 pin assignments
+ * ATmega2560
  */
 
 #define BOARD_INFO_NAME "Ortur 4.3"
@@ -88,7 +89,7 @@
   #undef LCD_PINS_ENABLE
   #undef LCD_PINS_D4
   #define LCD_PINS_RS                         27
-  #define LCD_PINS_ENABLE                     23
+  #define LCD_PINS_EN                         23
   #define LCD_PINS_D4                         37
 
   #undef LCD_SDSS

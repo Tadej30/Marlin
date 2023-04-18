@@ -23,6 +23,10 @@
  * Test SAMD51 specific configuration values for errors at compile-time.
  */
 
+#if HAS_SPI_TFT || HAS_FSMC_TFT
+  #error "Sorry! TFT displays are not available for HAL/SAMD51."
+#endif
+
 #if ENABLED(FLASH_EEPROM_EMULATION)
   #warning "Did you activate the SmartEEPROM? See https://github.com/GMagician/SAMD51-SmartEEprom-Manager/releases"
 #endif
@@ -49,7 +53,7 @@
 #endif
 
 #if ENABLED(FAST_PWM_FAN) || SPINDLE_LASER_FREQUENCY
-  #error "Features requiring Hardware PWM (FAST_PWM_FAN, SPINDLE_LASER_FREQUENCY) are not yet supported on SAMD51."
+  #error "Features requiring Hardware PWM (FAST_PWM_FAN, SPINDLE_LASER_FREQUENCY) are not yet supported for HAL/SAMD51."
 #endif
 
 #if ENABLED(POSTMORTEM_DEBUGGING)

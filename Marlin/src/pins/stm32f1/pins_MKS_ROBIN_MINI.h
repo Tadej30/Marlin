@@ -111,7 +111,7 @@
 #define HEATER_0_PIN                        PC3
 #define HEATER_BED_PIN                      PA0
 
-#define FAN_PIN                             PB1   // FAN
+#define FAN0_PIN                            PB1   // FAN
 
 //
 // Misc. Functions
@@ -157,8 +157,6 @@
   #define TFT_RS_PIN                 FSMC_RS_PIN
 
   #define LCD_USE_DMA_FSMC                        // Use DMA transfers to send data to the TFT
-  #define FSMC_DMA_DEV                      DMA2
-  #define FSMC_DMA_CHANNEL               DMA_CH5
 
   #define LCD_RESET_PIN                     PC6   // FSMC_RST
   #define LCD_BACKLIGHT_PIN                 PD13

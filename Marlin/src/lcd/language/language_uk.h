@@ -60,7 +60,7 @@ namespace Language_uk {
     LSTR MSG_LCD_SOFT_ENDSTOPS              = _UxGT("Прогр.кінцевики");
   #endif
   LSTR MSG_LCD_ENDSTOPS                     = _UxGT("Кінцевик"); // Max length 8 characters
-  LSTR MSG_MAIN                             = _UxGT("Основне меню");
+  LSTR MSG_MAIN_MENU                        = _UxGT("Основне меню");
   LSTR MSG_ADVANCED_SETTINGS                = _UxGT("Інші налаштування");
   LSTR MSG_CONFIGURATION                    = _UxGT("Конфігурація");
   LSTR MSG_RUN_AUTO_FILES                   = _UxGT("Автостарт");
@@ -626,9 +626,6 @@ namespace Language_uk {
   LSTR MSG_ERR_MINTEMP                      = _UxGT("МІНІМАЛЬНА Т") LCD_STR_DEGREE;
   LSTR MSG_HALTED                           = _UxGT("ПРИНТЕР ЗУПИНЕНО");
   LSTR MSG_PLEASE_RESET                     = _UxGT("Перезавантажте");
-  LSTR MSG_SHORT_DAY                        = _UxGT("д"); // One character only
-  LSTR MSG_SHORT_HOUR                       = _UxGT("г"); // One character only
-  LSTR MSG_SHORT_MINUTE                     = _UxGT("х"); // One character only
   LSTR MSG_HEATING                          = _UxGT("Нагрівання...");
   LSTR MSG_COOLING                          = _UxGT("Охолодження...");
   LSTR MSG_BED_HEATING                      = _UxGT("Нагрів столу...");
@@ -914,12 +911,8 @@ namespace Language_uk {
 
   LSTR MSG_SD_CARD                          = _UxGT("SD Картка");
   LSTR MSG_USB_DISK                         = _UxGT("USB Диск");
-}
 
-#if FAN_COUNT == 1
-  #define MSG_FIRST_FAN_SPEED       MSG_FAN_SPEED
-  #define MSG_EXTRA_FIRST_FAN_SPEED MSG_EXTRA_FAN_SPEED
-#else
-  #define MSG_FIRST_FAN_SPEED       MSG_FAN_SPEED_N
-  #define MSG_EXTRA_FIRST_FAN_SPEED MSG_EXTRA_FAN_SPEED_N
-#endif
+  LSTR MSG_SHORT_DAY                        = _UxGT("д"); // One character only
+  LSTR MSG_SHORT_HOUR                       = _UxGT("г"); // One character only
+  LSTR MSG_SHORT_MINUTE                     = _UxGT("х"); // One character only
+}
