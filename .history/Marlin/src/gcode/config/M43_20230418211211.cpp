@@ -141,18 +141,18 @@ inline void servo_probe_test() {
     #if ENABLED(Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN)
 
       #define PROBE_TEST_PIN Z_MIN_PIN
-      constexpr bool probe_inverting = Z_MIN_PROBE_ENDSTOP_HIT_STATE;
+      constexpr bool probe_inverting = Z_MIN_ENDSTOP_INVERTING;
 
       SERIAL_ECHOLNPGM(". Probe Z_MIN_PIN: ", PROBE_TEST_PIN);
-      SERIAL_ECHOPGM(". Z_MIN_PROBE_ENDSTOP_HIT_STATE: ");
+      SERIAL_ECHOPGM(". Z_MIN_ENDSTOP_INVERTING: ");
 
     #else
 
       #define PROBE_TEST_PIN Z_MIN_PROBE_PIN
-      constexpr bool probe_inverting = Z_MIN_PROBE_ENDSTOP_HIT_STATE;
+      constexpr bool probe_inverting = Z_MIN_PROBE_ENDSTOP_INVERTING;
 
       SERIAL_ECHOLNPGM(". Probe Z_MIN_PROBE_PIN: ", PROBE_TEST_PIN);
-      SERIAL_ECHOPGM(   ". Z_MIN_PROBE_ENDSTOP_HIT_STATE: ");
+      SERIAL_ECHOPGM(   ". Z_MIN_PROBE_ENDSTOP_INVERTING: ");
 
     #endif
 
