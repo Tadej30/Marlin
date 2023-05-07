@@ -446,7 +446,7 @@
     #define BTN_EN1                  EXP1_08_PIN
     #define BTN_EN2                  EXP1_06_PIN
 
-    #define LCD_PINS_EN          EXP1_03_PIN
+    #define LCD_PINS_ENABLE          EXP1_03_PIN
     #define LCD_PINS_D4              EXP1_05_PIN
 
   #elif ENABLED(MKS_MINI_12864)
@@ -498,7 +498,7 @@
     #define BTN_EN1                  EXP2_08_PIN
     #define BTN_EN2                  EXP2_06_PIN
 
-    #define LCD_PINS_EN              EXP1_08_PIN
+    #define LCD_PINS_ENABLE          EXP1_08_PIN
     #define LCD_PINS_D4              EXP1_06_PIN
 
     #if ENABLED(FYSETC_MINI_12864)
