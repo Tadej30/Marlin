@@ -71,7 +71,7 @@ void GcodeSuite::G61() {
   if (!TEST(saved_slots[slot >> 3], slot & 0x07)) return;
 
   // Apply any given feedrate over 0.0
-  REMEMBER(saved, feedrate_mm_s);
+  feedRate_t saved_feedrate = feedrate_mm_s;
   const float fr = parser.linearval('F');
   if (fr > 0.0) feedrate_mm_s = MMM_TO_MMS(fr);
 
@@ -101,6 +101,8 @@ void GcodeSuite::G61() {
       }
     #endif
   }
+
+  feedrate_mm_s = saved_feedrate;
 }
 
 #endif // SAVED_POSITIONS

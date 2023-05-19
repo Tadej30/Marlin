@@ -126,7 +126,7 @@
 
 void menu_led() {
   START_MENU();
-  BACK_ITEM(MSG_MAIN_MENU);
+  BACK_ITEM(MSG_MAIN);
 
   #if ENABLED(LED_CONTROL_MENU)
     if (TERN1(PSU_CONTROL, powerManager.psu_on)) {

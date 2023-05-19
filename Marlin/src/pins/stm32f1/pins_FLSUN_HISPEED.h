@@ -191,7 +191,7 @@
 #define HEATER_0_PIN                        PC3   // HEATER_E0
 #define HEATER_BED_PIN                      PA0   // HEATER_BED-WKUP
 
-#define FAN0_PIN                            PB1   // E_FAN
+#define FAN_PIN                             PB1   // E_FAN
 
 //
 // Misc. Functions
@@ -256,7 +256,7 @@
   #define SD_SS_PIN                         -1
   #define SD_DETECT_PIN                     PD12  // SD_CD (if -1 no detection)
 #else
-  #define ONBOARD_SDIO
+  #define SDIO_SUPPORT
   #define SDIO_CLOCK                     4500000  // 4.5 MHz
   #define SDIO_READ_RETRIES                   16
   #define ONBOARD_SPI_DEVICE                   1  // SPI1
@@ -295,6 +295,8 @@
   #define TFT_BACKLIGHT_PIN                 PD13
 
   #define LCD_USE_DMA_FSMC                        // Use DMA transfers to send data to the TFT
+  #define FSMC_DMA_DEV                      DMA2
+  #define FSMC_DMA_CHANNEL               DMA_CH5
 
   #define FSMC_CS_PIN                       PD7   // NE4
   #define FSMC_RS_PIN                       PD11  // A0

@@ -66,26 +66,42 @@ void draw_es_state(const bool is_hit) {
 }
 
 void ESDiagClass::Draw() {
-  Title.ShowCaption(GET_TEXT_F(MSG_ENDSTOP_TEST));
+  Title.ShowCaption(F("End-stops Diagnostic"));
   DWINUI::ClearMainArea();
   Draw_Popup_Bkgd();
   DWINUI::Draw_Button(BTN_Continue, 86, 250);
   DWINUI::cursor.y = 80;
   #define ES_LABEL(S) draw_es_label(F(STR_##S))
-  TERN_(HAS_X_MIN,     ES_LABEL(X_MIN)); TERN_(HAS_X_MAX, ES_LABEL(X_MAX));
-  TERN_(HAS_Y_MIN,     ES_LABEL(Y_MIN)); TERN_(HAS_Y_MAX, ES_LABEL(Y_MAX));
-  TERN_(HAS_Z_MIN_PIN, ES_LABEL(Z_MIN)); TERN_(HAS_Z_MAX, ES_LABEL(Z_MAX));
-  TERN_(HAS_FILAMENT_SENSOR, draw_es_label(F(STR_FILAMENT)));
+  #if HAS_X_MIN
+    ES_LABEL(X_MIN);
+  #endif
+  #if HAS_Y_MIN
+    ES_LABEL(Y_MIN);
+  #endif
+  #if HAS_Z_MIN
+    ES_LABEL(Z_MIN);
+  #endif
+  #if HAS_FILAMENT_SENSOR
+    draw_es_label(F(STR_FILAMENT));
+  #endif
   Update();
 }
 
 void ESDiagClass::Update() {
   DWINUI::cursor.y = 80;
-  #define ES_REPORT(S) draw_es_state(READ(S##_PIN) == S##_ENDSTOP_HIT_STATE)
-  TERN_(HAS_X_MIN,     ES_REPORT(X_MIN)); TERN_(HAS_X_MAX, ES_REPORT(X_MAX));
-  TERN_(HAS_Y_MIN,     ES_REPORT(Y_MIN)); TERN_(HAS_Y_MAX, ES_REPORT(Y_MAX));
-  TERN_(HAS_Z_MIN_PIN, ES_REPORT(Z_MIN)); TERN_(HAS_Z_MAX, ES_REPORT(Z_MAX));
-  TERN_(HAS_FILAMENT_SENSOR, draw_es_state(READ(FIL_RUNOUT1_PIN) != FIL_RUNOUT1_STATE));
+  #define ES_REPORT(S) draw_es_state(READ(S##_PIN) != S##_ENDSTOP_INVERTING)
+  #if HAS_X_MIN
+    ES_REPORT(X_MIN);
+  #endif
+  #if HAS_Y_MIN
+    ES_REPORT(Y_MIN);
+  #endif
+  #if HAS_Z_MIN
+    ES_REPORT(Z_MIN);
+  #endif
+  #if HAS_FILAMENT_SENSOR
+    draw_es_state(READ(FIL_RUNOUT1_PIN) != FIL_RUNOUT1_STATE);
+  #endif
   DWIN_UpdateLCD();
 }
 

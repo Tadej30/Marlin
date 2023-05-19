@@ -29,11 +29,11 @@
 #define BOARD_INFO_NAME "GT2560 4.x"
 
 #define LCD_PINS_RS                            5
-#define LCD_PINS_EN                           36
+#define LCD_PINS_ENABLE                       36
 #define LCD_PINS_D4                           21
 #define LCD_PINS_D7                            6
 
-#define SPEAKER                                   // The speaker can produce tones
+#define SPEAKER                                  // The speaker can produce tones
 
 #if IS_NEWPANEL
   #define BTN_EN1                             16

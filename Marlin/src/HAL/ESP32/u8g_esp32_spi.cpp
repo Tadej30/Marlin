@@ -32,7 +32,7 @@
 #include "HAL.h"
 #include "SPI.h"
 
-#if HAS_MEDIA
+#if ENABLED(SDSUPPORT)
   #include "../../sd/cardreader.h"
   #if ENABLED(ESP3D_WIFISUPPORT)
     #include "sd_ESP32.h"

@@ -139,17 +139,24 @@ inline void servo_probe_test() {
     bool deploy_state = false, stow_state;
 
     #if ENABLED(Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN)
-      constexpr bool probe_hit_state = Z_MIN_ENDSTOP_HIT_STATE;
+
       #define PROBE_TEST_PIN Z_MIN_PIN
-      #define _PROBE_PREF "Z_MIN"
+      constexpr bool probe_inverting = Z_MIN_ENDSTOP_INVERTING;
+
+      SERIAL_ECHOLNPGM(". Probe Z_MIN_PIN: ", PROBE_TEST_PIN);
+      SERIAL_ECHOPGM(". Z_MIN_ENDSTOP_INVERTING: ");
+
     #else
-      constexpr bool probe_hit_state = Z_MIN_PROBE_ENDSTOP_HIT_STATE;
+
       #define PROBE_TEST_PIN Z_MIN_PROBE_PIN
-      #define _PROBE_PREF "Z_MIN_PROBE"
+      constexpr bool probe_inverting = Z_MIN_PROBE_ENDSTOP_INVERTING;
+
+      SERIAL_ECHOLNPGM(". Probe Z_MIN_PROBE_PIN: ", PROBE_TEST_PIN);
+      SERIAL_ECHOPGM(   ". Z_MIN_PROBE_ENDSTOP_INVERTING: ");
+
     #endif
 
-    SERIAL_ECHOLNPGM(". Probe " _PROBE_PREF "_PIN: ", PROBE_TEST_PIN);
-    serial_ternary(probe_hit_state, F(". " _PROBE_PREF "_ENDSTOP_HIT_STATE: "), F("HIGH"), F("LOW"));
+    serialprint_truefalse(probe_inverting);
     SERIAL_EOL();
 
     SET_INPUT_PULLUP(PROBE_TEST_PIN);
@@ -166,11 +173,11 @@ inline void servo_probe_test() {
       SERIAL_ECHOLNPGM(". Check for BLTOUCH");
       bltouch._reset();
       bltouch._stow();
-      if (READ(PROBE_TEST_PIN) != probe_hit_state) {
+      if (probe_inverting == READ(PROBE_TEST_PIN)) {
         bltouch._set_SW_mode();
-        if (READ(PROBE_TEST_PIN) == probe_hit_state) {
+        if (probe_inverting != READ(PROBE_TEST_PIN)) {
           bltouch._deploy();
-          if (READ(PROBE_TEST_PIN) != probe_hit_state) {
+          if (probe_inverting == READ(PROBE_TEST_PIN)) {
             bltouch._stow();
             SERIAL_ECHOLNPGM("= BLTouch Classic 1.2, 1.3, Smart 1.0, 2.0, 2.2, 3.0, 3.1 detected.");
             // Check for a 3.1 by letting the user trigger it, later
@@ -188,30 +195,31 @@ inline void servo_probe_test() {
     if (!blt) {
       // DEPLOY and STOW 4 times and see if the signal follows
       // Then it is a mechanical switch
+      uint8_t i = 0;
       SERIAL_ECHOLNPGM(". Deploy & stow 4 times");
-      LOOP_L_N(i, 4) {
+      do {
         servo[probe_index].move(servo_angles[Z_PROBE_SERVO_NR][0]); // Deploy
         safe_delay(500);
         deploy_state = READ(PROBE_TEST_PIN);
         servo[probe_index].move(servo_angles[Z_PROBE_SERVO_NR][1]); // Stow
         safe_delay(500);
         stow_state = READ(PROBE_TEST_PIN);
-      }
+      } while (++i < 4);
 
-      if (probe_hit_state == deploy_state) SERIAL_ECHOLNPGM("WARNING: " _PROBE_PREF "_ENDSTOP_HIT_STATE is probably wrong.");
+      if (probe_inverting != deploy_state) SERIAL_ECHOLNPGM("WARNING: INVERTING setting probably backwards.");
 
       if (deploy_state != stow_state) {
         SERIAL_ECHOLNPGM("= Mechanical Switch detected");
         if (deploy_state) {
-          SERIAL_ECHOLNPGM(". DEPLOYED state: HIGH (logic 1)\n"
-                           ". STOWED (triggered) state: LOW (logic 0)");
+          SERIAL_ECHOLNPGM("  DEPLOYED state: HIGH (logic 1)",
+                            "  STOWED (triggered) state: LOW (logic 0)");
         }
         else {
-          SERIAL_ECHOLNPGM(". DEPLOYED state: LOW (logic 0)\n"
-                           ". STOWED (triggered) state: HIGH (logic 1)");
+          SERIAL_ECHOLNPGM("  DEPLOYED state: LOW (logic 0)",
+                            "  STOWED (triggered) state: HIGH (logic 1)");
         }
         #if ENABLED(BLTOUCH)
-          SERIAL_ECHOLNPGM("FAIL: Can't enable BLTOUCH. Check your settings.");
+          SERIAL_ECHOLNPGM("FAIL: BLTOUCH enabled - Set up this device as a Servo Probe with INVERTING set to 'true'.");
         #endif
         return;
       }
@@ -372,7 +380,7 @@ void GcodeSuite::M43() {
 
     for (;;) {
       LOOP_S_LE_N(i, first_pin, last_pin) {
-        pin_t pin = GET_PIN_MAP_PIN_M43(i);
+        const pin_t pin = GET_PIN_MAP_PIN_M43(i);
         if (!VALID_PIN(pin)) continue;
         if (M43_NEVER_TOUCH(i) || (!ignore_protection && pin_is_protected(pin))) continue;
         const byte val =
@@ -383,7 +391,7 @@ void GcodeSuite::M43() {
           //*/
             extDigitalRead(pin);
         if (val != pin_state[i - first_pin]) {
-          report_pin_state_extended(pin, ignore_protection, false);
+          report_pin_state_extended(pin, ignore_protection, true);
           pin_state[i - first_pin] = val;
         }
       }
@@ -401,7 +409,7 @@ void GcodeSuite::M43() {
   else {
     // Report current state of selected pin(s)
     LOOP_S_LE_N(i, first_pin, last_pin) {
-      pin_t pin = GET_PIN_MAP_PIN_M43(i);
+      const pin_t pin = GET_PIN_MAP_PIN_M43(i);
       if (VALID_PIN(pin)) report_pin_state_extended(pin, ignore_protection, true);
     }
   }

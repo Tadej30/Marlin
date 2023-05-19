@@ -110,7 +110,7 @@
 //
 // These are FAN PWM pins on EXT0..EXT2 connectors.
 //
-//#define FAN0_PIN                          PB9   // EXT0 port
+//#define FAN_PIN                           PB9   // EXT0 port
 #define FAN1_PIN                            PB8   // EXT1 port
 #define FAN2_PIN                            PB7   // EXT2 port
 
@@ -144,7 +144,7 @@
     // connected with a flat wire to J2 connector on the board.
     //
     #define LCD_PINS_RS                     PE6   // CS chip select /SS chip slave select
-    #define LCD_PINS_EN                     PE14  // SID (MOSI)
+    #define LCD_PINS_ENABLE                 PE14  // SID (MOSI)
     #define LCD_PINS_D4                     PD8   // SCK (CLK) clock
     #define LCD_PINS_D5                     PD9
     #define LCD_PINS_D6                     PD10

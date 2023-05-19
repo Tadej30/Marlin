@@ -45,38 +45,38 @@
   #if PIN_EXISTS(MT_DET_2)
     bool mt_det2_sta;
   #endif
-  #if HAS_X_ENDSTOP
+  #if X_HOME_DIR
     bool endstopx1_sta;
   #else
     constexpr static bool endstopx1_sta = true;
   #endif
-  #if HAS_X2_ENDSTOP
+  #if HAS_X2_MIN || HAS_X2_MAX
     bool endstopx2_sta;
   #else
     constexpr static bool endstopx2_sta = true;
   #endif
-  #if HAS_Y_ENDSTOP
+  #if HAS_Y_AXIS && Y_HOME_DIR
     bool endstopy1_sta;
   #else
     constexpr static bool endstopy1_sta = true;
   #endif
-  #if HAS_Y2_ENDSTOP
+  #if HAS_Y2_MIN || HAS_Y2_MAX
     bool endstopy2_sta;
   #else
     constexpr static bool endstopy2_sta = true;
   #endif
-  #if HAS_Z_ENDSTOP
+  #if HAS_Z_AXIS && Z_HOME_DIR
     bool endstopz1_sta;
   #else
     constexpr static bool endstopz1_sta = true;
   #endif
-  #if HAS_Z2_ENDSTOP
+  #if HAS_Z2_MIN || HAS_Z2_MAX
     bool endstopz2_sta;
   #else
     constexpr static bool endstopz2_sta = true;
   #endif
 
-  #define ESTATE(S) (READ(S##_PIN) == S##_ENDSTOP_HIT_STATE)
+  #define ESTATE(S) (READ(S##_PIN) != S##_ENDSTOP_INVERTING)
 
   void test_gpio_readlevel_L() {
     WRITE(WIFI_IO0_PIN, HIGH);
@@ -87,12 +87,36 @@
     #if PIN_EXISTS(MT_DET_2)
       mt_det2_sta = (READ(MT_DET_2_PIN) == LOW);
     #endif
-    TERN_(HAS_X_ENDSTOP,  endstopx1_sta = ESTATE(TERN(HAS_X_MIN,      X_MIN,  X_MAX)));
-    TERN_(HAS_X2_ENDSTOP, endstopx2_sta = ESTATE(TERN(HAS_X2_MIN,    X2_MIN, X2_MAX)));
-    TERN_(HAS_Y_ENDSTOP,  endstopy1_sta = ESTATE(TERN(HAS_Y_MIN,      Y_MIN,  Y_MAX)));
-    TERN_(HAS_Y2_ENDSTOP, endstopy2_sta = ESTATE(TERN(HAS_Y2_MIN,    Y2_MIN, Y2_MAX)));
-    TERN_(HAS_Z_ENDSTOP,  endstopz1_sta = ESTATE(TERN(HAS_Z_MIN_PIN,  Z_MIN,  Z_MAX)));
-    TERN_(HAS_Z2_ENDSTOP, endstopz2_sta = ESTATE(TERN(HAS_Z2_MIN,    Z2_MIN, Z2_MAX)));
+    #if HAS_X_MIN
+      endstopx1_sta = ESTATE(X_MIN);
+    #elif HAS_X_MAX
+      endstopx1_sta = ESTATE(X_MAX);
+    #endif
+    #if HAS_X2_MIN
+      endstopx2_sta = ESTATE(X2_MIN);
+    #elif HAS_X2_MAX
+      endstopx2_sta = ESTATE(X2_MAX);
+    #endif
+    #if HAS_Y_MIN
+      endstopy1_sta = ESTATE(Y_MIN);
+    #elif HAS_Y_MAX
+      endstopy1_sta = ESTATE(Y_MAX);
+    #endif
+    #if HAS_Y2_MIN
+      endstopy2_sta = ESTATE(Y2_MIN);
+    #elif HAS_Y2_MAX
+      endstopy2_sta = ESTATE(Y2_MAX);
+    #endif
+    #if HAS_Z_MIN
+      endstopz1_sta = ESTATE(Z_MIN);
+    #elif HAS_Z_MAX
+      endstopz1_sta = ESTATE(Z_MAX);
+    #endif
+    #if HAS_Z2_MIN
+      endstopz2_sta = ESTATE(Z2_MIN);
+    #elif HAS_Z2_MAX
+      endstopz2_sta = ESTATE(Z2_MAX);
+    #endif
   }
 
   void test_gpio_readlevel_H() {
@@ -104,12 +128,36 @@
     #if PIN_EXISTS(MT_DET_2)
       mt_det2_sta = (READ(MT_DET_2_PIN) == HIGH);
     #endif
-    TERN_(HAS_X_ENDSTOP,  endstopx1_sta = !ESTATE(TERN(HAS_X_MIN,     X_MIN,  X_MAX)));
-    TERN_(HAS_X2_ENDSTOP, endstopx2_sta = !ESTATE(TERN(HAS_X2_MIN,   X2_MIN, X2_MAX)));
-    TERN_(HAS_Y_ENDSTOP,  endstopy1_sta = !ESTATE(TERN(HAS_Y_MIN,     Y_MIN,  Y_MAX)));
-    TERN_(HAS_Y2_ENDSTOP, endstopy2_sta = !ESTATE(TERN(HAS_Y2_MIN,   Y2_MIN, Y2_MAX)));
-    TERN_(HAS_Z_ENDSTOP,  endstopz1_sta = !ESTATE(TERN(HAS_Z_MIN_PIN, Z_MIN,  Z_MAX)));
-    TERN_(HAS_Z2_ENDSTOP, endstopz2_sta = !ESTATE(TERN(HAS_Z2_MIN,   Z2_MIN, Z2_MAX)));
+    #if HAS_X_MIN
+      endstopx1_sta = !ESTATE(X_MIN);
+    #elif HAS_X_MAX
+      endstopx1_sta = !ESTATE(X_MAX);
+    #endif
+    #if HAS_X2_MIN
+      endstopx2_sta = !ESTATE(X2_MIN);
+    #elif HAS_X2_MAX
+      endstopx2_sta = !ESTATE(X2_MAX);
+    #endif
+    #if HAS_Y_MIN
+      endstopy1_sta = !ESTATE(Y_MIN);
+    #elif HAS_Y_MAX
+      endstopy1_sta = !ESTATE(Y_MAX);
+    #endif
+    #if HAS_Y2_MIN
+      endstopy2_sta = !ESTATE(Y2_MIN);
+    #elif HAS_Y2_MAX
+      endstopy2_sta = !ESTATE(Y2_MAX);
+    #endif
+    #if HAS_Z_MIN
+      endstopz1_sta = !ESTATE(Z_MIN);
+    #elif HAS_Z_MAX
+      endstopz1_sta = !ESTATE(Z_MAX);
+    #endif
+    #if HAS_Z2_MIN
+      endstopz2_sta = !ESTATE(Z2_MIN);
+    #elif HAS_Z2_MAX
+      endstopz2_sta = !ESTATE(Z2_MAX);
+    #endif
   }
 
   #include "../../../libs/buzzer.h"
@@ -130,9 +178,7 @@
     SET_INPUT_PULLUP(MKS_TEST_PS_ON_PIN);
     SET_INPUT_PULLUP(SERVO0_PIN);
 
-    #if HAS_X_AXIS
-      OUT_WRITE(X_ENABLE_PIN, LOW);
-    #endif
+    OUT_WRITE(X_ENABLE_PIN, LOW);
     #if HAS_Y_AXIS
       OUT_WRITE(Y_ENABLE_PIN, LOW);
     #endif
@@ -159,7 +205,7 @@
 
   void mks_test_beeper() { buzzer.click(100); }
 
-  #if HAS_MEDIA
+  #if ENABLED(SDSUPPORT)
 
     void mks_gpio_test() {
       init_test_gpio();
@@ -223,7 +269,7 @@
         #if HAS_Y_AXIS
           WRITE(Y_DIR_PIN, HIGH);
         #endif
-        #if HAS_Z_AXIS
+        #if HAS_Y_AXIS
           WRITE(Z_DIR_PIN, HIGH);
         #endif
         #if HAS_EXTRUDERS
@@ -677,7 +723,7 @@ void disp_assets_update_progress(FSTR_P const fmsg) {
   #endif
 }
 
-#if BOTH(MKS_TEST, HAS_MEDIA)
+#if BOTH(MKS_TEST, SDSUPPORT)
   uint8_t mks_test_flag = 0;
   const char *MKSTestPath = "MKS_TEST";
   void mks_test_get() {

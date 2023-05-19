@@ -89,8 +89,8 @@
 #define HEATER_1_PIN                           8
 #define HEATER_BED_PIN                        10
 
-#ifndef FAN0_PIN
-  #define FAN0_PIN                             7  // IO pin. Buffer needed
+#ifndef FAN_PIN
+  #define FAN_PIN                              7  // IO pin. Buffer needed
 #endif
 
 //
@@ -112,7 +112,7 @@
 #if HAS_WIRED_LCD && IS_NEWPANEL
 
   #define LCD_PINS_RS                         16
-  #define LCD_PINS_EN                         17
+  #define LCD_PINS_ENABLE                     17
   #define LCD_PINS_D4                         23
   #define LCD_PINS_D5                         25
   #define LCD_PINS_D6                         27

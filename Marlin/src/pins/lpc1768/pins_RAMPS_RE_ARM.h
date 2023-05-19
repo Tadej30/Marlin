@@ -99,16 +99,18 @@
 #endif
 
 //
-// Default pins for TMC software SPI
+// Software SPI pins for TMC2130 stepper drivers
 //
-#ifndef TMC_SPI_MOSI
-  #define TMC_SPI_MOSI                     P1_00  // ETH
-#endif
-#ifndef TMC_SPI_MISO
-  #define TMC_SPI_MISO                     P1_08  // ETH
-#endif
-#ifndef TMC_SPI_SCK
-  #define TMC_SPI_SCK                      P1_09  // ETH
+#if ENABLED(TMC_USE_SW_SPI)
+  #ifndef TMC_SW_MOSI
+    #define TMC_SW_MOSI                    P1_00  // ETH
+  #endif
+  #ifndef TMC_SW_MISO
+    #define TMC_SW_MISO                    P1_08  // ETH
+  #endif
+  #ifndef TMC_SW_SCK
+    #define TMC_SW_SCK                     P1_09  // ETH
+  #endif
 #endif
 
 #if HAS_TMC_UART
@@ -118,6 +120,7 @@
    * Hardware serial communication ports.
    * If undefined software serial is used according to the pins below
    */
+
 
   // P2_08 E1-Step
   // P2_13 E1-Dir
@@ -203,15 +206,15 @@
   #endif
 #endif
 
-#ifndef FAN0_PIN
+#ifndef FAN_PIN
   #if EITHER(FET_ORDER_EFB, FET_ORDER_EFF)        // Hotend, Fan, Bed or Hotend, Fan, Fan
-    #define FAN0_PIN                MOSFET_B_PIN
+    #define FAN_PIN                 MOSFET_B_PIN
   #elif EITHER(FET_ORDER_EEF, FET_ORDER_SF)       // Hotend, Hotend, Fan or Spindle, Fan
-    #define FAN0_PIN                MOSFET_C_PIN
+    #define FAN_PIN                 MOSFET_C_PIN
   #elif FET_ORDER_EEB                             // Hotend, Hotend, Bed
-    #define FAN0_PIN                       P1_18  // (4) IO pin. Buffer needed
+    #define FAN_PIN                        P1_18  // (4) IO pin. Buffer needed
   #else                                           // Non-specific are "EFB" (i.e., "EFBF" or "EFBE")
-    #define FAN0_PIN                MOSFET_B_PIN
+    #define FAN_PIN                 MOSFET_B_PIN
   #endif
 #endif
 
@@ -301,7 +304,7 @@
   #define BTN_ENC                          P3_25  // J3-4 & AUX-4
 
   #define LCD_PINS_RS                      P0_15  // J3-9 & AUX-4 (CS)
-  #define LCD_PINS_EN                      P0_18  // J3-10 & AUX-3 (SID, MOSI)
+  #define LCD_PINS_ENABLE                  P0_18  // J3-10 & AUX-3 (SID, MOSI)
   #define LCD_PINS_D4                      P2_06  // J3-8 & AUX-3 (SCK, CLK)
 
 #elif ENABLED(ZONESTAR_LCD)
@@ -394,7 +397,7 @@
     #endif
 
     #define LCD_BACKLIGHT_PIN              P0_16  //(16) J3-7 & AUX-4 - only used on DOGLCD controllers
-    #define LCD_PINS_EN                    P0_18  // (51) (MOSI) J3-10 & AUX-3
+    #define LCD_PINS_ENABLE                P0_18  // (51) (MOSI) J3-10 & AUX-3
     #define LCD_PINS_D4                    P0_15  // (52) (SCK)  J3-9 & AUX-3
     #if IS_ULTIPANEL
       #define LCD_PINS_D5                  P1_17  // (71) ENET_MDIO

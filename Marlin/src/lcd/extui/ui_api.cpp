@@ -112,9 +112,9 @@
 
 namespace ExtUI {
   static struct {
-    bool printer_killed : 1;
+    uint8_t printer_killed : 1;
     #if ENABLED(JOYSTICK)
-      bool jogging : 1;
+      uint8_t jogging : 1;
     #endif
   } flags;
 
@@ -333,7 +333,7 @@ namespace ExtUI {
     // This assumes the center is 0,0
     #if ENABLED(DELTA)
       if (axis != Z) {
-        max = SQRT(sq(float(PRINTABLE_RADIUS)) - sq(current_position[Y - axis])); // (Y - axis) == the other axis
+        max = SQRT(sq(float(DELTA_PRINTABLE_RADIUS)) - sq(current_position[Y - axis])); // (Y - axis) == the other axis
         min = -max;
       }
     #endif
@@ -926,27 +926,28 @@ namespace ExtUI {
       void setMeshPoint(const xy_uint8_t &pos, const_float_t zoff) {
         if (WITHIN(pos.x, 0, (GRID_MAX_POINTS_X) - 1) && WITHIN(pos.y, 0, (GRID_MAX_POINTS_Y) - 1)) {
           bedlevel.z_values[pos.x][pos.y] = zoff;
-          TERN_(ABL_BILINEAR_SUBDIVISION, bedlevel.refresh_bed_level());
+          TERN_(ABL_BILINEAR_SUBDIVISION, bed_level_virt_interpolate());
         }
       }
 
       void moveToMeshPoint(const xy_uint8_t &pos, const_float_t z) {
         #if EITHER(MESH_BED_LEVELING, AUTO_BED_LEVELING_UBL)
-          REMEMBER(fr, feedrate_mm_s);
+          const feedRate_t old_feedrate = feedrate_mm_s;
           const float x_target = MESH_MIN_X + pos.x * (MESH_X_DIST),
                       y_target = MESH_MIN_Y + pos.y * (MESH_Y_DIST);
           if (x_target != current_position.x || y_target != current_position.y) {
             // If moving across bed, raise nozzle to safe height over bed
-            feedrate_mm_s = MMM_TO_MMS(Z_PROBE_FEEDRATE_FAST);
+            feedrate_mm_s = Z_PROBE_FEEDRATE_FAST;
             destination.set(current_position.x, current_position.y, Z_CLEARANCE_BETWEEN_PROBES);
             prepare_line_to_destination();
-            feedrate_mm_s = XY_PROBE_FEEDRATE_MM_S;
+            feedrate_mm_s = XY_PROBE_FEEDRATE;
             destination.set(x_target, y_target);
             prepare_line_to_destination();
           }
-          feedrate_mm_s = MMM_TO_MMS(Z_PROBE_FEEDRATE_FAST);
+          feedrate_mm_s = Z_PROBE_FEEDRATE_FAST;
           destination.z = z;
           prepare_line_to_destination();
+          feedrate_mm_s = old_feedrate;
         #else
           UNUSED(pos);
           UNUSED(z);
@@ -1082,14 +1083,14 @@ namespace ExtUI {
   #endif
 
   void printFile(const char *filename) {
-    TERN(HAS_MEDIA, card.openAndPrintFile(filename), UNUSED(filename));
+    TERN(SDSUPPORT, card.openAndPrintFile(filename), UNUSED(filename));
   }
 
   bool isPrintingFromMediaPaused() {
-    return TERN0(HAS_MEDIA, IS_SD_PAUSED());
+    return TERN0(SDSUPPORT, IS_SD_PAUSED());
   }
 
-  bool isPrintingFromMedia() { return TERN0(HAS_MEDIA, IS_SD_PRINTING() || IS_SD_PAUSED()); }
+  bool isPrintingFromMedia() { return TERN0(SDSUPPORT, IS_SD_PRINTING() || IS_SD_PAUSED()); }
 
   bool isPrinting() {
     return commandsInQueue() || isPrintingFromMedia() || printJobOngoing() || printingIsPaused();
@@ -1099,7 +1100,7 @@ namespace ExtUI {
     return isPrinting() && (isPrintingFromMediaPaused() || print_job_timer.isPaused());
   }
 
-  bool isMediaInserted() { return TERN0(HAS_MEDIA, IS_SD_INSERTED()); }
+  bool isMediaInserted() { return TERN0(SDSUPPORT, IS_SD_INSERTED()); }
 
   void pausePrint()  { ui.pause_print(); }
   void resumePrint() { ui.resume_print(); }
@@ -1126,21 +1127,14 @@ namespace ExtUI {
     #endif
   }
 
-  void onSurviveInKilled() {
-    thermalManager.disable_all_heaters();
-    flags.printer_killed = 0;
-    marlin_state = MF_RUNNING;
-    //SERIAL_ECHOLNPGM("survived at: ", millis());
-  }
-
   FileList::FileList() { refresh(); }
 
-  void FileList::refresh() { }
+  void FileList::refresh() { num_files = 0xFFFF; }
 
   bool FileList::seek(const uint16_t pos, const bool skip_range_check) {
-    #if HAS_MEDIA
+    #if ENABLED(SDSUPPORT)
       if (!skip_range_check && (pos + 1) > count()) return false;
-      card.selectFileByIndexSorted(pos);
+      card.getfilename_sorted(SD_ORDER(pos, count()));
       return card.filename[0] != '\0';
     #else
       UNUSED(pos);
@@ -1150,35 +1144,43 @@ namespace ExtUI {
   }
 
   const char* FileList::filename() {
-    return TERN(HAS_MEDIA, card.longest_filename(), "");
+    return TERN(SDSUPPORT, card.longest_filename(), "");
   }
 
   const char* FileList::shortFilename() {
-    return TERN(HAS_MEDIA, card.filename, "");
+    return TERN(SDSUPPORT, card.filename, "");
   }
 
   const char* FileList::longFilename() {
-    return TERN(HAS_MEDIA, card.longFilename, "");
+    return TERN(SDSUPPORT, card.longFilename, "");
   }
 
   bool FileList::isDir() {
-    return TERN0(HAS_MEDIA, card.flag.filenameIsDir);
+    return TERN0(SDSUPPORT, card.flag.filenameIsDir);
   }
 
   uint16_t FileList::count() {
-    return TERN0(HAS_MEDIA, card.get_num_items());
+    return TERN0(SDSUPPORT, (num_files = (num_files == 0xFFFF ? card.get_num_Files() : num_files)));
   }
 
   bool FileList::isAtRootDir() {
-    return TERN1(HAS_MEDIA, card.flag.workDirIsRoot);
+    return TERN1(SDSUPPORT, card.flag.workDirIsRoot);
   }
 
   void FileList::upDir() {
-    TERN_(HAS_MEDIA, card.cdup());
+    #if ENABLED(SDSUPPORT)
+      card.cdup();
+      num_files = 0xFFFF;
+    #endif
   }
 
   void FileList::changeDir(const char * const dirname) {
-    TERN(HAS_MEDIA, card.cd(dirname), UNUSED(dirname));
+    #if ENABLED(SDSUPPORT)
+      card.cd(dirname);
+      num_files = 0xFFFF;
+    #else
+      UNUSED(dirname);
+    #endif
   }
 
 } // namespace ExtUI

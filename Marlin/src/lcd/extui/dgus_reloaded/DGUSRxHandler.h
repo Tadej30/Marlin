@@ -28,7 +28,7 @@ namespace DGUSRxHandler {
 
   void ScreenChange(DGUS_VP &, void *);
 
-  #if HAS_MEDIA
+  #if ENABLED(SDSUPPORT)
     void Scroll(DGUS_VP &, void *);
     void SelectFile(DGUS_VP &, void *);
     void PrintFile(DGUS_VP &, void *);

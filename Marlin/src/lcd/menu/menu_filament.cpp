@@ -130,7 +130,7 @@ void menu_change_filament() {
     #endif
 
     START_MENU();
-    BACK_ITEM(MSG_MAIN_MENU);
+    BACK_ITEM(MSG_MAIN);
 
     // Change filament
     #if E_STEPPERS == 1

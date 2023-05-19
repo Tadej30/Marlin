@@ -164,36 +164,19 @@ void MenuEditItemBase::draw(const bool sel, const uint8_t row, FSTR_P const fstr
 }
 
 // Draw a static item with no left-right margin required. Centered by default.
-void MenuItem_static::draw(const uint8_t row, FSTR_P const fstr, const uint8_t style/*=SS_DEFAULT*/, const char *vstr/*=nullptr*/) {
+void MenuItem_static::draw(const uint8_t row, FSTR_P const fstr, const uint8_t style/*=SS_DEFAULT*/, const char * const vstr/*=nullptr*/) {
   menu_item(row);
-
   tft_string.set(fstr, itemIndex, itemStringC, itemStringF);
-
-  const bool center = bool(style & SS_CENTER), full = bool(style & SS_FULL);
-  if (!full || !vstr) {
-    if (vstr) tft_string.add(vstr);
-    tft.add_text(center ? tft_string.center(TFT_WIDTH) : 0, MENU_TEXT_Y_OFFSET, COLOR_YELLOW, tft_string);
-    return;
-  }
-
-  // Move the leading colon from the value to the label
-  if (*vstr == ':') { tft_string.add(':'); vstr++; }
-
-  // Left-justified label
-  tft.add_text(0, MENU_TEXT_Y_OFFSET, COLOR_YELLOW, tft_string);
-
-  // Right-justified value, after spaces
-  while (*vstr == ' ') vstr++;
-  tft_string.set(vstr);
-  tft.add_text(TFT_WIDTH - 1 - tft_string.width(), MENU_TEXT_Y_OFFSET, COLOR_YELLOW, tft_string);
+  if (vstr) tft_string.add(vstr);
+  tft.add_text(tft_string.center(TFT_WIDTH), MENU_TEXT_Y_OFFSET, COLOR_YELLOW, tft_string);
 }
 
-#if HAS_MEDIA
+#if ENABLED(SDSUPPORT)
 
   void MenuItem_sdbase::draw(const bool sel, const uint8_t row, FSTR_P const, CardReader &theCard, const bool isDir) {
     menu_item(row, sel);
     if (isDir) tft.add_image(MENU_ITEM_ICON_X, MENU_ITEM_ICON_Y, imgDirectory, COLOR_MENU_TEXT, sel ? COLOR_SELECTION_BG : COLOR_BACKGROUND);
-    uint8_t maxlen = (MENU_ITEM_HEIGHT) - (MENU_TEXT_Y_OFFSET) + 1;
+    constexpr uint8_t maxlen = (MENU_ITEM_HEIGHT) - (MENU_TEXT_Y_OFFSET) + 1;
     tft.add_text(MENU_ITEM_ICON_SPACE, MENU_TEXT_Y_OFFSET, COLOR_MENU_TEXT, ui.scrolled_filename(theCard, maxlen, row, sel));
   }
 
@@ -210,9 +193,6 @@ void MarlinUI::init_lcd() {
   tft.set_font(MENU_FONT_NAME);
   #ifdef SYMBOLS_FONT_NAME
     tft.add_glyphs(SYMBOLS_FONT_NAME);
-  #endif
-  #ifdef EXTRA_FONT_NAME
-    tft.add_glyphs(EXTRA_FONT_NAME);
   #endif
   TERN_(TOUCH_SCREEN, touch.init());
   clear_lcd();

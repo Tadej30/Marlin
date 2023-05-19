@@ -257,15 +257,15 @@
   #endif
 #endif
 
-#ifndef FAN0_PIN
+#ifndef FAN_PIN
   #if EITHER(FET_ORDER_EFB, FET_ORDER_EFF)        // Hotend, Fan, Bed or Hotend, Fan, Fan
-    #define FAN0_PIN                MOSFET_B_PIN
+    #define FAN_PIN                 MOSFET_B_PIN
   #elif EITHER(FET_ORDER_EEF, FET_ORDER_SF)       // Hotend, Hotend, Fan or Spindle, Fan
-    #define FAN0_PIN                MOSFET_C_PIN
+    #define FAN_PIN                 MOSFET_C_PIN
   #elif FET_ORDER_EEB                             // Hotend, Hotend, Bed
-    #define FAN0_PIN                           4  // IO pin. Buffer needed
+    #define FAN_PIN                            4  // IO pin. Buffer needed
   #else                                           // Non-specific are "EFB" (i.e., "EFBF" or "EFBE")
-    #define FAN0_PIN                MOSFET_B_PIN
+    #define FAN_PIN                 MOSFET_B_PIN
   #endif
 #endif
 
@@ -320,14 +320,16 @@
 //
 // TMC software SPI
 //
-#ifndef TMC_SPI_MOSI
-  #define TMC_SPI_MOSI                        66
-#endif
-#ifndef TMC_SPI_MISO
-  #define TMC_SPI_MISO                        44
-#endif
-#ifndef TMC_SPI_SCK
-  #define TMC_SPI_SCK                         64
+#if ENABLED(TMC_USE_SW_SPI)
+  #ifndef TMC_SW_MOSI
+    #define TMC_SW_MOSI                       66
+  #endif
+  #ifndef TMC_SW_MISO
+    #define TMC_SW_MISO                       44
+  #endif
+  #ifndef TMC_SW_SCK
+    #define TMC_SW_SCK                        64
+  #endif
 #endif
 
 #if HAS_TMC_UART
@@ -594,13 +596,13 @@
   #if ENABLED(REPRAPWORLD_GRAPHICAL_LCD)
 
     #define LCD_PINS_RS              EXP2_07_PIN  // CS chip select /SS chip slave select
-    #define LCD_PINS_EN              EXP2_06_PIN  // SID (MOSI)
+    #define LCD_PINS_ENABLE          EXP2_06_PIN  // SID (MOSI)
     #define LCD_PINS_D4              EXP2_02_PIN  // SCK (CLK) clock
 
   #elif BOTH(IS_NEWPANEL, PANEL_ONE)
 
     #define LCD_PINS_RS              AUX2_06_PIN
-    #define LCD_PINS_EN              AUX2_08_PIN
+    #define LCD_PINS_ENABLE          AUX2_08_PIN
     #define LCD_PINS_D4              AUX2_10_PIN
     #define LCD_PINS_D5              AUX2_09_PIN
     #define LCD_PINS_D6              AUX2_07_PIN
@@ -615,7 +617,7 @@
     #if ENABLED(CR10_STOCKDISPLAY)
 
       #define LCD_PINS_RS            EXP1_07_PIN
-      #define LCD_PINS_EN            EXP1_08_PIN
+      #define LCD_PINS_ENABLE        EXP1_08_PIN
       #define LCD_PINS_D4            EXP1_06_PIN
 
       #if !IS_NEWPANEL
@@ -629,7 +631,7 @@
       #endif
 
       #define LCD_PINS_RS            AUX2_05_PIN
-      #define LCD_PINS_EN            AUX2_07_PIN
+      #define LCD_PINS_ENABLE        AUX2_07_PIN
       #define LCD_PINS_D4            AUX2_04_PIN
       #define LCD_PINS_D5            AUX2_06_PIN
       #define LCD_PINS_D6            AUX2_08_PIN
@@ -651,7 +653,7 @@
         #define DOGLCD_SCK           EXP1_05_PIN
       #else
         #define LCD_PINS_RS          EXP1_04_PIN
-        #define LCD_PINS_EN          EXP1_03_PIN
+        #define LCD_PINS_ENABLE      EXP1_03_PIN
         #define LCD_PINS_D4          EXP1_05_PIN
         #define LCD_PINS_D5          EXP1_06_PIN
         #define LCD_PINS_D6          EXP1_07_PIN
@@ -879,7 +881,7 @@
         #define BEEPER_PIN           EXP2_05_PIN
       #endif
 
-      #if ENABLED(PANEL_ONE)                      // Buttons connect directly to AUX-2
+      #if ENABLED(PANEL_ONE)                       // Buttons connect directly to AUX-2
         #define BTN_EN1              AUX2_03_PIN
         #define BTN_EN2              AUX2_04_PIN
         #define BTN_ENC              AUX3_02_PIN

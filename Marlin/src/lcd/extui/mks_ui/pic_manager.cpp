@@ -24,6 +24,7 @@
 
 #if HAS_TFT_LVGL_UI
 
+#include "string.h"
 #include "draw_ui.h"
 #include "pic_manager.h"
 #include "draw_ready_print.h"
@@ -33,11 +34,9 @@
 #include "../../../sd/cardreader.h"
 #include "../../../MarlinCore.h"
 
-#include <string.h>
-
 extern uint16_t DeviceCode;
 
-#if HAS_MEDIA
+#if ENABLED(SDSUPPORT)
   extern char *createFilename(char * const buffer, const dir_t &p);
 #endif
 
@@ -375,7 +374,7 @@ uint32_t Pic_Info_Write(uint8_t *P_name, uint32_t P_size) {
   return Pic_SaveAddr;
 }
 
-#if HAS_MEDIA
+#if ENABLED(SDSUPPORT)
 
   static void dosName2LongName(const char dosName[11], char *longName) {
     uint8_t j = 0;
@@ -548,7 +547,7 @@ uint32_t Pic_Info_Write(uint8_t *P_name, uint32_t P_size) {
     void spi_flash_read_test() { W25QXX.SPI_FLASH_BufferRead(public_buf, UNIGBK_FLASH_ADDR, BMP_WRITE_BUF_LEN); }
   #endif
 
-#endif // HAS_MEDIA
+#endif // SDSUPPORT
 
 void Pic_Read(uint8_t *Pname, uint8_t *P_Rbuff) {
   uint8_t i, j;

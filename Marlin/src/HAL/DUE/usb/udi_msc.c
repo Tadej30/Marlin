@@ -57,7 +57,7 @@
 #include "ctrl_access.h"
 #include <string.h>
 
-#if HAS_MEDIA
+#if ENABLED(SDSUPPORT)
 
 #ifndef UDI_MSC_NOTIFY_TRANS_EXT
 #  define UDI_MSC_NOTIFY_TRANS_EXT()
@@ -1127,6 +1127,6 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
 
 //@}
 
-#endif // HAS_MEDIA
+#endif // SDSUPPORT
 
 #endif // ARDUINO_ARCH_SAM

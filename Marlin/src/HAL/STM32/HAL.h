@@ -28,7 +28,6 @@
 #include "../shared/Marduino.h"
 #include "../shared/math_32bit.h"
 #include "../shared/HAL_SPI.h"
-#include "temp_soc.h"
 #include "fastio.h"
 #include "Servo.h"
 #include "MarlinSerial.h"
@@ -175,9 +174,7 @@ typedef libServo hal_servo_t;
   #define JTAGSWD_RESET() AFIO_DBGAFR_CONFIG(AFIO_MAPR_SWJ_CFG_RESET); // Reset: FULL SWD+JTAG
 #endif
 
-#ifndef PLATFORM_M997_SUPPORT
-  #define PLATFORM_M997_SUPPORT
-#endif
+#define PLATFORM_M997_SUPPORT
 void flashFirmware(const int16_t);
 
 // Maple Compatibility

@@ -148,16 +148,18 @@
 #endif
 
 //
-// Default pins for TMC software SPI
+// Software SPI pins for TMC2130 stepper drivers
 //
-#ifndef TMC_SPI_MOSI
-  #define TMC_SPI_MOSI                     P1_16
-#endif
-#ifndef TMC_SPI_MISO
-  #define TMC_SPI_MISO                     P0_05
-#endif
-#ifndef TMC_SPI_SCK
-  #define TMC_SPI_SCK                      P0_04
+#if ENABLED(TMC_USE_SW_SPI)
+  #ifndef TMC_SW_MOSI
+    #define TMC_SW_MOSI                    P1_16
+  #endif
+  #ifndef TMC_SW_MISO
+    #define TMC_SW_MISO                    P0_05
+  #endif
+  #ifndef TMC_SW_SCK
+    #define TMC_SW_SCK                     P0_04
+  #endif
 #endif
 
 #if HAS_TMC_UART
@@ -229,8 +231,8 @@
     #define FAN2_PIN                       P2_06  // HE1 for FAN3
   #endif
 #endif
-#ifndef FAN0_PIN
-  #define FAN0_PIN                         P2_04  // FAN1
+#ifndef FAN_PIN
+  #define FAN_PIN                          P2_04  // FAN1
 #endif
 #ifndef FAN1_PIN
   #define FAN1_PIN                         P1_04  // FAN2
@@ -316,7 +318,7 @@
     #define BTN_EN1                  EXP1_03_PIN
     #define BTN_EN2                  EXP1_05_PIN
 
-    #define LCD_PINS_EN              EXP1_08_PIN
+    #define LCD_PINS_ENABLE          EXP1_08_PIN
     #define LCD_PINS_D4              EXP1_06_PIN
 
   #else
@@ -342,7 +344,7 @@
 
       #define TFT_CS_PIN             EXP1_07_PIN
       #define TFT_DC_PIN             EXP1_08_PIN
-      #define TFT_A0_PIN              TFT_DC_PIN
+      #define TFT_A0_PIN             TFT_DC_PIN
       #define TFT_MISO_PIN           EXP2_01_PIN
       #define TFT_BACKLIGHT_PIN      EXP1_03_PIN
       #define TFT_RESET_PIN          EXP1_04_PIN
@@ -355,7 +357,7 @@
       #define TOUCH_BUTTONS_HW_SPI_DEVICE      2
 
       // Disable any LCD related PINs config
-      #define LCD_PINS_EN                  -1
+      #define LCD_PINS_ENABLE              -1
       #define LCD_PINS_RS                  -1
 
       #ifndef TFT_BUFFER_SIZE
@@ -369,7 +371,7 @@
 
       #define LCD_PINS_RS            EXP1_04_PIN
 
-      #define LCD_PINS_EN            EXP1_03_PIN
+      #define LCD_PINS_ENABLE        EXP1_03_PIN
       #define LCD_PINS_D4            EXP1_05_PIN
 
       #if ENABLED(FYSETC_MINI_12864)

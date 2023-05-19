@@ -44,7 +44,7 @@ namespace Language_vi {
   LSTR MSG_MEDIA_USB_FAILED               = _UxGT("USB khởi thất bại");
   LSTR MSG_LCD_ENDSTOPS                   = _UxGT("Công tắc");                             // Endstops - công tắc hành trình
   LSTR MSG_LCD_SOFT_ENDSTOPS              = _UxGT("Công tắc mềm");                         // soft Endstops
-  LSTR MSG_MAIN_MENU                      = _UxGT("Chính");                                // Main
+  LSTR MSG_MAIN                           = _UxGT("Chính");                                // Main
   LSTR MSG_ADVANCED_SETTINGS              = _UxGT("Thiết lập cấp cao");                    // Advanced Settings
   LSTR MSG_CONFIGURATION                  = _UxGT("Cấu hình");                             // Configuration
   LSTR MSG_RUN_AUTO_FILES                 = _UxGT("Khởi chạy tự động");                    // Autostart
@@ -207,7 +207,7 @@ namespace Language_vi {
   LSTR MSG_MOVE_10MM                      = _UxGT("Di chuyển 10mm");                       // Move 10mm
   LSTR MSG_MOVE_100MM                     = _UxGT("Di chuyển 100mm");                      // Move 100mm
   LSTR MSG_SPEED                          = _UxGT("Tốc độ");                               // Speed
-  LSTR MSG_MESH_Z_OFFSET                  = _UxGT("Z Bàn");
+  LSTR MSG_BED_Z                          = _UxGT("Z Bàn");
   LSTR MSG_NOZZLE                         = _UxGT("Đầu phun");                             // Nozzle
   LSTR MSG_NOZZLE_N                       = _UxGT("Đầu phun ~");
   LSTR MSG_BED                            = _UxGT("Bàn");                                  // bed

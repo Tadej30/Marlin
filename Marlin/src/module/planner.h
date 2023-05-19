@@ -50,8 +50,6 @@
   #include "delta.h"
 #elif ENABLED(POLARGRAPH)
   #include "polargraph.h"
-#elif ENABLED(POLAR)
-  #include "polar.h"
 #endif
 
 #if ABL_PLANAR
@@ -80,12 +78,11 @@
 
 // Feedrate for manual moves
 #ifdef MANUAL_FEEDRATE
-  constexpr xyze_feedrate_t manual_feedrate_mm_m = MANUAL_FEEDRATE,
-                            manual_feedrate_mm_s = LOGICAL_AXIS_ARRAY(
-                              MMM_TO_MMS(manual_feedrate_mm_m.e),
-                              MMM_TO_MMS(manual_feedrate_mm_m.x), MMM_TO_MMS(manual_feedrate_mm_m.y), MMM_TO_MMS(manual_feedrate_mm_m.z),
-                              MMM_TO_MMS(manual_feedrate_mm_m.i), MMM_TO_MMS(manual_feedrate_mm_m.j), MMM_TO_MMS(manual_feedrate_mm_m.k),
-                              MMM_TO_MMS(manual_feedrate_mm_m.u), MMM_TO_MMS(manual_feedrate_mm_m.v), MMM_TO_MMS(manual_feedrate_mm_m.w));
+  constexpr xyze_feedrate_t _mf = MANUAL_FEEDRATE,
+           manual_feedrate_mm_s = LOGICAL_AXIS_ARRAY(_mf.e / 60.0f,
+                                                     _mf.x / 60.0f, _mf.y / 60.0f, _mf.z / 60.0f,
+                                                     _mf.i / 60.0f, _mf.j / 60.0f, _mf.k / 60.0f,
+                                                     _mf.u / 60.0f, _mf.v / 60.0f, _mf.w / 60.0f);
 #endif
 
 #if IS_KINEMATIC && HAS_JUNCTION_DEVIATION
@@ -158,14 +155,6 @@ typedef struct {
   void set_nominal(const bool n) volatile { recalculate = true; if (n) nominal_length = true; }
 
 } block_flags_t;
-
-#if ENABLED(AUTOTEMP)
-  typedef struct {
-    celsius_t min, max;
-    float factor;
-    bool enabled;
-  } autotemp_t;
-#endif
 
 #if ENABLED(LASER_FEATURE)
 
@@ -294,7 +283,7 @@ typedef struct PlannerBlock {
 
 } block_t;
 
-#if ANY(LIN_ADVANCE, FEEDRATE_SCALING, GRADIENT_MIX, LCD_SHOW_E_TOTAL, POWER_LOSS_RECOVERY)
+#if ANY(LIN_ADVANCE, SCARA_FEEDRATE_SCALING, GRADIENT_MIX, LCD_SHOW_E_TOTAL, POWER_LOSS_RECOVERY)
   #define HAS_POSITION_FLOAT 1
 #endif
 
@@ -337,24 +326,28 @@ typedef struct {
   };
 #endif
 
-#if ENABLED(SKEW_CORRECTION)
-  typedef struct {
-    #if ENABLED(SKEW_CORRECTION_GCODE)
-      float xy;
-      #if ENABLED(SKEW_CORRECTION_FOR_Z)
-        float xz, yz;
-      #else
-        const float xz = XZ_SKEW_FACTOR, yz = YZ_SKEW_FACTOR;
-      #endif
-    #else
-      const float xy = XY_SKEW_FACTOR,
-                  xz = XZ_SKEW_FACTOR, yz = YZ_SKEW_FACTOR;
-    #endif
-  } skew_factor_t;
+#if DISABLED(SKEW_CORRECTION)
+  #define XY_SKEW_FACTOR 0
+  #define XZ_SKEW_FACTOR 0
+  #define YZ_SKEW_FACTOR 0
 #endif
 
-#if ENABLED(DISABLE_OTHER_EXTRUDERS)
-  typedef uvalue_t(BLOCK_BUFFER_SIZE * 2) last_move_t;
+typedef struct {
+  #if ENABLED(SKEW_CORRECTION_GCODE)
+    float xy;
+    #if ENABLED(SKEW_CORRECTION_FOR_Z)
+      float xz, yz;
+    #else
+      const float xz = XZ_SKEW_FACTOR, yz = YZ_SKEW_FACTOR;
+    #endif
+  #else
+    const float xy = XY_SKEW_FACTOR,
+                xz = XZ_SKEW_FACTOR, yz = YZ_SKEW_FACTOR;
+  #endif
+} skew_factor_t;
+
+#if ENABLED(DISABLE_INACTIVE_EXTRUDER)
+  typedef IF<(BLOCK_BUFFER_SIZE > 64), uint16_t, uint8_t>::type last_move_t;
 #endif
 
 #if ENABLED(ARC_SUPPORT)
@@ -364,7 +357,7 @@ typedef struct {
 
 struct PlannerHints {
   float millimeters = 0.0;            // Move Length, if known, else 0.
-  #if ENABLED(FEEDRATE_SCALING)
+  #if ENABLED(SCARA_FEEDRATE_SCALING)
     float inv_duration = 0.0;         // Reciprocal of the move duration, if known
   #endif
   #if ENABLED(HINTS_CURVE_RADIUS)
@@ -378,11 +371,6 @@ struct PlannerHints {
                                       // would calculate if it knew the as-yet-unbuffered path
   #endif
 
-  #if HAS_ROTATIONAL_AXES
-    bool cartesian_move = true;       // True if linear motion of the tool centerpoint relative to the workpiece occurs.
-                                      // False if no movement of the tool center point relative to the work piece occurs
-                                      // (i.e. the tool rotates around the tool centerpoint)
-  #endif
   PlannerHints(const_float_t mm=0.0f) : millimeters(mm) {}
 };
 
@@ -488,9 +476,7 @@ class Planner {
       static xyze_pos_t position_cart;
     #endif
 
-    #if ENABLED(SKEW_CORRECTION)
-      static skew_factor_t skew_factor;
-    #endif
+    static skew_factor_t skew_factor;
 
     #if ENABLED(SD_ABORT_ON_ENDSTOP_HIT)
       static bool abort_on_endstop_hit;
@@ -511,10 +497,6 @@ class Planner {
         xy_freq_limit_hz = constrain(hz, 0, 100);
         refresh_frequency_limit();
       }
-    #endif
-
-    #if ENABLED(FT_MOTION)
-      static bool fxdTiCtrl_busy;
     #endif
 
   private:
@@ -538,9 +520,9 @@ class Planner {
       static float last_fade_z;
     #endif
 
-    #if ENABLED(DISABLE_OTHER_EXTRUDERS)
+    #if ENABLED(DISABLE_INACTIVE_EXTRUDER)
       // Counters to manage disabling inactive extruder steppers
-      static last_move_t extruder_last_move[E_STEPPERS];
+      static last_move_t g_uc_extruder_last_move[E_STEPPERS];
     #endif
 
     #if HAS_WIRED_LCD
@@ -925,8 +907,8 @@ class Planner {
       return out;
     }
 
-    // SCARA AB and Polar YB axes are in degrees, not mm
-    #if EITHER(IS_SCARA, POLAR)
+    // SCARA AB axes are in degrees, not mm
+    #if IS_SCARA
       FORCE_INLINE static float get_axis_position_degrees(const AxisEnum axis) { return get_axis_position_mm(axis); }
     #endif
 
@@ -990,7 +972,9 @@ class Planner {
     #endif
 
     #if ENABLED(AUTOTEMP)
-      static autotemp_t autotemp;
+      static celsius_t autotemp_min, autotemp_max;
+      static float autotemp_factor;
+      static bool autotemp_enabled;
       static void autotemp_update();
       static void autotemp_M104_M109();
       static void autotemp_task();

@@ -67,7 +67,7 @@
   #include "../../feature/power_monitor.h"
 #endif
 
-#if HAS_MEDIA
+#if ENABLED(SDSUPPORT)
   #include "../../sd/cardreader.h"
 #endif
 
@@ -96,10 +96,9 @@
     DRAWBIT_HOTEND,
     DRAWBIT_BED = HOTENDS,
     DRAWBIT_CHAMBER,
-    DRAWBIT_CUTTER,
-    DRAWBIT_COUNT
+    DRAWBIT_CUTTER
   };
-  bits_t(DRAWBIT_COUNT) draw_bits;
+  IF<(DRAWBIT_CUTTER > 7), uint16_t, uint8_t>::type draw_bits;
 #endif
 
 #if ANIM_HOTEND
@@ -193,26 +192,14 @@
 #define PROGRESS_BAR_WIDTH (LCD_PIXEL_WIDTH - PROGRESS_BAR_X)
 
 FORCE_INLINE void _draw_centered_temp(const celsius_t temp, const uint8_t tx, const uint8_t ty) {
-  const char *str;
-  uint8_t len;
-  if (temp >= 0) {
-    str = i16tostr3left(temp);
-    len = strlen(str);
-    lcd_moveto(tx + 1 - len * (INFO_FONT_WIDTH) / 2, ty);
-  }
+  if (temp < 0)
+    lcd_put_u8str(tx - 3 * (INFO_FONT_WIDTH) / 2 + 1, ty, F("err"));
   else {
-    #if ENABLED(SHOW_TEMPERATURE_BELOW_ZERO)
-      str = i16tostr3left((-temp) % 100);
-      len = strlen(str) + 1;
-      lcd_moveto(tx + 1 - len * (INFO_FONT_WIDTH) / 2, ty);
-      lcd_put_lchar('-');
-    #else
-      lcd_put_u8str(tx + 1 - 3 * (INFO_FONT_WIDTH) / 2, ty, F("err"));
-      return;
-    #endif
+    const char *str = i16tostr3rj(temp);
+    const uint8_t len = str[0] != ' ' ? 3 : str[1] != ' ' ? 2 : 1;
+    lcd_put_u8str(tx - len * (INFO_FONT_WIDTH) / 2 + 1, ty, &str[3-len]);
+    lcd_put_lchar(LCD_STR_DEGREE[0]);
   }
-  lcd_put_u8str(str);
-  lcd_put_lchar(LCD_STR_DEGREE[0]);
 }
 
 #if DO_DRAW_FLOWMETER
@@ -457,12 +444,9 @@ FORCE_INLINE void _draw_axis_value(const AxisEnum axis, const char *value, const
 }
 
 // Prepare strings for progress display
-#if EITHER(HAS_EXTRA_PROGRESS, HAS_PRINT_PROGRESS)
+#if HAS_PRINT_PROGRESS
   static MarlinUI::progress_t progress = 0;
   static char bufferc[13];
-#endif
-
-#if HAS_EXTRA_PROGRESS
 
   static void prepare_time_string(const duration_t &time, char prefix) {
     char str[13];
@@ -500,8 +484,7 @@ FORCE_INLINE void _draw_axis_value(const AxisEnum axis, const char *value, const
       if (printJobOngoing())
         prepare_time_string(print_job_timer.duration(), 'E'); }
   #endif
-
-#endif // HAS_EXTRA_PROGRESS
+#endif // HAS_PRINT_PROGRESS
 
 /**
  * Draw the Status Screen for a 128x64 DOGM (U8glib) display.
@@ -525,9 +508,7 @@ void MarlinUI::draw_status_screen() {
 
   const bool show_e_total = TERN0(LCD_SHOW_E_TOTAL, printingIsActive());
 
-  #if HAS_PRINT_PROGRESS
-    static u8g_uint_t progress_bar_solid_width = 0;
-  #endif
+  static u8g_uint_t progress_bar_solid_width = 0;
 
   // At the first page, generate new display values
   if (first_page) {
@@ -742,7 +723,7 @@ void MarlinUI::draw_status_screen() {
     #endif
   }
 
-  #if HAS_MEDIA
+  #if ENABLED(SDSUPPORT)
     //
     // SD Card Symbol
     //
@@ -756,7 +737,7 @@ void MarlinUI::draw_status_screen() {
       // Corner pixel
       u8g.drawPixel(50, 43);         // 43 (or 42)
     }
-  #endif // HAS_MEDIA
+  #endif // SDSUPPORT
 
   #if HAS_PRINT_PROGRESS
     // Progress bar frame
@@ -871,7 +852,7 @@ void MarlinUI::draw_status_screen() {
     //
     // Filament sensor display if SD is disabled
     //
-    #if ENABLED(FILAMENT_LCD_DISPLAY) && !HAS_MEDIA
+    #if ENABLED(FILAMENT_LCD_DISPLAY) && DISABLED(SDSUPPORT)
       lcd_put_u8str(56, EXTRAS_2_BASELINE, wstring);
       lcd_put_u8str(102, EXTRAS_2_BASELINE, mstring);
       lcd_put_u8str(F("%"));
@@ -887,7 +868,7 @@ void MarlinUI::draw_status_screen() {
   if (PAGE_CONTAINS(STATUS_BASELINE - INFO_FONT_ASCENT, STATUS_BASELINE + INFO_FONT_DESCENT)) {
     lcd_moveto(0, STATUS_BASELINE);
 
-    #if BOTH(FILAMENT_LCD_DISPLAY, HAS_MEDIA)
+    #if BOTH(FILAMENT_LCD_DISPLAY, SDSUPPORT)
       // Alternate Status message and Filament display
       if (ELAPSED(millis(), next_filament_display)) {
         lcd_put_u8str(F(LCD_STR_FILAM_DIA));

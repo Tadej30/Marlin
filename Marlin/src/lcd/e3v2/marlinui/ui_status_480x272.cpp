@@ -29,7 +29,7 @@
 #include "dwin_string.h"
 #include "lcdprint_dwin.h"
 
-#include "../../utf8.h"
+#include "../../fontutils.h"
 #include "../../../libs/numtostr.h"
 #include "../../marlinui.h"
 
@@ -39,7 +39,7 @@
 #include "../../../module/printcounter.h"
 #include "../../../module/planner.h"
 
-#if HAS_MEDIA
+#if ENABLED(SDSUPPORT)
   #include "../../../libs/duration_t.h"
 #endif
 

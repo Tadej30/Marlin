@@ -119,8 +119,8 @@
 //
 #define HEATER_BED_PIN                     P2_05
 #define HEATER_0_PIN                       P2_07
-#ifndef FAN0_PIN
-  #define FAN0_PIN                         P2_06
+#ifndef FAN_PIN
+  #define FAN_PIN                          P2_06
 #endif
 #define FAN1_PIN                           P1_22
 
@@ -138,7 +138,7 @@
 
 #define SDCARD_CONNECTION                ONBOARD
 
-//#define SD_DETECT_PIN                    P0_25  // SD_CD
+#define SD_DETECT_PIN                      P0_27  // SD_CD
 #define SD_SCK_PIN                         P0_07
 #define SD_MISO_PIN                        P0_08
 #define SD_MOSI_PIN                        P0_09
@@ -185,7 +185,7 @@
    */
   #define BEEPER_PIN                 EXP1_01_PIN
   #define LCD_PINS_RS                EXP1_07_PIN
-  #define LCD_PINS_EN                EXP1_08_PIN
+  #define LCD_PINS_ENABLE            EXP1_08_PIN
   #define LCD_PINS_D4                EXP1_06_PIN
   #define KILL_PIN                   EXP1_04_PIN
 

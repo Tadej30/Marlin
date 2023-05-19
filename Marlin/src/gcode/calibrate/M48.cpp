@@ -162,8 +162,8 @@ void GcodeSuite::M48() {
         float angle = random(0, 360);
         const float radius = random(
           #if ENABLED(DELTA)
-            int(0.1250000000 * (PRINTABLE_RADIUS)),
-            int(0.3333333333 * (PRINTABLE_RADIUS))
+            int(0.1250000000 * (DELTA_PRINTABLE_RADIUS)),
+            int(0.3333333333 * (DELTA_PRINTABLE_RADIUS))
           #else
             int(5), int(0.125 * _MIN(X_BED_SIZE, Y_BED_SIZE))
           #endif
@@ -223,7 +223,7 @@ void GcodeSuite::M48() {
       } // n_legs
 
       // Probe a single point
-      const float pz = probe.probe_at_point(test_position, raise_after);
+      const float pz = probe.probe_at_point(test_position, raise_after, 0);
 
       // Break the loop if the probe fails
       probing_good = !isnan(pz);

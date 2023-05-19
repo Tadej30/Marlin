@@ -152,7 +152,7 @@
 #define HEATER_BED_PIN                      PE2   // HOT BED
 //#define HEATER_BED_INVERTING              true
 
-#define FAN0_PIN                            PG0   // FAN0
+#define FAN_PIN                             PG0   // FAN0
 #define FAN1_PIN                            PB6   // FAN1
 #define FAN2_PIN                            PG9   // FAN2
 #define FAN3_PIN                            PF10  // FAN3
@@ -200,6 +200,8 @@
   #define TFT_BACKLIGHT_PIN                 PG8
 
   #define LCD_USE_DMA_FSMC                        // Use DMA transfers to send data to the TFT
+  #define FSMC_DMA_DEV                      DMA2
+  #define FSMC_DMA_CHANNEL               DMA_CH5
 
   #define TFT_CS_PIN                        PG12
   #define TFT_RS_PIN                        PG2
@@ -251,7 +253,7 @@
 //
 // SD Card
 //
-#define ONBOARD_SDIO
+#define SDIO_SUPPORT
 #define SD_DETECT_PIN                       -1    // PF0, but not connected
 #define SDIO_CLOCK                       4500000
 #define SDIO_READ_RETRIES                     16

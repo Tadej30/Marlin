@@ -166,7 +166,7 @@
   #include "../feature/fancheck.h"
 #endif
 
-#if DGUS_LCD_UI_MKS
+#if ENABLED(DGUS_LCD_UI_MKS)
   #include "../lcd/extui/dgus/DGUSScreenHandler.h"
   #include "../lcd/extui/dgus/DGUSDisplayDef.h"
 #endif
@@ -246,14 +246,6 @@ typedef struct SettingsDataStruct {
   float planner_z_fade_height;                          // M420 Zn  planner.z_fade_height
 
   //
-  // AUTOTEMP
-  //
-  #if ENABLED(AUTOTEMP)
-    celsius_t planner_autotemp_max, planner_autotemp_min;
-    float planner_autotemp_factor;
-  #endif
-
-  //
   // MESH_BED_LEVELING
   //
   float mbl_z_offset;                                   // bedlevel.z_offset
@@ -322,7 +314,7 @@ typedef struct SettingsDataStruct {
   // BLTOUCH
   //
   bool bltouch_od_5v_mode;
-  #if HAS_BLTOUCH_HS_MODE
+  #ifdef BLTOUCH_HS_MODE
     bool bltouch_high_speed_mode;                       // M401 S
   #endif
 
@@ -480,9 +472,7 @@ typedef struct SettingsDataStruct {
   //
   // SKEW_CORRECTION
   //
-  #if ENABLED(SKEW_CORRECTION)
-    skew_factor_t planner_skew_factor;                  // M852 I J K
-  #endif
+  skew_factor_t planner_skew_factor;                    // M852 I J K
 
   //
   // ADVANCED_PAUSE_FEATURE
@@ -569,7 +559,7 @@ typedef struct SettingsDataStruct {
   //
   // MKS UI controller
   //
-  #if DGUS_LCD_UI_MKS
+  #if ENABLED(DGUS_LCD_UI_MKS)
     MKS_Language mks_language_index;                    // Display Language
     xy_int_t mks_corner_offsets[5];                     // Bed Tramming
     xyz_int_t mks_park_pos;                             // Custom Parking (without NOZZLE_PARK)
@@ -866,16 +856,6 @@ void MarlinSettings::postprocess() {
     }
 
     //
-    // AUTOTEMP
-    //
-    #if ENABLED(AUTOTEMP)
-      _FIELD_TEST(planner_autotemp_max);
-      EEPROM_WRITE(planner.autotemp.max);
-      EEPROM_WRITE(planner.autotemp.min);
-      EEPROM_WRITE(planner.autotemp.factor);
-    #endif
-
-    //
     // Mesh Bed Leveling
     //
     {
@@ -1016,7 +996,7 @@ void MarlinSettings::postprocess() {
       const bool bltouch_od_5v_mode = TERN0(BLTOUCH, bltouch.od_5v_mode);
       EEPROM_WRITE(bltouch_od_5v_mode);
 
-      #if HAS_BLTOUCH_HS_MODE
+      #ifdef BLTOUCH_HS_MODE
         _FIELD_TEST(bltouch_high_speed_mode);
         const bool bltouch_high_speed_mode = TERN0(BLTOUCH, bltouch.high_speed_mode);
         EEPROM_WRITE(bltouch_high_speed_mode);
@@ -1473,10 +1453,8 @@ void MarlinSettings::postprocess() {
     //
     // Skew correction factors
     //
-    #if ENABLED(SKEW_CORRECTION)
-      _FIELD_TEST(planner_skew_factor);
-      EEPROM_WRITE(planner.skew_factor);
-    #endif
+    _FIELD_TEST(planner_skew_factor);
+    EEPROM_WRITE(planner.skew_factor);
 
     //
     // Advanced Pause filament load & unload lengths
@@ -1614,7 +1592,7 @@ void MarlinSettings::postprocess() {
     //
     // MKS UI controller
     //
-    #if DGUS_LCD_UI_MKS
+    #if ENABLED(DGUS_LCD_UI_MKS)
       EEPROM_WRITE(mks_language_index);
       EEPROM_WRITE(mks_corner_offsets);
       EEPROM_WRITE(mks_park_pos);
@@ -1632,13 +1610,14 @@ void MarlinSettings::postprocess() {
     // Model predictive control
     //
     #if ENABLED(MPCTEMP)
-      HOTEND_LOOP() EEPROM_WRITE(thermalManager.temp_hotend[e].mpc);
+      HOTEND_LOOP()
+        EEPROM_WRITE(thermalManager.temp_hotend[e].constants);
     #endif
 
     //
     // Input Shaping
     ///
-    #if HAS_ZV_SHAPING
+    #if HAS_SHAPING
       #if ENABLED(INPUT_SHAPING_X)
         EEPROM_WRITE(stepper.get_shaping_frequency(X_AXIS));
         EEPROM_WRITE(stepper.get_shaping_damping_ratio(X_AXIS));
@@ -1825,15 +1804,6 @@ void MarlinSettings::postprocess() {
       EEPROM_READ(TERN(ENABLE_LEVELING_FADE_HEIGHT, new_z_fade_height, dummyf));
 
       //
-      // AUTOTEMP
-      //
-      #if ENABLED(AUTOTEMP)
-        EEPROM_READ(planner.autotemp.max);
-        EEPROM_READ(planner.autotemp.min);
-        EEPROM_READ(planner.autotemp.factor);
-      #endif
-
-      //
       // Mesh (Manual) Bed Leveling
       //
       {
@@ -1976,7 +1946,7 @@ void MarlinSettings::postprocess() {
         #endif
         EEPROM_READ(bltouch_od_5v_mode);
 
-        #if HAS_BLTOUCH_HS_MODE
+        #ifdef BLTOUCH_HS_MODE
           _FIELD_TEST(bltouch_high_speed_mode);
           #if ENABLED(BLTOUCH)
             const bool &bltouch_high_speed_mode = bltouch.high_speed_mode;
@@ -2453,7 +2423,6 @@ void MarlinSettings::postprocess() {
       //
       // Skew correction factors
       //
-      #if ENABLED(SKEW_CORRECTION)
       {
         skew_factor_t skew_factor;
         _FIELD_TEST(planner_skew_factor);
@@ -2468,7 +2437,6 @@ void MarlinSettings::postprocess() {
           }
         #endif
       }
-      #endif
 
       //
       // Advanced Pause filament load & unload lengths
@@ -2601,7 +2569,7 @@ void MarlinSettings::postprocess() {
       //
       // MKS UI controller
       //
-      #if DGUS_LCD_UI_MKS
+      #if ENABLED(DGUS_LCD_UI_MKS)
         _FIELD_TEST(mks_language_index);
         EEPROM_READ(mks_language_index);
         EEPROM_READ(mks_corner_offsets);
@@ -2626,7 +2594,8 @@ void MarlinSettings::postprocess() {
       //
       #if ENABLED(MPCTEMP)
       {
-        HOTEND_LOOP() EEPROM_READ(thermalManager.temp_hotend[e].mpc);
+        HOTEND_LOOP()
+          EEPROM_READ(thermalManager.temp_hotend[e].constants);
       }
       #endif
 
@@ -3031,15 +3000,6 @@ void MarlinSettings::reset() {
   TERN_(HAS_LEVELING, reset_bed_level());
 
   //
-  // AUTOTEMP
-  //
-  #if ENABLED(AUTOTEMP)
-    planner.autotemp.max = AUTOTEMP_MAX;
-    planner.autotemp.min = AUTOTEMP_MIN;
-    planner.autotemp.factor = AUTOTEMP_FACTOR;
-  #endif
-
-  //
   // X Axis Twist Compensation
   //
   TERN_(X_AXIS_TWIST_COMPENSATION, xatc.reset());
@@ -3075,7 +3035,9 @@ void MarlinSettings::reset() {
   //
   // BLTouch
   //
-  TERN_(HAS_BLTOUCH_HS_MODE, bltouch.high_speed_mode = BLTOUCH_HS_MODE);
+  #ifdef BLTOUCH_HS_MODE
+    bltouch.high_speed_mode = ENABLED(BLTOUCH_HS_MODE);
+  #endif
 
   //
   // Kinematic Settings (Delta, SCARA, TPARA, Polargraph...)
@@ -3412,22 +3374,22 @@ void MarlinSettings::reset() {
     static_assert(COUNT(_filament_heat_capacity_permm) == HOTENDS, "FILAMENT_HEAT_CAPACITY_PERMM must have HOTENDS items.");
 
     HOTEND_LOOP() {
-      MPC_t &mpc = thermalManager.temp_hotend[e].mpc;
-      mpc.heater_power = _mpc_heater_power[e];
-      mpc.block_heat_capacity = _mpc_block_heat_capacity[e];
-      mpc.sensor_responsiveness = _mpc_sensor_responsiveness[e];
-      mpc.ambient_xfer_coeff_fan0 = _mpc_ambient_xfer_coeff[e];
+      MPC_t &constants = thermalManager.temp_hotend[e].constants;
+      constants.heater_power = _mpc_heater_power[e];
+      constants.block_heat_capacity = _mpc_block_heat_capacity[e];
+      constants.sensor_responsiveness = _mpc_sensor_responsiveness[e];
+      constants.ambient_xfer_coeff_fan0 = _mpc_ambient_xfer_coeff[e];
       #if ENABLED(MPC_INCLUDE_FAN)
-        mpc.fan255_adjustment = _mpc_ambient_xfer_coeff_fan255[e] - _mpc_ambient_xfer_coeff[e];
+        constants.fan255_adjustment = _mpc_ambient_xfer_coeff_fan255[e] - _mpc_ambient_xfer_coeff[e];
       #endif
-      mpc.filament_heat_capacity_permm = _filament_heat_capacity_permm[e];
+      constants.filament_heat_capacity_permm = _filament_heat_capacity_permm[e];
     }
   #endif
 
   //
   // Input Shaping
   //
-  #if HAS_ZV_SHAPING
+  #if HAS_SHAPING
     #if ENABLED(INPUT_SHAPING_X)
       stepper.set_shaping_frequency(X_AXIS, SHAPING_FREQ_X);
       stepper.set_shaping_damping_ratio(X_AXIS, SHAPING_ZETA_X);
@@ -3688,7 +3650,7 @@ void MarlinSettings::reset() {
     //
     // Input Shaping
     //
-    TERN_(HAS_ZV_SHAPING, gcode.M593_report(forReplay));
+    TERN_(HAS_SHAPING, gcode.M593_report(forReplay));
 
     //
     // Linear Advance

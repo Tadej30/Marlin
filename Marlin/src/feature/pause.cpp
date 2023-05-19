@@ -91,7 +91,7 @@ static xyze_pos_t resume_position;
 
 fil_change_settings_t fc_settings[EXTRUDERS];
 
-#if HAS_MEDIA
+#if ENABLED(SDSUPPORT)
   #include "../sd/cardreader.h"
 #endif
 
@@ -234,8 +234,6 @@ bool load_filament(const_float_t slow_load_length/*=0*/, const_float_t fast_load
 
   TERN_(BELTPRINTER, do_blocking_move_to_xy(0.00, 50.00));
 
-  TERN_(MPCTEMP, MPC::e_paused = true);
-
   // Slow Load filament
   if (slow_load_length) unscaled_e_move(slow_load_length, FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE);
 
@@ -299,9 +297,6 @@ bool load_filament(const_float_t slow_load_length/*=0*/, const_float_t fast_load
     } while (TERN0(M600_PURGE_MORE_RESUMABLE, pause_menu_response == PAUSE_RESPONSE_EXTRUDE_MORE));
 
   #endif
-
-  TERN_(MPCTEMP, MPC::e_paused = false);
-
   TERN_(HOST_PROMPT_SUPPORT, hostui.prompt_end());
 
   return true;
@@ -420,7 +415,7 @@ bool pause_print(const_float_t retract, const xyz_pos_t &park_point, const bool 
   ++did_pause_print;
 
   // Pause the print job and timer
-  #if HAS_MEDIA
+  #if ENABLED(SDSUPPORT)
     const bool was_sd_printing = IS_SD_PRINTING();
     if (was_sd_printing) {
       card.pauseSDPrint();
@@ -445,7 +440,7 @@ bool pause_print(const_float_t retract, const xyz_pos_t &park_point, const bool 
   // Wait for buffered blocks to complete
   planner.synchronize();
 
-  #if BOTH(ADVANCED_PAUSE_FANS_PAUSE, HAS_FAN)
+  #if ENABLED(ADVANCED_PAUSE_FANS_PAUSE) && HAS_FAN
     thermalManager.set_fans_paused(true);
   #endif
 
@@ -701,7 +696,7 @@ void resume_print(const_float_t slow_load_length/*=0*/, const_float_t fast_load_
   // Resume the print job timer if it was running
   if (print_job_timer.isPaused()) print_job_timer.start();
 
-  #if HAS_MEDIA
+  #if ENABLED(SDSUPPORT)
     if (did_pause_print) {
       --did_pause_print;
       card.startOrResumeFilePrinting();

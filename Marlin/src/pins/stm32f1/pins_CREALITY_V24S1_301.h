@@ -30,7 +30,6 @@
 
 #if HAS_MULTI_HOTEND || E_STEPPERS > 1
   #error "Creality v24S1 only supports 1 hotend / E stepper."
-  #define E_ERROR 1
 #endif
 
 #if BOTH(BLTOUCH, Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN)
@@ -85,7 +84,7 @@
 #if HAS_CUTTER
   //#define HEATER_0_PIN                    -1
   //#define HEATER_BED_PIN                  -1
-  #define FAN0_PIN                          -1
+  #define FAN_PIN                           -1
   #define SPINDLE_LASER_ENA_PIN             PC0   // FET 1
   #define SPINDLE_LASER_PWM_PIN             PC0   // Bed FET
   #define SPINDLE_DIR_PIN                   PC0   // FET 4

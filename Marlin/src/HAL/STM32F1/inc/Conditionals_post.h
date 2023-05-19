@@ -28,7 +28,7 @@
   #define USE_SHARED_EEPROM 1
 #endif
 
-// Allow for no media drives
-#if !HAS_MEDIA
-  #undef ONBOARD_SDIO
+// Allow SDSUPPORT to be disabled
+#if DISABLED(SDSUPPORT)
+  #undef SDIO_SUPPORT
 #endif
