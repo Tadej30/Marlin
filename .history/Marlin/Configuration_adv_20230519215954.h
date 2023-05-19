@@ -4213,7 +4213,7 @@
 
 //
 // M100 Free Memory Watcher to debug memory usage
-//
+//probe
 //#define M100_FREE_MEMORY_WATCHER
 
 //

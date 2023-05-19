@@ -3120,8 +3120,7 @@
   //#define Z4_HYBRID_THRESHOLD    3
   //#define I_HYBRID_THRESHOLD     3  // [linear=mm/s, rotational=°/s]
   //#define J_HYBRID_THRESHOLD     3  // [linear=mm/s, rotational=°/s]
-  //#define K_HYBRID_THRESHOLD     3  // [linear=mm/s, rotational=°/s]
-  //#define U_HYBRID_THRESHOLD     3
+  //#define K_HYBRID_THRESHOLD     3  // [linear=mm/s, rotational=°/s]//#define U_HYBRID_THRESHOLD       3
   //#define V_HYBRID_THRESHOLD     3
   //#define W_HYBRID_THRESHOLD     3
   #define E0_HYBRID_THRESHOLD     30
@@ -3193,7 +3192,7 @@
    *
    * Values from 0..1023, -1 to disable homing phase for that axis.
    */
-   //#define TMC_HOME_PHASE { 896, 896, 896 }
+   #define TMC_HOME_PHASE { 896, 896, 896 }
 
   /**
    * Beta feature!
@@ -3611,7 +3610,7 @@
 /**
  * Auto-report position with M154 S<seconds>
  */
-//#define AUTO_REPORT_POSITION
+#define AUTO_REPORT_POSITION
 
 /**
  * Include capabilities in M115 output
@@ -3628,7 +3627,7 @@
  * Add the M16 G-code to compare a string to the MACHINE_NAME.
  * M16 with a non-matching string causes the printer to halt.
  */
-//#define EXPECTED_PRINTER_CHECK
+#define EXPECTED_PRINTER_CHECK
 
 // @section volumetrics
 
@@ -3663,9 +3662,9 @@
 // @section reporting
 
 // Extra options for the M114 "Current Position" report
-//#define M114_DETAIL         // Use 'M114` for details to check planner calculations
-//define M114_REALTIME       // Real current position based on forward kinematics
-//#define M114_LEGACY         // M114 used to synchronize on every call. Enable if needed.
+#define M114_DETAIL         // Use 'M114` for details to check planner calculations
+#define M114_REALTIME       // Real current position based on forward kinematics
+#define M114_LEGACY         // M114 used to synchronize on every call. Enable if needed.
 
 //#define REPORT_FAN_CHANGE   // Report the new fan speed when changed by M106 (and others)
 
@@ -4213,7 +4212,7 @@
 
 //
 // M100 Free Memory Watcher to debug memory usage
-//
+//probe
 //#define M100_FREE_MEMORY_WATCHER
 
 //
