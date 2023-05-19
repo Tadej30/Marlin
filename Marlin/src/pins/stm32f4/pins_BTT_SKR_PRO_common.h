@@ -40,7 +40,7 @@
 // Use one of these or SDCard-based Emulation will be used
 #if NO_EEPROM_SELECTED
   //#define SRAM_EEPROM_EMULATION                 // Use BackSRAM-based EEPROM emulation
-  #define FLASH_EEPROM_EMULATION                  // Use Flash-based EEPROM emulation
+  //#define FLASH_EEPROM_EMULATION                  // Use Flash-based EEPROM emulation
 #endif
 
 #if ENABLED(FLASH_EEPROM_EMULATION)
@@ -48,6 +48,17 @@
   // 128 kB sector allocated for EEPROM emulation.
   #define FLASH_EEPROM_LEVELING
 #endif
+
+// Externall I2C EEPROM  https://www.instructables.com/BigTreeTech-SKR-Pro-V11-Adding-a-EEPROM/
+#define I2C_EEPROM
+#ifdef MARLIN_EEPROM_SIZE
+   #undef MARLIN_EEPROM_SIZE
+   #endif
+// uncomment the size of EEPROM you are using.
+#define MARLIN_EEPROM_SIZE 0x7FFF // EEPROM end address AT24C256 (32kB)
+//#define MARLIN_EEPROM_SIZE 0x3FFF // EEPROM end address AT24C128 (16kB)
+//#define MARLIN_EEPROM_SIZE 0x1FFF // EEPROM end address AT24C64 (8kB)
+//#define MARLIN_EEPROM_SIZE 0x0FFF // EEPROM end address AT24C32 (4kB)
 
 #define HAS_OTG_USB_HOST_SUPPORT                  // USB Flash Drive support
 
@@ -157,11 +168,11 @@
   #define E0_CS_PIN                         PB3
 #endif
 
-#define E1_STEP_PIN                         PD15
-#define E1_DIR_PIN                          PE7
-#define E1_ENABLE_PIN                       PA3
-#ifndef E1_CS_PIN
-  #define E1_CS_PIN                         PG15
+#define Z2_STEP_PIN                         PD15
+#define Z2_DIR_PIN                          PE7
+#define Z2_ENABLE_PIN                       PA3
+#ifndef Z2_CS_PIN
+  #define Z2_CS_PIN                         PG15
 #endif
 
 #define E2_STEP_PIN                         PD13
@@ -231,25 +242,28 @@
 // Temperature Sensors
 // Use ADC pins without pullup for sensors that don't need a pullup.
 //
+
+#define TEMP_BOARD_PIN    PF5 // T3 <-> (E2) SKR PRO 1.1 temp. sensor
+
 #if TEMP_SENSOR_0_IS_AD8495 || TEMP_SENSOR_0 == 20
   #define TEMP_0_PIN                        PF8
 #else
-  #define TEMP_0_PIN                        PF4   // T1 <-> E0
+  #define TEMP_0_PIN                        PF4 // T1 <-> (E0) Hot End temp.sensor
 #endif
 #if TEMP_SENSOR_1_IS_AD8495 || TEMP_SENSOR_1 == 20
   #define TEMP_1_PIN                        PF9
 #else
-  #define TEMP_1_PIN                        PF5   // T2 <-> E1
+  #define TEMP_1_PIN                        PF6 // T2 <-> (E1) CHAMBER temperature pin
 #endif
 #if TEMP_SENSOR_2_IS_AD8495 || TEMP_SENSOR_2 == 20
   #define TEMP_2_PIN                        PF10
 #else
-  #define TEMP_2_PIN                        PF6   // T3 <-> E2
+  #define TEMP_2_PIN                        PF5 // T3 <-> (E2) SKR PRO 1.1 temp. sensor
 #endif
 #if TEMP_SENSOR_BED_IS_AD8495 || TEMP_SENSOR_BED == 20
   #define TEMP_BED_PIN                      PF7
 #else
-  #define TEMP_BED_PIN                      PF3   // T0 <-> Bed
+  #define TEMP_BED_PIN                      PF3 // T0 <-> Bed temp.sensor
 #endif
 
 #if TEMP_SENSOR_PROBE && !defined(TEMP_PROBE_PIN)
@@ -279,29 +293,30 @@
 //
 // Heaters
 //
-#define HEATER_0_PIN                        PB1   // Heater0
-#define HEATER_1_PIN                        PD14  // Heater1
+#define HEATER_0_PIN                        PB1   // Heater0 = Hotend
+#define HEATER_1_PIN                        PD14  // Heater1 = CASE Light
 #if TEMP_SENSOR_CHAMBER && HOTENDS < 3
-  #define HEATER_CHAMBER_PIN                PB0   // Heater2
+  #define HEATER_CHAMBER_PIN                PB0   // Fan3 = CHAMBER FAN
 #else
-  #define HEATER_2_PIN                      PB0   // Heater2
+  #define HEATER_2_PIN                      PB0   // Fan3 = CHAMBER FAN
 #endif
-#define HEATER_BED_PIN                      PD12  // Hotbed
+#define HEATER_BED_PIN                      PD12  // Heated BED
 
 //
 // Fans
 //
-#define FAN_PIN                             PC8   // Fan0
-#define FAN1_PIN                            PE5   // Fan1
+#define FAN_PIN                             PE5  // Fan0 = LAYER FAN
+#define FAN1_PIN                            PC8  // Fan1 = EXTRUDER FAN
+#define FAN3_PIN                            PB0  // Fan3 = CHAMBER FAN
 
 #ifndef E0_AUTO_FAN_PIN
   #define E0_AUTO_FAN_PIN               FAN1_PIN
 #endif
 
 #if !defined(CONTROLLER_FAN_PIN) && ENABLED(USE_CONTROLLER_FAN) && HOTENDS < 2
-  #define CONTROLLER_FAN_PIN                PE6   // Fan2
+  #define CONTROLLER_FAN_PIN                PE6   // Fan2 = SKR PRO 1.1 CONTROLLER FAN
 #else
-  #define FAN2_PIN                          PE6   // Fan2
+  #define FAN2_PIN                          PE6   // Fan2 = SKR PRO 1.1 CONTROLLER FAN
 #endif
 
 //
@@ -547,24 +562,22 @@
   #endif
 #endif
 
-#if ENABLED(WIFISUPPORT)
-  //
-  // WIFI
-  //
+//
+// WIFI
+//
 
-  /**
-   *          ------
-   *      RX | 8  7 | 3.3V      GPIO0  PF14 ... Leave as unused (ESP3D software configures this with a pullup so OK to leave as floating)
-   *   GPIO0 | 6  5 | Reset     GPIO2  PF15 ... must be high (ESP3D software configures this with a pullup so OK to leave as floating)
-   *   GPIO2 | 4  3 | Enable    Reset  PG0  ... active low, probably OK to leave floating
-   *     GND | 2  1 | TX        Enable PG1  ... Must be high for module to run
-   *          ------
-   *            W1
-   */
-  #define ESP_WIFI_MODULE_COM                  6  // Must also set either SERIAL_PORT or SERIAL_PORT_2 to this
-  #define ESP_WIFI_MODULE_BAUDRATE      BAUDRATE  // Must use same BAUDRATE as SERIAL_PORT & SERIAL_PORT_2
-  #define ESP_WIFI_MODULE_RESET_PIN         PG0
-  #define ESP_WIFI_MODULE_ENABLE_PIN        PG1
-  #define ESP_WIFI_MODULE_GPIO0_PIN         PF14
-  #define ESP_WIFI_MODULE_GPIO2_PIN         PF15
-#endif
+/**
+ *          ------
+ *      RX | 8  7 | 3.3V      GPIO0  PF14 ... Leave as unused (ESP3D software configures this with a pullup so OK to leave as floating)
+ *   GPIO0 | 6  5 | Reset     GPIO2  PF15 ... must be high (ESP3D software configures this with a pullup so OK to leave as floating)
+ *   GPIO2 | 4  3 | Enable    Reset  PG0  ... active low, probably OK to leave floating
+ *     GND | 2  1 | TX        Enable PG1  ... Must be high for module to run
+ *          ------
+ *            W1
+ */
+#define ESP_WIFI_MODULE_COM                    6  // Must also set either SERIAL_PORT or SERIAL_PORT_2 to this
+#define ESP_WIFI_MODULE_BAUDRATE        BAUDRATE  // Must use same BAUDRATE as SERIAL_PORT & SERIAL_PORT_2
+#define ESP_WIFI_MODULE_RESET_PIN           PG0
+#define ESP_WIFI_MODULE_ENABLE_PIN          PG1
+#define ESP_WIFI_MODULE_GPIO0_PIN           PF14
+#define ESP_WIFI_MODULE_GPIO2_PIN           PF15
