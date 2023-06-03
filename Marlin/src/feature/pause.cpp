@@ -91,7 +91,7 @@ static xyze_pos_t resume_position;
 
 fil_change_settings_t fc_settings[EXTRUDERS];
 
-#if ENABLED(SDSUPPORT)
+#if HAS_MEDIA
   #include "../sd/cardreader.h"
 #endif
 
@@ -210,7 +210,7 @@ bool load_filament(const_float_t slow_load_length/*=0*/, const_float_t fast_load
 
     while (wait_for_user) {
       impatient_beep(max_beep_count);
-      #if BOTH(FILAMENT_CHANGE_RESUME_ON_INSERT, FILAMENT_RUNOUT_SENSOR)
+      #if ALL(FILAMENT_CHANGE_RESUME_ON_INSERT, FILAMENT_RUNOUT_SENSOR)
         #if MULTI_FILAMENT_SENSOR
           #define _CASE_INSERTED(N) case N-1: if (READ(FIL_RUNOUT##N##_PIN) != FIL_RUNOUT##N##_STATE) wait_for_user = false; break;
           switch (active_extruder) {
@@ -233,6 +233,8 @@ bool load_filament(const_float_t slow_load_length/*=0*/, const_float_t fast_load
   #endif
 
   TERN_(BELTPRINTER, do_blocking_move_to_xy(0.00, 50.00));
+
+  TERN_(MPCTEMP, MPC::e_paused = true);
 
   // Slow Load filament
   if (slow_load_length) unscaled_e_move(slow_load_length, FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE);
@@ -284,7 +286,7 @@ bool load_filament(const_float_t slow_load_length/*=0*/, const_float_t fast_load
           // Show "Purge More" / "Resume" menu and wait for reply
           KEEPALIVE_STATE(PAUSED_FOR_USER);
           wait_for_user = false;
-          #if EITHER(HAS_MARLINUI_MENU, DWIN_LCD_PROUI)
+          #if ANY(HAS_MARLINUI_MENU, DWIN_LCD_PROUI)
             ui.pause_show_message(PAUSE_MESSAGE_OPTION); // Also sets PAUSE_RESPONSE_WAIT_FOR
           #else
             pause_menu_response = PAUSE_RESPONSE_WAIT_FOR;
@@ -297,6 +299,9 @@ bool load_filament(const_float_t slow_load_length/*=0*/, const_float_t fast_load
     } while (TERN0(M600_PURGE_MORE_RESUMABLE, pause_menu_response == PAUSE_RESPONSE_EXTRUDE_MORE));
 
   #endif
+
+  TERN_(MPCTEMP, MPC::e_paused = false);
+
   TERN_(HOST_PROMPT_SUPPORT, hostui.prompt_end());
 
   return true;
@@ -326,18 +331,18 @@ inline void disable_active_extruder() {
  */
 bool unload_filament(const_float_t unload_length, const bool show_lcd/*=false*/,
                      const PauseMode mode/*=PAUSE_MODE_PAUSE_PRINT*/
-                     #if BOTH(FILAMENT_UNLOAD_ALL_EXTRUDERS, MIXING_EXTRUDER)
+                     #if ALL(FILAMENT_UNLOAD_ALL_EXTRUDERS, MIXING_EXTRUDER)
                        , const_float_t mix_multiplier/*=1.0*/
                      #endif
 ) {
   DEBUG_SECTION(uf, "unload_filament", true);
   DEBUG_ECHOLNPGM("... unloadlen:", unload_length, " showlcd:", show_lcd, " mode:", mode
-    #if BOTH(FILAMENT_UNLOAD_ALL_EXTRUDERS, MIXING_EXTRUDER)
+    #if ALL(FILAMENT_UNLOAD_ALL_EXTRUDERS, MIXING_EXTRUDER)
       , " mixmult:", mix_multiplier
     #endif
   );
 
-  #if !BOTH(FILAMENT_UNLOAD_ALL_EXTRUDERS, MIXING_EXTRUDER)
+  #if !ALL(FILAMENT_UNLOAD_ALL_EXTRUDERS, MIXING_EXTRUDER)
     constexpr float mix_multiplier = 1.0f;
   #endif
 
@@ -415,7 +420,7 @@ bool pause_print(const_float_t retract, const xyz_pos_t &park_point, const bool 
   ++did_pause_print;
 
   // Pause the print job and timer
-  #if ENABLED(SDSUPPORT)
+  #if HAS_MEDIA
     const bool was_sd_printing = IS_SD_PRINTING();
     if (was_sd_printing) {
       card.pauseSDPrint();
@@ -440,7 +445,7 @@ bool pause_print(const_float_t retract, const xyz_pos_t &park_point, const bool 
   // Wait for buffered blocks to complete
   planner.synchronize();
 
-  #if ENABLED(ADVANCED_PAUSE_FANS_PAUSE) && HAS_FAN
+  #if ALL(ADVANCED_PAUSE_FANS_PAUSE, HAS_FAN)
     thermalManager.set_fans_paused(true);
   #endif
 
@@ -696,7 +701,7 @@ void resume_print(const_float_t slow_load_length/*=0*/, const_float_t fast_load_
   // Resume the print job timer if it was running
   if (print_job_timer.isPaused()) print_job_timer.start();
 
-  #if ENABLED(SDSUPPORT)
+  #if HAS_MEDIA
     if (did_pause_print) {
       --did_pause_print;
       card.startOrResumeFilePrinting();

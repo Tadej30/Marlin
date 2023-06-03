@@ -99,8 +99,11 @@
   #define E0_SERIAL_RX_PIN                 P0_21
 
   // Reduce baud rate to improve software serial reliability
-  #define TMC_BAUD_RATE                    19200
-#endif
+  #ifndef TMC_BAUD_RATE
+    #define TMC_BAUD_RATE                  19200
+  #endif
+
+#endif // HAS_TMC_UART
 
 //
 // Temp Sensors
@@ -214,7 +217,7 @@
 
 #endif
 
-#if EITHER(CR10_STOCKDISPLAY, MKS_MINI_12864)
+#if ANY(CR10_STOCKDISPLAY, MKS_MINI_12864)
   #define BTN_EN1                    EXP1_03_PIN
   #define BTN_EN2                    EXP1_05_PIN
   #define BTN_ENC                    EXP1_02_PIN

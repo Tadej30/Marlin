@@ -33,9 +33,10 @@
 #include "dwin_defines.h"
 #include "dwinui.h"
 #include "../common/encoder.h"
+#include "../common/limits.h"
 #include "../../../libs/BL24CXX.h"
 
-#if EITHER(BABYSTEPPING, HAS_BED_PROBE)
+#if ANY(BABYSTEPPING, HAS_BED_PROBE)
   #define HAS_ZOFFSET_ITEM 1
   #if !HAS_BED_PROBE
     #define JUST_BABYSTEP 1
@@ -70,17 +71,30 @@ enum processID : uint8_t {
   WaitResponse,
   Homing,
   PidProcess,
+  MPCProcess,
   NothingToDo
 };
 
-enum pidresult_t : uint8_t {
-  PIDTEMP_START = 0,
-  PIDTEMPBED_START,
-  PID_BAD_EXTRUDER_NUM,
-  PID_TEMP_TOO_HIGH,
-  PID_TUNING_TIMEOUT,
-  PID_DONE,
-};
+#if ANY(DWIN_PID_TUNE, MPC_AUTOTUNE)
+
+  enum tempcontrol_t : uint8_t {
+    #if DWIN_PID_TUNE
+      PID_DONE,
+      PIDTEMP_START,
+      PIDTEMPBED_START,
+      PID_BAD_HEATER_ID,
+      PID_TEMP_TOO_HIGH,
+      PID_TUNING_TIMEOUT,
+    #endif
+    #if ENABLED(MPC_AUTOTUNE)
+      MPC_DONE,
+      MPCTEMP_START,
+      MPC_TEMP_ERROR,
+      MPC_INTERRUPTED
+    #endif
+  };
+
+#endif
 
 #define DWIN_CHINESE 123
 #define DWIN_ENGLISH 0
@@ -107,14 +121,14 @@ typedef struct {
   uint16_t Coordinate_Color;
 
   // Temperatures
-  #if ENABLED(PIDTEMP)
-    int16_t HotendPidT = DEF_HOTENDPIDT;
-  #endif
-  #if ENABLED(PIDTEMPBED)
-    int16_t BedPidT = DEF_BEDPIDT;
-  #endif
-  #if (HAS_HOTEND || HAS_HEATED_BED) && HAS_PID_HEATING
+  #if DWIN_PID_TUNE
     int16_t PidCycles = DEF_PIDCYCLES;
+    #if ENABLED(PIDTEMP)
+      int16_t HotendPidT = DEF_HOTENDPIDT;
+    #endif
+    #if ENABLED(PIDTEMPBED)
+      int16_t BedPidT = DEF_BEDPIDT;
+    #endif
   #endif
   #if ENABLED(PREVENT_COLD_EXTRUSION)
     int16_t ExtMinT = EXTRUDE_MINTEMP;
@@ -128,10 +142,10 @@ typedef struct {
 
   bool FullManualTramming = false;
   bool MediaAutoMount = ENABLED(HAS_SD_EXTENDER);
-  #if BOTH(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
+  #if ALL(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
     uint8_t z_after_homing = DEF_Z_AFTER_HOMING;
   #endif
-  #if BOTH(LED_CONTROL_MENU, HAS_COLOR_LEDS)
+  #if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
     LEDColor Led_Color = Def_Leds_Color;
   #endif
 } HMI_data_t;
@@ -141,7 +155,7 @@ static constexpr size_t eeprom_data_size = sizeof(HMI_data_t);
 
 typedef struct {
   int8_t Color[3];                    // Color components
-  #if HAS_PID_HEATING
+  #if DWIN_PID_TUNE
     tempcontrol_t pidresult = PID_DONE;
   #endif
   uint8_t Select          = 0;        // Auxiliary selector variable
@@ -211,7 +225,7 @@ void ParkHead();
 #if HAS_ONESTEP_LEVELING
   void Trammingwizard();
 #endif
-#if BOTH(LED_CONTROL_MENU, HAS_COLOR_LEDS)
+#if ALL(LED_CONTROL_MENU, HAS_COLOR_LEDS)
   void ApplyLEDColor();
 #endif
 #if ENABLED(AUTO_BED_LEVELING_UBL)
@@ -319,7 +333,7 @@ void Draw_FilSet_Menu();
 void Draw_PhySet_Menu();
 void Draw_SelectColors_Menu();
 void Draw_GetColor_Menu();
-#if BOTH(CASE_LIGHT_MENU, CASELIGHT_USES_BRIGHTNESS)
+#if ALL(CASE_LIGHT_MENU, CASELIGHT_USES_BRIGHTNESS)
   void Draw_CaseLight_Menu();
 #endif
 #if ENABLED(LED_CONTROL_MENU)
@@ -340,7 +354,7 @@ void Draw_MaxAccel_Menu();
   void Draw_MaxJerk_Menu();
 #endif
 void Draw_Steps_Menu();
-#if EITHER(HAS_BED_PROBE, BABYSTEPPING)
+#if ANY(HAS_BED_PROBE, BABYSTEPPING)
   void Draw_ZOffsetWiz_Menu();
 #endif
 #if ENABLED(INDIVIDUAL_AXIS_HOMING_SUBMENU)
@@ -357,7 +371,9 @@ void Draw_Steps_Menu();
 #endif
 
 // PID
-#if HAS_PID_HEATING
+#if DWIN_PID_TUNE
+  #include "../../../module/temperature.h"
+  void DWIN_StartM303(const bool seenC, const int c, const bool seenS, const heater_id_t hid, const celsius_t temp);
   void DWIN_PidTuning(tempcontrol_t result);
   #if ENABLED(PIDTEMP)
     void Draw_HotendPID_Menu();
@@ -366,4 +382,11 @@ void Draw_Steps_Menu();
     void Draw_BedPID_Menu();
   #endif
 #endif
+
+// MPC
+#if ANY(MPC_EDIT_MENU, MPC_AUTOTUNE_MENU)
+  void Draw_HotendMPC_Menu();
+#endif
+#if ENABLED(MPC_AUTOTUNE)
+  void DWIN_MPCTuning(tempcontrol_t result);
 #endif
