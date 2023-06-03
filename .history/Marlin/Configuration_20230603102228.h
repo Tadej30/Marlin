@@ -3018,10 +3018,17 @@
 //
 //#define TOUCH_UI_FTDI_EVE
 
+//
 // Touch-screen LCD for Anycubic printers
+//
+//#define ANYCUBIC_LCD_I3MEGA
+//#define ANYCUBIC_LCD_CHIRON
+//#define ANYCUBIC_LCD_DEBUG
+//#define ANYCUBIC_LCD_GCODE_EXT  // Add ".gcode" to menu entries for DGUS clone compatibility
 
+//
 // 320x240 Nextion 2.8" serial TFT Resistive Touch Screen NX3224T028
-
+//
 //#define NEXTION_TFT
 
 //
